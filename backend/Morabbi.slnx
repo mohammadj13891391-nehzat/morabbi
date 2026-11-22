@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EducationalPlatform.Morabbi.API/EducationalPlatform.Morabbi.API.csproj" />
+    <Project Path="src/EducationalPlatform.Morabbi.Application/EducationalPlatform.Morabbi.Application.csproj" />
+    <Project Path="src/EducationalPlatform.Morabbi.Domain/EducationalPlatform.Morabbi.Domain.csproj" />
+    <Project Path="src/EducationalPlatform.Morabbi.Infrastructure/EducationalPlatform.Morabbi.Infrastructure.csproj" />
+  </Folder>
+</Solution>

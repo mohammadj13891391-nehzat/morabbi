@@ -1,0 +1,63 @@
+namespace EducationalPlatform.Morabbi.Application.DTOs;
+
+public record CreateDailyReportRequest(
+    int? BranchId,
+    DateTime? Date,
+    string Subject,
+    string? Summary,
+    string? ReportPattern,
+    string? ReportStyle,
+    string? Content,
+    string? Recommendations,
+    string? Audience,
+    int? AttendeesCount,
+    string? QuranRefs,
+    string? HadithRefs,
+    string? Challenges,
+    string? Solutions,
+    string? PedagogicalNotes,
+    string? TranscriptionSource,
+    double? TranscriptionConfidence,
+    string? PlanType,
+    string? Approach,
+    int? TraineeCount,
+    string? StagePresentation,
+    string? StageThinking,
+    string? StageDiscussion,
+    string? StageReporting,
+    string? GroupEndurance,
+    string? GroupSemiSpeed,
+    string? GroupSpeed,
+    string? EvaluationSelf,
+    string? Status
+);
+
+public record UpdateDailyReportRequest(
+    string? Subject,
+    string? Summary,
+    string? ReportPattern,
+    string? ReportStyle,
+    string? Content,
+    string? Recommendations,
+    string? Audience,
+    int? AttendeesCount,
+    string? QuranRefs,
+    string? HadithRefs,
+    string? Challenges,
+    string? Solutions,
+    string? PedagogicalNotes,
+    string? PlanType,
+    string? Approach,
+    int? TraineeCount,
+    string? StagePresentation,
+    string? StageThinking,
+    string? StageDiscussion,
+    string? StageReporting,
+    string? GroupEndurance,
+    string? GroupSemiSpeed,
+    string? GroupSpeed,
+    string? EvaluationSelf,
+    string? Status
+);
+
+public record ReturnReportRequest(string? Comment);
