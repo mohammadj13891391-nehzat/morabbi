@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#059669">
+  <title>نهضت تربیتی سیدالشهدا</title>
+  <style>
+    body { margin: 0; padding: 0; background: #059669; }
+    #app { 
+      width: 100vw; height: 100vh; 
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+    }
+    img { width: 100px; height: 100px; border-radius: 20px; }
+    p { color: white; font-family: sans-serif; margin-top: 20px; }
+    .loader { 
+      width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%; 
+      animation: spin 1s linear infinite; margin-top: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <img src="/logo-nehzat.jpg" alt="logo">
+    <p>نهضت تربیتی حضرت سیدالشهدا علیه‌السلام</p>
+    <div class="loader"></div>
+  </div>
+  <script>
+    // Redirect to the Next.js app
+    // In production, this should point to your deployed URL
+    var SERVER_URL = 'http://localhost:3000'; // Change this
+    
+    // Check if running in Capacitor
+    if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+      // Try to connect to the server
+      window.location.href = SERVER_URL;
+    } else {
+      window.location.href = SERVER_URL;
+    }
+  </script>
+</body>
+</html>

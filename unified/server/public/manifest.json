@@ -1,0 +1,64 @@
+{
+  "name": "نهضت تربیتی حضرت سیدالشهدا علیه‌السلام - سامانه مربیان",
+  "short_name": "سامانه مربیان",
+  "description": "سامانه گزارش و طرح درس روزانه مربیان با قابلیت آفلاین، ارزیابی هوشمند، و سیستم تقدیر — السابقون السابقون",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "background_color": "#ffffff",
+  "theme_color": "#059669",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "fa-IR",
+  "categories": ["education", "productivity", "religion"],
+  "icons": [
+    {
+      "src": "/logo-nehzat.jpg",
+      "sizes": "640x640",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-nehzat.jpg",
+      "sizes": "640x640",
+      "type": "image/jpeg",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ثبت گزارش جدید",
+      "short_name": "گزارش",
+      "description": "ثبت گزارش روزانه",
+      "url": "/?action=new_report",
+      "icons": [{ "src": "/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "ثبت طرح درس",
+      "short_name": "طرح درس",
+      "description": "ثبت طرح درس جدید",
+      "url": "/?action=new_lesson_plan",
+      "icons": [{ "src": "/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "السابقون السابقون",
+      "short_name": "تقدیر",
+      "description": "مشاهده لوح تقدیر",
+      "url": "/?action=recognition",
+      "icons": [{ "src": "/icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}

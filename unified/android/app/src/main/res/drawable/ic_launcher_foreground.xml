@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Persian letter "ن" (Noon) centered in a 108x108 adaptive icon viewport.
+     Adaptive icons reserve 72dp safe zone in the center; the glyph sits inside it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:translateX="27"
+        android:translateY="27">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M36,10
+                C36,4.5 31.5,0 26,0
+                L22,0
+                C16.5,0 12,4.5 12,10
+                L12,30
+                C12,36 7.5,40.5 1.5,40.5
+                L0,40.5
+                L0,46
+                L12,46
+                L12,48
+                L36,48
+                L36,46
+                L24,46
+                L24,44
+                C24,42 26,40.5 28,40.5
+                C33.5,40.5 36,36 36,30
+                L36,10
+                L36,10 Z" />
+    </group>
+</vector>

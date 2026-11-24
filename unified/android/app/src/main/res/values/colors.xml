@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lp_primary">#059669</color>
+    <color name="lp_primary_dark">#047857</color>
+    <color name="lp_bg">#f0fdf4</color>
+    <color name="lp_text">#1f2937</color>
+</resources>

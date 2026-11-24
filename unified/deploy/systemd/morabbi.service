@@ -1,0 +1,63 @@
+# ============================================================
+# Morabbi Unified v4.0.0 - Next.js standalone production server
+# Install: /etc/systemd/system/morabbi.service
+#
+#   sudo cp morabbi.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now morabbi
+#   sudo systemctl status morabbi
+# ============================================================
+
+[Unit]
+Description=Morabbi Unified Production Server (Next.js standalone)
+Documentation=https://morabbi.nehzat128.ir
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+
+# Project location
+WorkingDirectory=/opt/morabbi/server
+
+# Standalone Next.js server (port 3000, proxied by Caddy)
+ExecStart=/usr/bin/node /opt/morabbi/server/.next/standalone/server.js
+
+# Environment
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=0.0.0.0
+Environment=DATABASE_URL=file:/opt/morabbi/server/prisma/dev.db
+
+# VAPID (web push) - fill in before enabling push
+# Environment=VAPID_PUBLIC_KEY=
+# Environment=VAPID_PRIVATE_KEY=
+# Environment=VAPID_SUBJECT=mailto:admin@nehzat128.ir
+
+# Reliability
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ReadWritePaths=/opt/morabbi/server/prisma
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=morabbi
+
+# Limits
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

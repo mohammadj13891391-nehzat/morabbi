@@ -1,0 +1,12 @@
+# Morabbi Unified — ignore build artifacts & local state
+unified/tools/
+unified/server/node_modules/
+unified/server/.next/
+unified/server/prisma/dev.db
+unified/server/prisma/dev.db-journal
+unified/server/.env
+unified/build-apk/work/
+unified/android/.gradle/
+unified/android/app/build/
+unified/android/build/
+*.log

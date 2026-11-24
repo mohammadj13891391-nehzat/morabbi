@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نهضت تربیتی</string>
+    <string name="url_open_external">باز کردن در مرورگر</string>
+    <string name="loading">در حال بارگذاری...</string>
+</resources>

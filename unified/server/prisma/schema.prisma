@@ -1,0 +1,546 @@
+// Prisma schema for سامانه نهضت تربیتی حضرت سیدالشهدا علیه‌السلام
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Branch {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  address     String?
+  phone       String?
+  maktabId    String?
+  maktab      Maktab?  @relation(fields: [maktabId], references: [id])
+  isBoys      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+  reports     DailyReport[]
+  lessonPlans LessonPlan[]
+  recognitions Recognition[]
+  pointTransactions PointTransaction[]
+  people      Person[]
+  minutes     SessionMinutes[]
+  @@map("branches")
+}
+
+model Maktab {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  code        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+  branches    Branch[]
+  @@map("maktabs")
+}
+
+enum UserRole {
+  INSTRUCTOR
+  INSTRUCTOR_ASSISTANT
+  EVALUATOR
+  BRANCH_MANAGER
+  BROTHERS_SKILLS_SUPERVISOR
+  SISTERS_SKILLS_SUPERVISOR
+  SUPERVISOR
+  ADMIN
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id              String   @id @default(cuid())
+  name            String
+  nationalId      String?  @unique
+  phone           String   @unique
+  passwordHash    String?
+  role            UserRole @default(INSTRUCTOR)
+  requestedRole   UserRole @default(INSTRUCTOR)
+  branchId        String?
+  branch          Branch?  @relation(fields: [branchId], references: [id])
+  maktabId        String?
+  maktab          Maktab?  @relation(fields: [maktabId], references: [id])
+  approvalStatus  ApprovalStatus @default(PENDING)
+  approvedBy      String?
+  approvedAt      DateTime?
+  active          Boolean  @default(true)
+  totalPoints     Int      @default(0)
+  recognitionsCount Int    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  reportsAuthored DailyReport[]    @relation("ReportInstructor")
+  reportsEvaluated DailyReport[]   @relation("ReportEvaluator")
+  lessonPlansAuthored LessonPlan[] @relation("PlanInstructor")
+  lessonPlansEvaluated LessonPlan[] @relation("PlanEvaluator")
+  evaluationsGiven Evaluation[]    @relation("EvaluationByUser")
+  comments        Comment[]        @relation("CommentAuthor")
+  pointTransactions PointTransaction[]
+  recognitions    Recognition[]
+  sessions        Session[]          @relation("UserSessions")
+  pushSubscriptions PushSubscription[] @relation("UserPushSubs")
+  tasks           Task[]             @relation("UserTasks")
+  tracker         DailyTracker[]     @relation("UserTracker")
+  minutesAuthored SessionMinutes[]   @relation("MinutesInstructor")
+  @@map("users")
+}
+
+model VerificationCode {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  code         String
+  nationalId   String?
+  requestedRole String?
+  name         String?
+  passwordHash String?
+  branchId     String?
+  expiresAt    DateTime
+  attempts     Int      @default(0)
+  verified     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  @@map("verification_codes")
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  RETURNED
+}
+
+enum TranscriptionSource {
+  MANUAL
+  AUDIO
+  IMAGE
+}
+
+model DailyReport {
+  id                    String   @id @default(cuid())
+  instructorId          String
+  instructor            User     @relation("ReportInstructor", fields: [instructorId], references: [id])
+  branchId              String
+  branch                Branch   @relation(fields: [branchId], references: [id])
+  date                  DateTime @default(now())
+  subject               String
+  summary               String?
+  reportPattern         String?
+  reportStyle           String?
+  content               String   @default("")
+  recommendations       String?
+  audience              String?
+  attendeesCount        Int      @default(0)
+  quranRefs             String   @default("[]")
+  hadithRefs            String   @default("[]")
+  challenges            String?
+  solutions             String?
+  pedagogicalNotes      String?
+  attachments           String   @default("[]")
+  transcriptionSource   TranscriptionSource @default(MANUAL)
+  transcriptionConfidence Float?
+
+  // === فیلدهای روش‌شناسی نهضت ===
+  planType              String   @default("daily")  // daily | biweekly
+  approach              String?  // اجمال_به_تفصیل | کل_به_جزء
+  traineeCount          Int      @default(0)  // تعداد متربیان
+  // چهار مرحله
+  stagePresentation     String?  // مرحله ۱: ارائه مطلب
+  stageThinking         String?  // مرحله ۲: تفکر
+  stageDiscussion       String?  // مرحله ۳: مباحثه
+  stageReporting        String?  // مرحله ۴: ارائه به مربی
+  // سه گروه استقامتی
+  groupEndurance        String?  // گروه استقامتی (نام متربیان + خلاصه فعالیت)
+  groupSemiSpeed        String?  // گروه نیمه سرعتی
+  groupSpeed            String?  // گروه سرعتی
+  // ارزش‌گذاری
+  evaluationSelf        String?  // خودارزیابی مربی
+  evaluationResult      String?  // نتیجه ارزش‌گذاری
+
+  status                ReportStatus @default(DRAFT)
+  evaluatorId           String?
+  evaluator             User?    @relation("ReportEvaluator", fields: [evaluatorId], references: [id])
+  evaluatedAt           DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  @@map("daily_reports")
+}
+
+model LessonPlan {
+  id                String   @id @default(cuid())
+  instructorId      String
+  instructor        User     @relation("PlanInstructor", fields: [instructorId], references: [id])
+  branchId          String
+  branch            Branch   @relation(fields: [branchId], references: [id])
+  title             String
+  subject           String
+  grade             String?
+  sessionCount      Int      @default(1)
+  generalObjective  String?
+  objectives        String   @default("[]")
+  behavioralObjectives String?
+  subHeadings       String?
+  prerequisites     String?
+  diagnosticEvaluation String?
+  preparationPhase  String?
+  introductionPhase String?
+  presentationPhase String?
+  summaryPhase      String?
+  evaluationPhase   String?
+  supplementaryActivities String?
+  teachingMethod    String?
+  teachingAids      String?
+  evaluationQuestions String?
+  contentOutline    String?
+  evaluationMethod  String?
+  quranRefs         String   @default("[]")
+  hadithRefs        String   @default("[]")
+  sources           String   @default("[]")
+
+  // === فیلدهای روش‌شناسی نهضت ===
+  planType          String   @default("biweekly")  // daily | biweekly
+  approach          String?  // اجمال_به_تفصیل | کل_به_جزء
+  traineeCount      Int      @default(0)  // تعداد متربیان
+  // چهار مرحله
+  stagePresentation String?  // مرحله ۱: ارائه مطلب
+  stageThinking     String?  // مرحله ۲: تفکر
+  stageDiscussion   String?  // مرحله ۳: مباحثه
+  stageReporting    String?  // مرحله ۴: ارائه به مربی
+  // سه گروه استقامتی
+  groupEndurance    String?  // گروه استقامتی
+  groupSemiSpeed    String?  // گروه نیمه سرعتی
+  groupSpeed        String?  // گروه سرعتی
+  // ارزش‌گذاری
+  evaluationSelf    String?  // خودارزیابی
+  evaluationResult  String?  // نتیجه ارزش‌گذاری
+
+  status            ReportStatus @default(DRAFT)
+  evaluatorId       String?
+  evaluator         User?    @relation("PlanEvaluator", fields: [evaluatorId], references: [id])
+  evaluatedAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  @@map("lesson_plans")
+}
+
+enum CriteriaType {
+  REPORT
+  LESSON_PLAN
+}
+
+model EvaluationCriteria {
+  id           String   @id @default(cuid())
+  type         CriteriaType
+  title        String
+  description  String?
+  weight       Int      @default(1)
+  rubricLevels String   @default("[]")
+  active       Boolean  @default(true)
+  version      Int      @default(1)
+  definedBy    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@map("evaluation_criteria")
+}
+
+enum EvaluationStatus {
+  DRAFT
+  FINAL
+  REVISED
+}
+
+model Evaluation {
+  id             String           @id @default(cuid())
+  targetType     String
+  targetId       String
+  evaluatorId    String
+  evaluator      User             @relation("EvaluationByUser", fields: [evaluatorId], references: [id])
+  scores         String           @default("{}")
+  overallComment String?
+  aiSuggestionId String?          @unique
+  aiSuggestion   AISuggestion?    @relation(fields: [aiSuggestionId], references: [id])
+  status         EvaluationStatus @default(DRAFT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  @@map("evaluations")
+}
+
+model AISuggestion {
+  id            String      @id @default(cuid())
+  targetType    String
+  targetId      String
+  inputSnapshot String
+  outputJson    String
+  modelVersion  String?
+  acceptedBy    String?
+  acceptedAt    DateTime?
+  modified      Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  evaluation    Evaluation?
+  @@map("ai_suggestions")
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  targetType  String
+  targetId    String
+  authorId    String
+  author      User     @relation("CommentAuthor", fields: [authorId], references: [id])
+  body        String
+  anchor      String?
+  parentId    String?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@map("comments")
+}
+
+enum PointReason {
+  HIGH_EVALUATION
+  AUTHENTIC_SOURCE_USE
+  QUICK_RESOLUTION
+  CONTINUITY
+  PEDAGOGICAL_INSIGHT
+  RECOGNITION_BONUS
+  MANUAL_AWARD
+  REPORT_SAVED
+  REPORT_APPROVED
+  LESSON_SAVED
+  LESSON_APPROVED
+  SESSION_SAVED
+  TASK_COMPLETED
+  TRACKER_ITEM
+}
+
+model PointTransaction {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  branchId    String?
+  branch      Branch?     @relation(fields: [branchId], references: [id])
+  amount      Int
+  reason      PointReason
+  description String?
+  sourceType  String?
+  sourceId    String?
+  awardedBy   String?
+  createdAt   DateTime    @default(now())
+  @@map("point_transactions")
+}
+
+enum RecognitionLevel {
+  WEEKLY_BRANCH
+  MONTHLY_BRANCH
+  MONTHLY_CENTRAL
+  SPECIAL
+}
+
+model Recognition {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  branchId    String?
+  branch      Branch?          @relation(fields: [branchId], references: [id])
+  level       RecognitionLevel
+  title       String
+  description String?
+  period      String?
+  awardedBy   String?
+  aiSuggested Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  @@map("recognitions")
+}
+
+model QuranVerse {
+  id           Int     @id
+  surah        Int
+  ayah         Int
+  surahName    String
+  surahNameFa  String
+  textSimple   String
+  textUthmani  String
+  juz          Int
+  page         Int
+  @@index([surah, ayah])
+  @@map("quran_verses")
+}
+
+model Hadith {
+  id             String   @id @default(cuid())
+  source         String
+  volume         Int?
+  chapter        String?
+  narratorChain  String?
+  grade          String?
+  textAr         String
+  textFa         String?
+  subjectTags    String   @default("[]")
+  createdAt      DateTime @default(now())
+  @@map("hadiths")
+}
+
+enum MediaType {
+  AUDIO
+  IMAGE
+}
+enum MediaJobStatus {
+  QUEUED
+  PROCESSING
+  DONE
+  FAILED
+}
+
+model MediaProcessingJob {
+  id              String         @id @default(cuid())
+  userId          String
+  targetType      String
+  targetId        String?
+  mediaType       MediaType
+  filePath        String
+  status          MediaJobStatus @default(QUEUED)
+  resultText      String?
+  error           String?
+  autoDeleteAfter DateTime?
+  createdAt       DateTime       @default(now())
+  completedAt     DateTime?
+  @@map("media_processing_jobs")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String?
+  payload   String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  @@map("notifications")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation("UserSessions", fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([token])
+  @@map("sessions")
+}
+
+model Person {
+  id        String   @id @default(cuid())
+  branchId  String?
+  branch    Branch?  @relation(fields: [branchId], references: [id])
+  name      String
+  nationalId String?
+  age       Int?
+  phone     String?
+  grade     String?
+  group     String   @default("")  // '' | ESTEGHLATI | NIMESORAT | SORATI
+  joinDate  DateTime?
+  note      String?
+  createdBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  attendance AttendanceRecord[]
+  @@map("people")
+}
+
+model AttendanceRecord {
+  id       String   @id @default(cuid())
+  personId String
+  person   Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
+  date     String   // fa-IR locale date string (key for daily lookups)
+  status   String   // PRESENT | ABSENT
+  markedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([personId, date])
+  @@map("attendance")
+}
+
+model SessionMinutes {
+  id          String   @id @default(cuid())
+  instructorId String
+  instructor  User     @relation("MinutesInstructor", fields: [instructorId], references: [id])
+  branchId    String?
+  branch      Branch?  @relation(fields: [branchId], references: [id])
+  title       String
+  date        DateTime @default(now())
+  attendees   Int      @default(0)
+  place       String?
+  agenda      String?
+  decisions   String?
+  followup    String?
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@map("session_minutes")
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserTasks", fields: [userId], references: [id], onDelete: Cascade)
+  text      String
+  priority  String   @default("MED")  // HIGH | MED | LOW
+  due       DateTime?
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("tasks")
+}
+
+model DailyTracker {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation("UserTracker", fields: [userId], references: [id], onDelete: Cascade)
+  date          String   // fa-IR locale date string
+  salatFajr     Boolean  @default(false)
+  salatZuhr     Boolean  @default(false)
+  salatAsr      Boolean  @default(false)
+  salatMagrib   Boolean  @default(false)
+  salatIsha     Boolean  @default(false)
+  quran         Boolean  @default(false)
+  dhikrMorning  Boolean  @default(false)
+  dhikrEvening  Boolean  @default(false)
+  fasting       Boolean  @default(false)
+  study         Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  @@unique([userId, date])
+  @@map("daily_tracker")
+}
+
+model Methodology {
+  id        String   @id @default(cuid())
+  name      String
+  desc      String?
+  steps     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("methodologies")
+}
+
+model PushSubscription {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation("UserPushSubs", fields: [userId], references: [id], onDelete: Cascade)
+  endpoint     String   @unique
+  p256dh       String
+  auth         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@map("push_subscriptions")
+}

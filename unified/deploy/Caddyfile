@@ -1,0 +1,83 @@
+# ============================================================
+# Caddyfile - Morabbi Unified v4.0.0 (production)
+# HTTPS خودکار (Let's Encrypt) + reverse proxy به Next.js standalone
+#
+# استفاده:
+#   sudo cp Caddyfile /etc/caddy/Caddyfile
+#   sudo systemctl restart caddy
+#
+# پورت standalone: 3000 (PORT در morabbi.service)
+# ============================================================
+
+morabbi.nehzat128.ir {
+    # ایمیل برای اطلاع‌رسانی انقضای گواهی
+    email admin@nehzat128.ir
+
+    # لاگ‌ها
+    log {
+        output file /var/log/caddy/morabbi-access.log {
+            roll_size 10mb
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format json
+    }
+
+    # محدودیت حجم آپلود
+    request_body {
+        max_size 50MB
+    }
+
+    # فشرده‌سازی
+    encode gzip zstd
+
+    # هدرهای امنیتی
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+        # CORS (قاب اندروید + توسعه)
+        Access-Control-Allow-Origin "*"
+        Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, x-user-id"
+
+        # حذف هدر Caddy
+        -Server
+    }
+
+    # پاسخ به درخواست‌های OPTIONS (پیش‌نویس CORS)
+    @options method OPTIONS
+    handle @options {
+        header Access-Control-Max-Age "86400"
+        respond 204
+    }
+
+    # API ها
+    handle /api/* {
+        reverse_proxy localhost:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            # تایم‌اوت برای عملیات سنگین (AI)
+            transport http {
+                read_timeout 120s
+                write_timeout 120s
+                dial_timeout 10s
+            }
+        }
+    }
+
+    # باقی مسیرها (PWA + استاتیک‌ها + redirect صفحهٔ اصلی)
+    handle {
+        reverse_proxy localhost:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+}

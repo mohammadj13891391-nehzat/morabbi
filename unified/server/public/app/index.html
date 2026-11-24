@@ -1,0 +1,2628 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#059669">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="نهضت تربیتی">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="js/api.js"></script>
+<title>نهضت تربیتی</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--p:#059669;--pd:#047857;--pl:#d1fae5;--bg:#f0fdf4;--w:#fff;--t:#1f2937;--m:#6b7280;--l:#e5e7eb;--d:#dc2626;--i:#0ea5e9;--y:#f59e0b;--v:#8b5cf6}
+html.dark{--bg:#0f172a;--w:#1e293b;--t:#e2e8f0;--m:#94a3b8;--l:#334155;--pl:#064e3b;--p:#10b981;--pd:#059669;--pl:#065f46}
+html,body{height:100%;overflow:hidden}
+body{font:14px/1.6 Tahoma,sans-serif;background:var(--bg);color:var(--t);display:flex;flex-direction:column;transition:background .3s,color .3s}
+button{font:inherit;cursor:pointer;border:none;border-radius:10px;padding:12px;background:var(--l);color:var(--t);transition:.15s}
+button:active{transform:scale(.97)}
+.app{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px;max-width:520px;margin:0 auto;width:100%}
+.top{position:sticky;top:0;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(5,150,105,.25);z-index:10;max-width:520px;margin:0 auto;width:100%}
+.top h1{font-size:16px;font-weight:700}
+.top .u{display:flex;align-items:center;gap:8px;font-size:13px}
+.top .av{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:700}
+.card{background:var(--w);border-radius:14px;padding:14px;margin:8px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card h2{font-size:15px;color:var(--pd);margin-bottom:10px;border-bottom:2px solid var(--pl);padding-bottom:6px}
+.f{margin:10px 0}
+.f label{display:block;font-weight:700;font-size:13px;margin-bottom:4px;color:var(--t)}
+.f input,.f textarea,.f select{width:100%;padding:10px;border:1.5px solid var(--l);border-radius:8px;font:14px Tahoma;background:#fff;color:var(--t)}
+.f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--p)}
+.f textarea{min-height:70px;resize:vertical}
+.btn-p{background:var(--p);color:#fff;width:100%;padding:13px;font-weight:700;font-size:15px}
+.btn-s{background:var(--l);color:var(--t);width:100%;padding:11px}
+.btn-d{background:var(--d);color:#fff;width:100%;padding:11px}
+.btn-i{background:var(--i);color:#fff}
+.btn-y{background:var(--y);color:#fff}
+.btn-v{background:var(--v);color:#fff}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--p);color:#fff;padding:10px 20px;border-radius:10px;z-index:100;font-size:13px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.2);opacity:0;transition:.3s}
+.toast.show{opacity:1}
+.toast.e{background:var(--d)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{background:var(--w);border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stat .n{font-size:22px;font-weight:700;color:var(--p)}
+.stat .l{font-size:11px;color:var(--m);margin-top:4px}
+.stat.i .n{color:var(--i)}
+.stat.y .n{color:var(--y)}
+.stat.d .n{color:var(--d)}
+.stat.v .n{color:var(--v)}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.menu button{background:var(--w);color:var(--t);padding:14px 6px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600}
+.menu button .ic{font-size:22px}
+.list-item{background:var(--w);border-radius:10px;padding:12px;margin:6px 0;box-shadow:0 1px 2px rgba(0,0,0,.04);display:flex;align-items:center;gap:10px}
+.list-item .li-ic{width:38px;height:38px;border-radius:10px;background:var(--pl);color:var(--p);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.list-item .li-t{flex:1;min-width:0}
+.list-item .li-t .t{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item .li-t .s{font-size:11px;color:var(--m)}
+.list-item .li-a{display:flex;gap:4px;flex-shrink:0}
+.list-item .li-a button{padding:6px 10px;font-size:11px;border-radius:6px}
+.empty{text-align:center;color:var(--m);padding:30px 10px;font-size:13px}
+.empty .e-ic{font-size:36px;display:block;margin-bottom:8px;opacity:.5}
+.tabs{position:sticky;bottom:0;background:var(--w);border-top:1px solid var(--l);display:flex;max-width:520px;margin:0 auto;width:100%;box-shadow:0 -2px 10px rgba(0,0,0,.06)}
+.tabs button{flex:1;background:transparent;color:var(--m);padding:8px 4px;border-radius:0;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px}
+.tabs button .ic{font-size:18px}
+.tabs button.on{color:var(--p)}
+.tabs button.on .ic{transform:scale(1.1)}
+.sec-h{font-size:13px;color:var(--m);margin:14px 0 6px;padding:0 4px;font-weight:700}
+.tag{display:inline-block;background:var(--pl);color:var(--pd);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;margin:2px}
+.tag.d{background:#fee2e2;color:#991b1b}
+.tag.i{background:#e0f2fe;color:#075985}
+.tag.y{background:#fef3c7;color:#92400e}
+.tag.v{background:#ede9fe;color:#5b21b6}
+.tag.g{background:#dcfce7;color:#166534}
+.bar-back{display:flex;align-items:center;gap:8px;padding:0 0 10px}
+.bar-back button{background:var(--l);padding:8px 12px;font-size:13px}
+.bar-back .t{font-size:15px;font-weight:700;color:var(--pd)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:14px;padding:16px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:15px;color:var(--pd);margin-bottom:10px}
+.tab-sel{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}
+.tab-sel button{padding:6px 12px;font-size:12px;background:var(--l)}
+.tab-sel button.on{background:var(--p);color:#fff}
+.divider{height:1px;background:var(--l);margin:10px 0}
+.kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--l);font-size:13px}
+.kv .k{color:var(--m)}
+.kv .v{font-weight:700;text-align:left}
+.about p{font-size:13px;color:var(--t);margin:8px 0;line-height:1.8}
+.about ul{margin:8px 20px}
+.about li{font-size:13px;margin:4px 0}
+.note{background:#fef3c7;border-right:3px solid var(--y);padding:8px 12px;border-radius:6px;font-size:12px;margin:8px 0}
+.search{display:flex;gap:6px;margin:8px 0}
+.search input{flex:1;padding:10px;border:1.5px solid var(--l);border-radius:8px;font:14px Tahoma}
+.search button{background:var(--p);color:#fff;padding:10px 16px;font-weight:700}
+.verse{background:#fef9c3;border-right:4px solid #ca8a04;padding:10px;margin:6px 0;border-radius:6px;font-size:13px;line-height:1.8}
+.verse .vref{display:block;text-align:left;color:#a16207;font-weight:700;font-size:11px;margin-top:4px}
+.point{display:flex;align-items:center;gap:8px;padding:8px;background:#f0fdf4;border-radius:8px;margin:4px 0}
+.point .pp{font-size:18px;font-weight:700;color:var(--p);min-width:50px;text-align:center}
+.eval-row{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid var(--l)}
+.eval-row .er-n{font-size:13px;font-weight:600}
+.eval-row .er-s select{padding:4px 8px;font-size:12px;border-radius:6px;border:1px solid var(--l)}
+.comment{background:#f9fafb;border-radius:8px;padding:10px;margin:6px 0}
+.comment .ch{font-size:12px;font-weight:700;color:var(--pd);margin-bottom:4px}
+.comment .cb{font-size:13px;line-height:1.6}
+.rec-card{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:12px;padding:12px;margin:6px 0;text-align:center}
+.rec-card .rl{font-size:11px;color:#92400e;font-weight:700}
+.rec-card .rn{font-size:16px;font-weight:700;color:#78350f;margin:4px 0}
+.rec-card .rp{font-size:11px;color:#92400e}
+.role-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700}
+.role-ADMIN{background:#dcfce7;color:#166534}
+.role-INSTRUCTOR{background:#dbeafe;color:#1e40af}
+.role-EVALUATOR{background:#ede9fe;color:#5b21b6}
+.role-TRAINEE{background:#fef3c7;color:#92400e}
+.role-BRANCH_MANAGER{background:#fce7f3;color:#9d174d}
+/* Voice/Photo buttons */
+.btn-voice{background:var(--d);color:#fff;padding:8px 12px;font-size:13px;border-radius:20px}
+.btn-voice.recording{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.btn-photo{background:var(--v);color:#fff;padding:8px 12px;font-size:13px;border-radius:20px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.toolbar button{padding:8px 12px;font-size:12px;border-radius:20px}
+/* Chat */
+.chat-msg{padding:10px;margin:6px 0;border-radius:10px;max-width:85%;font-size:13px;line-height:1.6}
+.chat-msg.user{background:var(--p);color:#fff;margin-right:auto}
+.chat-msg.bot{background:var(--l);color:var(--t);margin-left:auto}
+.chat-input{display:flex;gap:6px;position:sticky;bottom:0;background:var(--w);padding:8px;border-top:1px solid var(--l)}
+.chat-input input{flex:1;padding:10px;border:1px solid var(--l);border-radius:8px;font:14px Tahoma}
+.chat-input button{padding:10px 14px}
+/* Checklist */
+.check-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--w);border-radius:8px;margin:4px 0;border-right:3px solid var(--p)}
+.check-item input{width:20px;height:20px;cursor:pointer}
+.check-item.done{opacity:.6;text-decoration:line-through}
+.check-item .ci-t{flex:1;font-size:13px}
+/* Tasks */
+.task-item{display:flex;align-items:center;gap:8px;padding:10px;background:var(--w);border-radius:8px;margin:4px 0}
+.task-item.done .tt{opacity:.5;text-decoration:line-through}
+.task-item .tt{flex:1;font-size:13px}
+/* Methodology card */
+.method-card{background:var(--w);border-radius:10px;padding:12px;margin:6px 0;border-right:4px solid var(--v)}
+.method-card .mn{font-weight:700;color:var(--v);font-size:14px}
+.method-card .md{font-size:12px;color:var(--m);margin-top:4px}
+.method-card .ms{font-size:11px;color:var(--t);margin-top:6px;line-height:1.6}
+/* Help steps */
+.help-step{display:flex;gap:10px;padding:10px;margin:6px 0;background:var(--w);border-radius:10px}
+.help-step .hs-n{width:28px;height:28px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.help-step .hs-t{font-size:13px;line-height:1.6}
+/* Dark mode toggle */
+.theme-toggle{background:rgba(255,255,255,.2);color:#fff;padding:6px 10px;font-size:14px;border-radius:20px}
+/* PWA install banner */
+.pwa-banner{position:fixed;bottom:60px;left:10px;right:10px;background:var(--p);color:#fff;padding:10px;border-radius:10px;display:none;align-items:center;justify-content:space-between;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.pwa-banner.show{display:flex}
+.pwa-banner button{background:rgba(255,255,255,.25);color:#fff;padding:6px 12px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="top" id="topbar" style="display:none">
+  <h1 id="topTitle">نهضت تربیتی</h1>
+  <div class="u">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button class="theme-toggle" onclick="nav('more','search')">🔍</button>
+    <span id="topUserName"></span>
+    <div class="av" id="topAvatar">م</div>
+  </div>
+</div>
+<div class="app" id="app"></div>
+<div class="tabs" id="tabs" style="display:none">
+  <button onclick="nav('home')" id="tab-home" class="on"><span class="ic">🏠</span>خانه</button>
+  <button onclick="nav('reports')" id="tab-reports"><span class="ic">📝</span>گزارش</button>
+  <button onclick="nav('lessons')" id="tab-lessons"><span class="ic">📋</span>طرح درس</button>
+  <button onclick="nav('people')" id="tab-people"><span class="ic">👥</span>افراد</button>
+  <button onclick="nav('more')" id="tab-more"><span class="ic">⚙️</span>بیشتر</button>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalBody"></div>
+</div>
+<div class="pwa-banner" id="pwaBanner">
+  <span>📱 نصب اپ روی موبایل</span>
+  <div><button onclick="installPWA()">نصب</button><button onclick="document.getElementById('pwaBanner').classList.remove('show')">بستن</button></div>
+</div>
+<script>
+// ========= STORAGE =========
+var DB_KEY='morabbi_db_v23',SS_KEY='morabbi_session_v23',THEME_KEY='morabbi_theme';
+function db(){
+  var r=localStorage.getItem(DB_KEY);
+  if(r){try{return JSON.parse(r)}catch(e){}}
+  var seed={
+    maktabs:[
+      {id:'mk1',name:'مکتب حضرت سیدالشهدا',code:'MK-SYED',active:true},
+      {id:'mk2',name:'مکتب امام رضا',code:'MK-REZA',active:true},
+      {id:'mk3',name:'مکتب امام خمینی',code:'MK-KHOMEINI',active:true},
+      {id:'mk4',name:'مکتب شهید بهشتی',code:'MK-BEHESHTI',active:true}
+    ],
+    branches:[
+      {id:'br1',name:'شعبه مرکزی',code:'BR-01',maktabId:'mk1',phone:'021-12345678'},
+      {id:'br2',name:'شعبه север',code:'BR-02',maktabId:'mk1',phone:'021-87654321'},
+      {id:'br3',name:'شعبه جنوب',code:'BR-03',maktabId:'mk2',phone:'021-11112222'},
+      {id:'br4',name:'شعبه شرق',code:'BR-04',maktabId:'mk3',phone:'021-33334444'},
+      {id:'br5',name:'شعبه غرب',code:'BR-05',maktabId:'mk3',phone:'021-55556666'},
+      {id:'br6',name:'شعبه کرج',code:'BR-06',maktabId:'mk4',phone:'026-99998888'}
+    ],
+    users:[
+      {id:'u1',name:'مدیر سامانه',phone:'09120000001',code:'567890',nationalId:'1234567890',role:'ADMIN',branchId:'br1',area:'تهران',school:'مدارس شهید همدانی',points:0,recognitions:0,approvalStatus:'APPROVED',active:true,created:Date.now()},
+      {id:'u2',name:'مربی نمونه',phone:'09120000002',code:'543210',nationalId:'9876543210',role:'INSTRUCTOR',branchId:'br1',area:'تهران',school:'مدرسه همدانی',points:120,recognitions:2,approvalStatus:'APPROVED',active:true,created:Date.now()},
+      {id:'u3',name:'ارزیاب شهرستانی',phone:'09120000003',code:'111111',nationalId:'1111111111',role:'EVALUATOR',branchId:'br2',area:'تهران',school:'دفتر فرهنگی',points:50,recognitions:0,approvalStatus:'APPROVED',active:true,created:Date.now()}
+    ],
+    reports:[],
+    lessons:[],
+    people:[],
+    attendance:[],
+    sessions:[],
+    notifications:[{id:'n1',title:'خوش آمدید',body:'به سامانه نهضت تربیتی خوش آمدید. این نسخه v22 با همه امکانات است.',date:Date.now(),read:false}],
+    criteria:defaultCriteria(),
+    evaluations:[],
+    comments:[],
+    points:[],
+    recognitions:[],
+    quran:defaultQuran(),
+    hadiths:defaultHadiths(),
+    methodologies:defaultMethodologies(),
+    tasks:[],
+    dailyTracker:[],
+    chatHistory:[],
+    settings:{serverUrl:'',theme:'green',darkMode:false}
+  };
+  localStorage.setItem(DB_KEY,JSON.stringify(seed));
+  return seed;
+}
+function defaultMethodologies(){
+  return [
+    {id:'m1',name:'روش چهار مرحله‌ای',desc:'ارائه، تفکر، مباحثه، ارائه به مربی',steps:'۱. ارائه مطلب به افراد\n۲. تفکر و تأمل در مطلب\n۳. مباحثه و تبادل نظر\n۴. ارائه نتیجه به مربی'},
+    {id:'m2',name:'روش سه گروهی',desc:'استقامتی، نیمه‌سرعتی، سرعتی',steps:'۱. گروه استقامتی: افراد در مرحله شروع\n۲. گروه نیمه‌سرعتی: افراد در حال پیشرفت\n۳. گروه سرعتی: افراد پیشرفته'},
+    {id:'m3',name:'روش سخنرانی فعال',desc:'ارائه ساختاریافته با مشارکت',steps:'۱. مقدمه و ایجاد انگیزه\n۲. ارائه محتوای اصلی\n۳. پرسش و پاسخ\n۴. جمع‌بندی و تکلیف'},
+    {id:'m4',name:'روش بحث گروهی',desc:'گفتگوی ساختاریافته',steps:'۱. تعریف موضوع\n۲. تقسیم گروه‌ها\n۳. بحث با نظارت مربی\n۴. جمع‌بندی'},
+    {id:'m5',name:'روش ایفای نقش',desc:'بازی نقش‌های تربیتی',steps:'۱. تعریف سناریو\n۲. تخصیص نقش‌ها\n۳. اجرای نقش\n۴. تحلیل و بازخورد'},
+    {id:'m6',name:'روش مطالعه موردی',desc:'تحلیل داستان‌های واقعی',steps:'۱. ارائه مورد\n۲. تحلیل گروهی\n۳. استخراج درس‌ها\n۴. تطبیق با زندگی'},
+    {id:'m7',name:'روش پروژه محور',desc:'انجام پروژه عملی',steps:'۱. تعریف پروژه\n۲. برنامه‌ریزی\n۳. اجرا\n۴. ارائه نتایج'},
+    {id:'m8',name:'روش قرآنی',desc:'استخراج درس از آیات',steps:'۱. تلاوت آیه\n۲. ترجمه\n۳. تفسیر مختصر\n۴. استخراج درس‌ها و کاربرد'}
+  ];
+}
+function defaultCriteria(){
+  return [
+    {id:'c1',name:'استفاده از روش چهار مرحله‌ای',type:'REPORT',maxScore:10},
+    {id:'c2',name:'تفکیک سه گروه (استقامتی، نیمه‌سرعتی، سرعتی)',type:'REPORT',maxScore:10},
+    {id:'c3',name:'ارائه محتوای غنی و مستند',type:'REPORT',maxScore:10},
+    {id:'c4',name:'خودارزیابی صادقانه',type:'REPORT',maxScore:5},
+    {id:'c5',name:'نظم و انسجام گزارش',type:'REPORT',maxScore:5},
+    {id:'c6',name:'پیگیری تکالیف',type:'REPORT',maxScore:5},
+    {id:'c7',name:'استفاده از آیات قرآن',type:'LESSON',maxScore:10},
+    {id:'c8',name:'استفاده از احادیث',type:'LESSON',maxScore:10},
+    {id:'c9',name:'تناسب با پایه تحصیلی',type:'LESSON',maxScore:10},
+    {id:'c10',name:'اهداف رفتاری روشن',type:'LESSON',maxScore:5},
+    {id:'c11',name:'مراحل تدریس منطقی',type:'LESSON',maxScore:10},
+    {id:'c12',name:'ارزشیابی تشخیصی و پایانی',type:'LESSON',maxScore:5},
+    {id:'c13',name:'فعالیت مقدماتی و آماده‌سازی',type:'INSTRUCTOR',maxScore:10},
+    {id:'c14',name:'حضور منظم در جلسات',type:'INSTRUCTOR',maxScore:10},
+    {id:'c15',name:'تعامل با افراد گروه',type:'INSTRUCTOR',maxScore:10}
+  ];
+}
+function defaultQuran(){
+  return [
+    {id:'q1',surah:'بقره',verseNo:153,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ ۚ إِنَّ اللَّهَ مَعَ الصَّابِرِينَ',topic:'صبر و استقامت'},
+    {id:'q2',surah:'عصر',verseNo:1,text:'وَالْعَصْرِ ۝ إِنَّ الْإِنسَانَ لَفِي خُسْرٍ',topic:'زمان و流失 سرمایه'},
+    {id:'q3',surah:'فاتحه',verseNo:5,text:'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ',topic:'عبادت و استعانت'},
+    {id:'q4',surah:'مزمل',verseNo:5,text:'إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَى مِن ثُلُثَيِ اللَّيْلِ',topic:'قیام شب و تهجد'},
+    {id:'q5',surah:'تغابن',verseNo:14,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا إِنَّ مِنْ أَزْوَاجِكُمْ وَأَوْلَادِكُمْ عَدُوًّا لَّكُمْ فَاحْذَرُوهُمْ',topic:'دوستی‌های خطرناک'},
+    {id:'q6',surah:'حجرات',verseNo:13,text:'يَا أَيُّهَا النَّاسُ إِنَّا خَلَقْنَاكُم مِّن ذَكَرٍ وَأُنثَى',topic:'برادری اسلامی'},
+    {id:'q7',surah:'فرقان',verseNo:74,text:'وَالَّذِينَ يَقُولُونَ رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ',topic:'فرزند صالح'},
+    {id:'q8',surah:'لقمان',verseNo:13,text:'يَا بُنَيَّ لَا تُشْرِكْ بِاللَّهِ إِنَّ الشِّرْكَ لَظُلْمٌ عَظِيمٌ',topic:'توحید و شرک'},
+    {id:'q9',surah:'لقمان',verseNo:17,text:'يَا بُنَيَّ أَقِمِ الصَّلَاةَ وَأْمُرْ بِالْمَعْرُوفِ وَانْهَ عَنِ الْمُنكَرِ',topic:'امر به معروف'},
+    {id:'q10',surah:'انفال',verseNo:24,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَجِيبُوا لِلَّهِ وَلِلرَّسُولِ إِذَا دَعَاكُمْ',topic:'استجابت دعوت خدا'},
+    {id:'q11',surah:'صف',verseNo:2,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا لِمَ تَقُولُونَ مَا لَا تَفْعَلُونَ',topic:'عمل به قول'},
+    {id:'q12',surah:'بقره',verseNo:201,text:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً',topic:'دعای جامع'},
+    {id:'q13',surah:'آل عمران',verseNo:200,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا اصْبِرُوا وَصَابِرُوا وَرَابِطُوا',topic:'صبر و مرابطة'},
+    {id:'q14',surah:'نور',verseNo:31,text:'وَقُل لِّلْمُؤْمِنَاتِ يَغْضُضْنَ مِنْ أَبْصَارِهِنَّ',topic:'حجاب و عفاف'},
+    {id:'q15',surah:'اسراء',verseNo:23,text:'وَقَضَىٰ رَبُّكَ أَلَّا تَعْبُدُوا إِلَّا إِيَّاهُ وَبِالْوَالِدَيْنِ إِحْسَانًا',topic:'نیکی به والدین'},
+    {id:'q16',surah:'مائده',verseNo:2,text:'وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ ۖ وَلَا تَعَاوَنُوا عَلَى الْإِثْمِ وَالْعُدْوَانِ',topic:'همکاری در نیکی'},
+    {id:'q17',surah:'بقره',verseNo:195,text:'وَأَحْسِنُوا ۛ إِنَّ اللَّهَ يُحِبُّ الْمُحْسِنِينَ',topic:'احسان و نیکوکاری'},
+    {id:'q18',surah:'نساء',verseNo:36,text:'وَاعْبُدُوا اللَّهَ وَلَا تُشْرِكُوا بِهِ شَيْئًا ۖ وَبِالْوَالِدَيْنِ إِحْسَانًا',topic:'عبادت و نیکی'},
+    {id:'q19',surah:'نساء',verseNo:59,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا أَطِيعُوا اللَّهَ وَأَطِيعُوا الرَّسُولَ وَأُولِي الْأَمْرِ مِنكُمْ',topic:'اطاعت از ولی امر'},
+    {id:'q20',surah:'احزاب',verseNo:21,text:'لَّقَدْ كَانَ لَكُمْ فِي رَسُولِ اللَّهِ أُسْوَةٌ حَسَنَةٌ',topic:'الگوبرداری از پیامبر'},
+    {id:'q21',surah:'توبه',verseNo:71,text:'وَالْمُؤْمِنُونَ وَالْمُؤْمِنَاتُ بَعْضُهُمْ أَوْلِيَاءُ بَعْضٍ ۚ يَأْمُرُونَ بِالْمَعْرُوفِ',topic:'ولایت مؤمنان'},
+    {id:'q22',surah:'حجرات',verseNo:12,text:'يَا أَيُّهَا الَّذِينَ آمَنُوا اجْتَنِبُوا كَثِيرًا مِّنَ الظَّنِّ',topic:'پرهیز از بدگمانی'},
+    {id:'q23',surah:'فرقان',verseNo:63,text:'وَعِبَادُ الرَّحْمَٰنِ الَّذِينَ يَمْشُونَ عَلَى الْأَرْضِ هَوْنًا',topic:'تواضع و متانت'},
+    {id:'q24',surah:'ملک',verseNo:2,text:'الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا',topic:'آزمایش الهی'},
+    {id:'q25',surah:'زمر',verseNo:9,text:'أَمَّنْ هُوَ قَانِتٌ آنَاءَ اللَّيْلِ سَاجِدًا وَقَائِمًا',topic:'عبادت شب'},
+    {id:'q26',surah:'شوری',verseNo:13,text:'شَرَعَ لَكُم مِّنَ الدِّينِ مَا وَصَّىٰ بِهِ نُوحًا',topic:'وحدت دین الهی'},
+    {id:'q27',surah:'حدید',verseNo:3,text:'هُوَ الْأَوَّلُ وَالْآخِرُ وَالظَّاهِرُ وَالْبَاطِنُ ۖ وَهُوَ بِكُلِّ شَيْءٍ عَلِيمٌ',topic:'صفات الهی'},
+    {id:'q28',surah:'تغابن',verseNo:15,text:'إِنَّمَا أَمْوَالُكُمْ وَأَوْلَادُكُمْ فِتْنَةٌ ۚ وَاللَّهُ عِندَهُ أَجْرٌ عَظِيمٌ',topic:'آزمایش مال و فرزند'},
+    {id:'q29',surah:'بقره',verseNo:286,text:'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا',topic:'تکلیف به اندازه توان'},
+    {id:'q30',surah:'رعد',verseNo:28,text:'الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ',topic:'آرامش با ذکر خدا'}
+  ];
+}
+function defaultHadiths(){
+  return [
+    {id:'h1',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'لا خیر فی قرنٍ لیس فیه نصیحةٌ',topic:'خیرخواهی و نصیحت'},
+    {id:'h2',source:'کافی',narrator:'امام صادق علیه‌السلام',text:'کونوا دعاةً للناس بغیر ألسنتکم',topic:'دعوت عملی'},
+    {id:'h3',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'من عذل أخاه خفیاً فقد نصحه ومن عذله علانیةً فقد فضحه',topic:'نصیحت پنهانی'},
+    {id:'h4',source:'بحارالانوار',narrator:'پیامبر اکرم صلی‌الله علیه وآله',text:'المؤمن أخو المؤمن لا یظلمه ولا یخذله',topic:'برادری مؤمن'},
+    {id:'h5',source:'کافی',narrator:'امام صادق علیه‌السلام',text:'من اصطنع الی یتیمٍ اثمر الله عمله بالجنة',topic:'نیکی به یتیم'},
+    {id:'h6',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'الصبر صبران: صبر علی ما تکرہ و صبر عمّا تحب',topic:'صبر در دو حال'},
+    {id:'h7',source:'خصال',narrator:'پیامبر اکرم صلی‌الله علیه وآله',text:'الجنة تحت أقدام الأمهات',topic:'احترام مادر'},
+    {id:'h8',source:'کافی',narrator:'امام صادق علیه‌السلام',text:'لا تکذبوا وإن کنتم فی شدةٍ',topic:'راستگویی'},
+    {id:'h9',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'قیمت کل امرئٍ ما یحسنه',topic:'ارزش انسان به دانش'},
+    {id:'h10',source:'بحارالانوار',narrator:'امام رضا علیه‌السلام',text:'لا یستکمل المؤمن إیمانه حتی تکون فیه خصالٌ',topic:'صفات مؤمن کامل'},
+    {id:'h11',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'من أصلح ما بینه و بین الله أصلح الله ما بینه و بین الناس',topic:'اصلاح رابطه با خدا'},
+    {id:'h12',source:'کافی',narrator:'امام صادق علیه‌السلام',text:'إذا أحب الله عبداً نظر إلیه، فإذا نظر إلیه ألقی فی قلبه حبَّ ثلاثٍ: حبَّ الصلاة وحبَّ الصدقة وحبَّ الصیام',topic:'نشانه‌های محبت خدا'},
+    {id:'h13',source:'بحارالانوار',narrator:'پیامبر اکرم صلی‌الله علیه وآله',text:'أحب الأعمال إلی الله أدومها وإن قلَّ',topic:'استمرار در عمل خیر'},
+    {id:'h14',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'الناس أعداء ما جهلوا',topic:'دشمنی با ناشناخته'},
+    {id:'h15',source:'کافی',narrator:'امام صادق علیه‌السلام',text:'من سرَّه أن تکون تجارته رابحة فلیتق الله',topic:'تقوا و تجارت'},
+    {id:'h16',source:'وسائل الشیعة',narrator:'امام صادق علیه‌السلام',text:'صلة الرحم تزکی الأعمال و تنمی الأموال و تدفع البلوى',topic:'صله رحم'},
+    {id:'h17',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'من ذکر الله أحبَّه الله',topic:'ذکر خدا و محبت'},
+    {id:'h18',source:'بحارالانوار',narrator:'پیامبر اکرم صلی‌الله علیه وآله',text:'المسلم من سلم المسلمون من لسانه ویده',topic:'تعریف مسلمان'},
+    {id:'h19',source:'کافی',narrator:'امام باقر علیه‌السلام',text:'تمام الاخلاص أن تکون سریرته کعلانیته',topic:'اخلاص'},
+    {id:'h20',source:'نهج‌البلاغه',narrator:'امام علی علیه‌السلام',text:'إنّ هذه القلوب تمَلّ کما تَمَلّ الأبدان فابتغوا لها طرائف الحکم',topic:'تنوع در یادگیری'}
+  ];
+}
+function sv(d){localStorage.setItem(DB_KEY,JSON.stringify(d))}
+function gs(){try{return JSON.parse(localStorage.getItem(SS_KEY))}catch(e){return null}}
+function ss(s){s?localStorage.setItem(SS_KEY,JSON.stringify(s)):localStorage.removeItem(SS_KEY)}
+function uid(p){return (p||'id')+Date.now()+Math.floor(Math.random()*1000)}
+
+// ========= UTILS =========
+function tg(m,e){var t=document.getElementById('toast');t.textContent=m;t.className='toast show'+(e?' e':'');setTimeout(function(){t.className='toast'},2500)}
+function pdate(d){try{return new Date(d||Date.now()).toLocaleDateString('fa-IR')}catch(e){return new Date(d||Date.now()).toLocaleDateString()}}
+function ptime(d){try{return new Date(d||Date.now()).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}catch(e){return ''}}
+function esc(s){if(s===null||s===undefined)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function v(id){var e=document.getElementById(id);return e?e.value:''}
+function shareText(title,text){
+  if(navigator.share){
+    navigator.share({title:title,text:text}).catch(function(){});
+  }else{
+    var ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');tg('در کلیپ‌بورد کپی شد')}catch(e){tg('کپی نشد',1)}
+    document.body.removeChild(ta);
+  }
+}
+
+// ========= NAV =========
+var curPage='home',curSub=null;
+var curReportId=null,curLessonId=null,curPersonId=null,curSessionId=null,curNotificationId=null;
+function nav(p,sub){
+  curPage=p;curSub=sub||null;
+  ['home','reports','lessons','people','more'].forEach(function(t){
+    var el=document.getElementById('tab-'+t);
+    if(el)el.className=(t===p)?'on':'';
+  });
+  showTop(p);render();
+  document.getElementById('app').scrollTop=0;
+}
+function showTop(p){
+  var t=document.getElementById('topbar');
+  var titles={home:'نهضت تربیتی',reports:'گزارش‌ها',lessons:'طرح درس',people:'افراد',more:'بیشتر'};
+  if(p&&titles[p]){
+    t.style.display='flex';
+    document.getElementById('topTitle').textContent=titles[p];
+    var u=gs();
+    if(u){
+      document.getElementById('topUserName').textContent=u.name;
+      document.getElementById('topAvatar').textContent=u.name.charAt(0);
+    }
+  }else{t.style.display='none'}
+}
+function render(){
+  var app=document.getElementById('app');
+  if(!gs()){app.innerHTML=loginPage();return}
+  document.getElementById('tabs').style.display='flex';
+  showTop(curPage);
+  // Sub-pages first
+  if(curPage==='reports'&&curSub==='form')app.innerHTML=reportForm();
+  else if(curPage==='reports'&&curSub==='view')app.innerHTML=reportView();
+  else if(curPage==='lessons'&&curSub==='form')app.innerHTML=lessonForm();
+  else if(curPage==='lessons'&&curSub==='view')app.innerHTML=lessonView();
+  else if(curPage==='people'&&curSub==='form')app.innerHTML=personForm();
+  else if(curPage==='more'&&curSub==='attendance')app.innerHTML=attendancePage();
+  else if(curPage==='more'&&curSub==='sessions')app.innerHTML=sessionsPage();
+  else if(curPage==='more'&&curSub==='sform')app.innerHTML=sessionForm();
+  else if(curPage==='more'&&curSub==='sview')app.innerHTML=sessionView();
+  else if(curPage==='more'&&curSub==='notifications')app.innerHTML=notificationsPage();
+  else if(curPage==='more'&&curSub==='calendar')app.innerHTML=calendarPage();
+  else if(curPage==='more'&&curSub==='stats')app.innerHTML=statsPage();
+  else if(curPage==='more'&&curSub==='profile')app.innerHTML=profilePage();
+  else if(curPage==='more'&&curSub==='settings')app.innerHTML=settingsPage();
+  else if(curPage==='more'&&curSub==='about')app.innerHTML=aboutPage();
+  else if(curPage==='more'&&curSub==='quran')app.innerHTML=quranPage();
+  else if(curPage==='more'&&curSub==='hadith')app.innerHTML=hadithPage();
+  else if(curPage==='more'&&curSub==='evaluations')app.innerHTML=evaluationsPage();
+  else if(curPage==='more'&&curSub==='criteria')app.innerHTML=evalCriteriaPage();
+  else if(curPage==='more'&&curSub==='points')app.innerHTML=pointsPage();
+  else if(curPage==='more'&&curSub==='recognitions')app.innerHTML=recognitionsPage();
+  else if(curPage==='more'&&curSub==='leaderboard')app.innerHTML=leaderboardPage();
+  else if(curPage==='more'&&curSub==='branches')app.innerHTML=branchesPage();
+  else if(curPage==='more'&&curSub==='users')app.innerHTML=usersPage();
+  else if(curPage==='more'&&curSub==='approvals')app.innerHTML=approvalsPage();
+  // NEW v23 pages
+  else if(curPage==='more'&&curSub==='ai')app.innerHTML=aiAssistantPage();
+  else if(curPage==='more'&&curSub==='tasks')app.innerHTML=tasksPage();
+  else if(curPage==='more'&&curSub==='tracker')app.innerHTML=dailyTrackerPage();
+  else if(curPage==='more'&&curSub==='methodologies')app.innerHTML=methodologiesPage();
+  else if(curPage==='more'&&curSub==='help')app.innerHTML=helpPage();
+  else if(curPage==='more'&&curSub==='search')app.innerHTML=globalSearchPage();
+  else if(curPage==='more'&&curSub==='exportall')app.innerHTML=exportAllPage();
+  // Main pages
+  else if(curPage==='home')app.innerHTML=homePage();
+  else if(curPage==='reports')app.innerHTML=reportsPage();
+  else if(curPage==='lessons')app.innerHTML=lessonsPage();
+  else if(curPage==='people')app.innerHTML=peoplePage();
+  else if(curPage==='more')app.innerHTML=morePage();
+  else app.innerHTML=homePage();
+}
+
+// ========= LOGIN =========
+function loginPage(){
+  return '<div class="card">'+
+    '<h1 style="text-align:center;color:var(--p);font-size:18px;margin:8px 0">نهضت تربیتی حضرت سیدالشهدا علیه‌السلام</h1>'+
+    '<p style="text-align:center;color:var(--m);font-size:12px;margin-bottom:12px">سامانه جامع مدیریت فرهنگی تربیتی (نسخه ۲۲)</p>'+
+    '<div class="note">برای ورود، شماره تلفن و رمز (۶ رقم آخر کد ملی) را وارد کنید. در صورت عدم وجود حساب، ثبت‌نام کنید.</div>'+
+    '<div class="f"><label>شماره تلفن</label><input id="lph" inputmode="numeric" placeholder="09xxxxxxxxx" value="09120000001"></div>'+
+    '<div class="f"><label>رمز (۶ رقم)</label><input id="lpw" type="password" inputmode="numeric" value="567890"></div>'+
+    '<button class="btn-p" onclick="doLogin()">ورود</button>'+
+    '<div style="text-align:center;margin:14px 0 6px;color:var(--m);font-size:12px">────── یا ──────</div>'+
+    '<h2 style="font-size:14px">ثبت‌نام جدید</h2>'+
+    '<div class="f"><label>نام و نام خانوادگی</label><input id="rname" placeholder="مثال: علی رضایی"></div>'+
+    '<div class="f"><label>کد ملی (۱۰ رقم)</label><input id="rcode" inputmode="numeric" maxlength="10" placeholder="xxxxxxxxxx"></div>'+
+    '<div class="f"><label>شماره تلفن</label><input id="rphone" inputmode="numeric" placeholder="09xxxxxxxxx"></div>'+
+    '<div class="f"><label>نقش درخواستی</label><select id="rrole"><option value="INSTRUCTOR">مربی</option><option value="EVALUATOR">ارزیاب</option><option value="TRAINEE">تربیت‌پذیر</option></select></div>'+
+    '<div class="f"><label>منطقه / مدرسه</label><input id="rarea" placeholder="مثال: تهران - مدرسه همدانی"></div>'+
+    '<div class="f"><label>شعبه</label>'+branchSelect('rbranch')+'</div>'+
+    '<button class="btn-s" onclick="doRegister()">ثبت‌نام</button>'+
+    '<div style="text-align:center;margin-top:10px;color:var(--m);font-size:11px">رمز شما = ۶ رقم آخر کد ملی</div>'+
+    '</div>';
+}
+function branchSelect(id){
+  var d=db();
+  var h='<select id="'+id+'">';
+  d.branches.forEach(function(b){
+    var mk=d.maktabs.find(function(m){return m.id==b.maktabId});
+    h+='<option value="'+b.id+'">'+esc(b.name)+(mk?' ('+esc(mk.name)+')':'')+'</option>';
+  });
+  h+='</select>';
+  return h;
+}
+function doLogin(){
+  var p=document.getElementById('lph').value.trim();
+  var w=document.getElementById('lpw').value.trim();
+  if(!p||!w){tg('شماره و رمز را وارد کنید',1);return}
+  var d=db();
+  var u=d.users.find(function(x){return x.phone==p&&x.code==w});
+  if(u){
+    if(!u.active){tg('حساب شما غیرفعال است',1);return}
+    ss(u);
+    if(window.API&&API.base()){
+      API.login(p,w).then(function(r){ss(r.user);sv(db());API.start();tg('ورود موفق — اتصال به سرور');})
+        .catch(function(){tg('ورود موفق — حالت آفلاین (سرور در دسترس نیست)',1)});
+    }else tg('ورود موفق');
+    nav('home');return;
+  }
+  if(window.API&&API.base()&&navigator.onLine){
+    API.login(p,w).then(function(r){ss(r.user);sv(db());API.start();tg('ورود موفق');nav('home');})
+      .catch(function(){tg('شماره یا رمز اشتباه است',1)});
+    return;
+  }
+  tg('شماره یا رمز اشتباه است',1);
+}
+function doRegister(){
+  var n=document.getElementById('rname').value.trim();
+  var c=document.getElementById('rcode').value.trim();
+  var p=document.getElementById('rphone').value.trim();
+  var a=document.getElementById('rarea').value.trim();
+  var role=document.getElementById('rrole').value;
+  var br=v('rbranch');
+  if(!n){tg('نام را وارد کنید',1);return}
+  if(c.length<10){tg('کد ملی باید ۱۰ رقم باشد',1);return}
+  if(p.length<11){tg('شماره تلفن نامعتبر',1);return}
+  var d=db();
+  if(d.users.find(function(x){return x.phone==p})){tg('این شماره قبلا ثبت شده',1);return}
+  var w=c.slice(-6);
+  var u={id:uid('u'),name:n,phone:p,code:w,nationalId:c,role:'TRAINEE',requestedRole:role,branchId:br,area:a,school:'',points:0,recognitions:0,approvalStatus:'PENDING',active:true,created:Date.now()};
+  d.users.push(u);
+  d.notifications.push({id:uid('n'),title:'درخواست ثبت‌نام جدید',body:'کاربر '+n+' با نقش '+role+' ثبت‌نام کرد. در انتظار تأیید مدیر.',date:Date.now(),read:false});
+  sv(d);ss(u);
+  if(window.API&&API.base()&&navigator.onLine){
+    var br2=d.branches.find(function(x){return x.id==br});
+    API.register({
+      name:n, nationalId:c, phone:p,
+      requestedRole:(role=='EVALUATOR'?'EVALUATOR':(role=='ADMIN'?'ADMIN':'INSTRUCTOR')),
+      branchId:(br2&&br2.serverId)?br2.serverId:null
+    }).then(function(res){
+      if(res&&res.userId){var d2=db();var u2=d2.users.find(function(x){return x.id==u.id});if(u2){u2.serverId=res.userId;sv(d2)}
+        var s=gs();if(s){s.serverId=res.userId;ss(s)}}
+    }).catch(function(){tg('ثبت در سرور انجام نشد — فقط محلی ثبت شد',1)});
+  }
+  tg('ثبت‌نام موفق. در انتظار تأیید مدیر. رمز: '+w);
+  nav('home');
+}
+
+// ========= HOME =========
+function homePage(){
+  var u=gs(),d=db();
+  var myReports=d.reports.filter(function(r){return r.uid==u.id});
+  var myLessons=d.lessons.filter(function(r){return r.uid==u.id});
+  var myPeople=d.people.length;
+  var mySessions=d.sessions.filter(function(r){return r.uid==u.id});
+  var unread=d.notifications.filter(function(n){return !n.read}).length;
+  var pendingApprovals=d.users.filter(function(x){return x.approvalStatus=='PENDING'}).length;
+  var myEvaluations=d.evaluations.filter(function(e){return e.targetUid==u.id});
+  var avgScore=myEvaluations.length?(myEvaluations.reduce(function(s,e){return s+(e.totalScore||0)},0)/myEvaluations.length).toFixed(1):'-';
+  var html='<div class="card">'+
+    '<h2>سلام، '+u.name+' 👋</h2>'+
+    '<p style="color:var(--m);font-size:12px">'+
+      '<span class="role-badge role-'+u.role+'">'+roleLabel(u.role)+'</span> '+
+      (u.area?esc(u.area):'')+' • '+pdate(Date.now())+
+    '</p>'+
+    '<p style="color:var(--m);font-size:12px;margin-top:4px">امتیاز شما: <b style="color:var(--p)">'+(u.points||0)+'</b> • تقدیرها: <b style="color:var(--y)">'+(u.recognitions||0)+'</b>'+(myEvaluations.length?' • میانگین ارزیابی: <b style="color:var(--v)">'+avgScore+'</b>':'')+'</p>'+
+    '</div>'+
+    '<div class="grid">'+
+      '<div class="stat"><div class="n">'+myReports.length+'</div><div class="l">گزارش‌ها</div></div>'+
+      '<div class="stat i"><div class="n">'+myLessons.length+'</div><div class="l">طرح درس</div></div>'+
+      '<div class="stat y"><div class="n">'+myPeople+'</div><div class="l">افراد</div></div>'+
+      '<div class="stat d"><div class="n">'+mySessions.length+'</div><div class="l">جلسات</div></div>'+
+    '</div>';
+  if(u.role=='ADMIN'||u.role=='EVALUATOR'){
+    html+='<div class="grid">'+
+      '<div class="stat v"><div class="n">'+d.reports.length+'</div><div class="l">کل گزارش‌ها</div></div>'+
+      '<div class="stat v"><div class="n">'+d.users.length+'</div><div class="l">کاربران</div></div>'+
+      (pendingApprovals?'<div class="stat y"><div class="n">'+pendingApprovals+'</div><div class="l">در انتظار تأیید</div></div>':'')+
+      '<div class="stat v"><div class="n">'+d.evaluations.length+'</div><div class="l">ارزیابی‌ها</div></div>'+
+    '</div>';
+  }
+  html+='<div class="sec-h">دسترسی سریع</div>'+
+    '<div class="menu">'+
+      '<button onclick="nav(\'reports\',\'form\')"><span class="ic">📝</span>ثبت گزارش</button>'+
+      '<button onclick="nav(\'lessons\',\'form\')"><span class="ic">📋</span>طرح درس</button>'+
+      '<button onclick="nav(\'people\',\'form\')"><span class="ic">👤</span>افزودن فرد</button>'+
+      '<button onclick="nav(\'more\',\'attendance\')"><span class="ic">✓</span>حضور و غیاب</button>'+
+      '<button onclick="nav(\'more\',\'sessions\')"><span class="ic">📅</span>صورتجلسه</button>'+
+      '<button onclick="nav(\'more\',\'calendar\')"><span class="ic">📆</span>تقویم</button>'+
+      '<button onclick="nav(\'more\',\'stats\')"><span class="ic">📊</span>آمار</button>'+
+      '<button onclick="nav(\'more\',\'quran\')"><span class="ic">📖</span>قرآن</button>'+
+      '<button onclick="nav(\'more\',\'hadith\')"><span class="ic">☪️</span>حدیث</button>'+
+      '<button onclick="nav(\'more\',\'evaluations\')"><span class="ic">🎯</span>ارزیابی</button>'+
+      '<button onclick="nav(\'more\',\'points\')"><span class="ic">⭐</span>امتیاز</button>'+
+      '<button onclick="nav(\'more\',\'recognitions\')"><span class="ic">🏆</span>تقدیر</button>'+
+      '<button onclick="nav(\'more\',\'leaderboard\')"><span class="ic">📈</span>رتبه‌بندی</button>'+
+      '<button onclick="nav(\'more\',\'notifications\')"><span class="ic">🔔</span>اطلاعیه'+(unread?' ('+unread+')':'')+'</button>'+
+      '<button onclick="nav(\'more\',\'ai\')"><span class="ic">🤖</span>دستیار هوشمند</button>'+
+      '<button onclick="nav(\'more\',\'tasks\')"><span class="ic">✓</span>کارها</button>'+
+      '<button onclick="nav(\'more\',\'tracker\')"><span class="ic">📿</span>برنامه روزانه</button>'+
+      '<button onclick="nav(\'more\',\'methodologies\')"><span class="ic">📐</span>روش‌ها</button>'+
+      '<button onclick="nav(\'more\',\'search\')"><span class="ic">🔍</span>جستجوی کل</button>'+
+      '<button onclick="nav(\'more\',\'help\')"><span class="ic">❓</span>راهنما</button>'+
+      '<button onclick="nav(\'more\',\'exportall\')"><span class="ic">📦</span>خروجی همه</button>'+
+      (pendingApprovals?'<button onclick="nav(\'more\',\'approvals\')"><span class="ic">✅</span>تأییدها ('+pendingApprovals+')</button>':'')+
+      (u.role=='ADMIN'?'<button onclick="nav(\'more\',\'branches\')"><span class="ic">🏛</span>شعب</button><button onclick="nav(\'more\',\'users\')"><span class="ic">👥</span>کاربران</button>':'')+
+      '<button onclick="nav(\'more\',\'about\')"><span class="ic">ℹ️</span>درباره</button>'+
+    '</div>';
+  if(myReports.length>0){
+    html+='<div class="sec-h">گزارش‌های اخیر</div>';
+    myReports.slice(-3).reverse().forEach(function(r){
+      html+='<div class="list-item" onclick="openReport('+r.id+')">'+
+        '<div class="li-ic">📝</div>'+
+        '<div class="li-t"><div class="t">'+esc(r.subject)+'</div><div class="s">'+pdate(r.date)+' '+statusTag(r.status)+'</div></div>'+
+        '<div class="li-a">›</div>'+
+      '</div>';
+    });
+  }
+  html+='</div>';
+  return html;
+}
+function roleLabel(r){return {ADMIN:'مدیر',INSTRUCTOR:'مربی',EVALUATOR:'ارزیاب',TRAINEE:'تربیت‌پذیر'}[r]||r}
+function statusTag(s){
+  if(!s||s=='DRAFT')return '<span class="tag">پیش‌نویس</span>';
+  if(s=='SUBMITTED')return '<span class="tag i">ارسال‌شده</span>';
+  if(s=='APPROVED')return '<span class="tag g">تأییدشده</span>';
+  if(s=='REJECTED')return '<span class="tag d">ردشده</span>';
+  return '<span class="tag">'+s+'</span>';
+}
+
+// ========= REPORTS =========
+function reportsPage(){
+  var u=gs(),d=db();
+  var allReports=u.role=='ADMIN'||u.role=='EVALUATOR'?d.reports:d.reports.filter(function(x){return x.uid==u.id});
+  allReports=allReports.slice().reverse();
+  var h='<div class="search">'+
+    '<input id="rsearch" placeholder="جستجو در موضوع یا متن..." oninput="filterReports()">'+
+    '<button onclick="filterReports()">🔍</button>'+
+  '</div>';
+  h+='<div class="tab-sel">'+
+    '<button class="on" onclick="filterReportsByStatus(this,\'all\')">همه</button>'+
+    '<button onclick="filterReportsByStatus(this,\'DRAFT\')">پیش‌نویس</button>'+
+    '<button onclick="filterReportsByStatus(this,\'SUBMITTED\')">ارسالی</button>'+
+    '<button onclick="filterReportsByStatus(this,\'APPROVED\')">تأییدشده</button>'+
+    '<button onclick="filterReportsByStatus(this,\'REJECTED\')">ردشده</button>'+
+  '</div>';
+  h+='<div class="row" style="margin-bottom:8px"><button class="btn-p" onclick="nav(\'reports\',\'form\')">+ ثبت گزارش جدید</button>'+
+    '<button class="btn-y" onclick="exportAllReports()">📦 خروجی همه</button></div>';
+  h+='<div id="reportsList">';
+  h+=renderReportsList(allReports);
+  h+='</div>';
+  return h;
+}
+function renderReportsList(list){
+  if(!list.length)return '<div class="empty"><span class="e-ic">📝</span>گزارشی یافت نشد</div>';
+  var h='<div class="card"><h2>نتایج ('+list.length+')</h2>';
+  list.forEach(function(x){
+    h+='<div class="list-item" data-status="'+(x.status||'DRAFT')+'" data-search="'+(esc(x.subject)+' '+esc(x.content)).toLowerCase()+'">'+
+      '<div class="li-ic">📝</div>'+
+      '<div class="li-t" onclick="openReport('+x.id+')"><div class="t">'+esc(x.subject)+'</div><div class="s">'+pdate(x.date)+' '+statusTag(x.status)+(x.instructorName?' • '+esc(x.instructorName):'')+'</div></div>'+
+      '<div class="li-a"><button class="btn-i" onclick="openReport('+x.id+')">نمایش</button></div>'+
+    '</div>';
+  });
+  h+='</div>';
+  return h;
+}
+function filterReports(){
+  var q=(document.getElementById('rsearch').value||'').toLowerCase();
+  var items=document.querySelectorAll('#reportsList .list-item');
+  items.forEach(function(li){
+    var s=li.getAttribute('data-search');
+    li.style.display=s.indexOf(q)>=0?'flex':'none';
+  });
+}
+function filterReportsByStatus(btn,status){
+  var all=btn.parentNode.querySelectorAll('button');
+  all.forEach(function(b){b.className=''});
+  btn.className='on';
+  var items=document.querySelectorAll('#reportsList .list-item');
+  items.forEach(function(li){
+    var s=li.getAttribute('data-status');
+    li.style.display=(status=='all'||s==status)?'flex':'none';
+  });
+}
+function reportForm(){
+  var u=gs();
+  return '<div class="bar-back"><button onclick="nav(\'reports\')">‹ بازگشت</button><span class="t">ثبت گزارش</span></div>'+
+    '<div class="card">'+
+    '<div class="f"><label>موضوع گزارش *</label><input id="fsubject" placeholder="مثال: جلسه ۱۵ آبان"></div>'+
+    '<div class="row"><div class="f"><label>تاریخ جلسه</label><input id="fdate" value="'+pdate()+'"></div>'+
+      '<div class="f"><label>وضعیت</label><select id="fstatus">'+
+        '<option value="DRAFT">پیش‌نویس</option>'+
+        '<option value="SUBMITTED">ارسال برای ارزیابی</option>'+
+      '</select></div></div>'+
+    '<div class="f"><label>تعداد شرکت‌کنندگان</label><input id="fcount" inputmode="numeric" value="0"></div>'+
+    '<div class="f"><label>متن گزارش *</label><textarea id="fcontent" placeholder="شرح مختصر جلسه و فعالیت‌های انجام شده"></textarea></div>'+
+    '<div class="toolbar">'+
+      '<button class="btn-voice" id="voiceBtn" onclick="toggleVoice(\'fcontent\')">🎤 ضبط صوت</button>'+
+      '<button class="btn-y" onclick="insertQuran()">📖 درج آیه</button>'+
+      '<button class="btn-v" onclick="insertHadith()">☪️ درج حدیث</button>'+
+      '<button class="btn-photo" onclick="insertMethodology()">📐 درج روش</button>'+
+    '</div>'+
+    '<div class="sec-h">چهار مرحله (الگوی تربیتی)</div>'+
+    '<div class="f"><label>۱. ارائه مطلب</label><textarea id="fs1" placeholder="موضوع ارائه‌شده به افراد"></textarea></div>'+
+    '<div class="f"><label>۲. تفکر</label><textarea id="fs2" placeholder="پرسش و تأمل در مطلب"></textarea></div>'+
+    '<div class="f"><label>۳. مباحثه</label><textarea id="fs3" placeholder="گفتگو و تبادل نظر"></textarea></div>'+
+    '<div class="f"><label>۴. ارائه به مربی</label><textarea id="fs4" placeholder="نتیجه و جمع‌بندی نهایی"></textarea></div>'+
+    '<div class="sec-h">سه گروه (پیشرفت تربیتی)</div>'+
+    '<div class="f"><label>گروه استقامتی</label><textarea id="fg1" placeholder="افراد در مرحله استقامت"></textarea></div>'+
+    '<div class="f"><label>گروه نیمه‌سرعتی</label><textarea id="fg2" placeholder="افراد در مرحله نیمه‌سرعت"></textarea></div>'+
+    '<div class="f"><label>گروه سرعتی</label><textarea id="fg3" placeholder="افراد در مرحله سرعت"></textarea></div>'+
+    '<div class="f"><label>خودارزیابی</label><textarea id="fev" placeholder="ارزیابی مربی از عملکرد خود در جلسه"></textarea></div>'+
+    '<button class="btn-p" onclick="saveReport()">ذخیره گزارش</button>'+
+    '<button class="btn-s" onclick="nav(\'reports\')" style="margin-top:6px">انصراف</button>'+
+    '</div>';
+}
+function insertQuran(){
+  var d=db();
+  var h='<h3>انتخاب آیه قرآن</h3><div style="max-height:300px;overflow-y:auto">';
+  d.quran.forEach(function(q){
+    h+='<div class="verse" onclick="appendText(\'fcontent\',\'\\n[قرآن کریم - '+esc(q.surah)+':'+q.verseNo+'] '+esc(q.text)+'\\n\');closeModal()">'+
+      '<div>'+esc(q.text)+'</div><span class="vref">'+esc(q.surah)+' • آیه '+q.verseNo+' • '+esc(q.topic)+'</span></div>';
+  });
+  h+='</div>';
+  showModal(h);
+}
+function insertHadith(){
+  var d=db();
+  var h='<h3>انتخاب حدیث</h3><div style="max-height:300px;overflow-y:auto">';
+  d.hadiths.forEach(function(hd){
+    h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" onclick="appendText(\'fcontent\',\'\\n['+esc(hd.source)+' - '+esc(hd.narrator)+'] '+esc(hd.text)+'\\n\');closeModal()">'+
+      '<div>'+esc(hd.text)+'</div><span class="vref" style="color:#6d28d9">'+esc(hd.source)+' • '+esc(hd.narrator)+' • '+esc(hd.topic)+'</span></div>';
+  });
+  h+='</div>';
+  showModal(h);
+}
+function appendText(id,text){
+  var e=document.getElementById(id);
+  if(e)e.value+=text;
+}
+function showModal(html){
+  var m=document.getElementById('modal');
+  document.getElementById('modalBody').innerHTML=html;
+  m.className='modal-bg show';
+}
+function closeModal(){document.getElementById('modal').className='modal-bg'}
+function saveReport(){
+  var s=document.getElementById('fsubject').value.trim();
+  var c=document.getElementById('fcontent').value.trim();
+  if(!s){tg('موضوع را وارد کنید',1);return}
+  if(!c){tg('متن گزارش را وارد کنید',1);return}
+  var u=gs(),d=db();
+  var status=document.getElementById('fstatus').value;
+  var rep={
+    id:Date.now(),uid:u.id,instructorName:u.name,
+    date:Date.now(),
+    jdate:v('fdate'),status:status,count:v('fcount'),
+    subject:s,content:c,
+    s1:v('fs1'),s2:v('fs2'),s3:v('fs3'),s4:v('fs4'),
+    g1:v('fg1'),g2:v('fg2'),g3:v('fg3'),ev:v('fev')
+  };
+  d.reports.push(rep);
+  if(status=='SUBMITTED'){
+    d.evaluators=d.users.filter(function(x){return x.role=='EVALUATOR'||x.role=='ADMIN'});
+    d.notifications.push({id:uid('n'),title:'گزارش جدید برای ارزیابی',body:'گزارش «'+s+'» توسط '+u.name+' ارسال شد.',date:Date.now(),read:false});
+  }
+  // Award points
+  awardPoints(u.id,5,'ثبت گزارش: '+s);
+  sv(d);tg('گزارش با موفقیت ذخیره شد');
+  if(window.API&&API.base()&&u.serverId)API.push('report',rep,String(rep.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  nav('reports');
+}
+function awardPoints(uid,amount,reason){
+  var d=db();
+  d.points.push({id:Date.now(),uid:uid,amount:amount,reason:reason,date:Date.now()});
+  var u=d.users.find(function(x){return x.id==uid});
+  if(u)u.points=(u.points||0)+amount;
+}
+function openReport(id){curSub='view';curReportId=id;render()}
+function reportView(){
+  var d=db();
+  var r=d.reports.find(function(x){return x.id==curReportId});
+  if(!r)return '<div class="empty">گزارش یافت نشد</div>';
+  var u=gs();
+  var h='<div class="bar-back"><button onclick="nav(\'reports\')">‹ بازگشت</button><span class="t">مشاهده گزارش</span></div>';
+  h+='<div class="card">'+
+    '<h2>'+esc(r.subject)+'</h2>'+
+    '<div class="kv"><span class="k">مربی</span><span class="v">'+esc(r.instructorName||r.name||'-')+'</span></div>'+
+    '<div class="kv"><span class="k">تاریخ ثبت</span><span class="v">'+pdate(r.date)+'</span></div>'+
+    (r.jdate?'<div class="kv"><span class="k">تاریخ جلسه</span><span class="v">'+esc(r.jdate)+'</span></div>':'')+
+    (r.count?'<div class="kv"><span class="k">تعداد شرکت‌کنندگان</span><span class="v">'+esc(r.count)+'</span></div>':'')+
+    '<div class="kv"><span class="k">وضعیت</span><span class="v">'+statusTag(r.status||'DRAFT')+'</span></div>'+
+    '<div class="divider"></div>'+
+    '<p style="font-size:13px;line-height:1.8;margin:8px 0">'+esc(r.content).replace(/\n/g,'<br>')+'</p>';
+  if(r.s1||r.s2||r.s3||r.s4){
+    h+='<div class="divider"></div><h2 style="font-size:13px">چهار مرحله</h2>';
+    if(r.s1)h+='<p style="font-size:12px;margin:4px 0"><b>۱. ارائه:</b> '+esc(r.s1).replace(/\n/g,'<br>')+'</p>';
+    if(r.s2)h+='<p style="font-size:12px;margin:4px 0"><b>۲. تفکر:</b> '+esc(r.s2).replace(/\n/g,'<br>')+'</p>';
+    if(r.s3)h+='<p style="font-size:12px;margin:4px 0"><b>۳. مباحثه:</b> '+esc(r.s3).replace(/\n/g,'<br>')+'</p>';
+    if(r.s4)h+='<p style="font-size:12px;margin:4px 0"><b>۴. ارائه به مربی:</b> '+esc(r.s4).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.g1||r.g2||r.g3){
+    h+='<div class="divider"></div><h2 style="font-size:13px">سه گروه</h2>';
+    if(r.g1)h+='<p style="font-size:12px;margin:4px 0"><b>استقامتی:</b> '+esc(r.g1).replace(/\n/g,'<br>')+'</p>';
+    if(r.g2)h+='<p style="font-size:12px;margin:4px 0"><b>نیمه‌سرعتی:</b> '+esc(r.g2).replace(/\n/g,'<br>')+'</p>';
+    if(r.g3)h+='<p style="font-size:12px;margin:4px 0"><b>سرعتی:</b> '+esc(r.g3).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.ev){h+='<div class="divider"></div><h2 style="font-size:13px">خودارزیابی</h2><p style="font-size:12px">'+esc(r.ev).replace(/\n/g,'<br>')+'</p>'}
+  h+='</div>';
+  // Export buttons
+  h+='<div class="row">'+
+    '<button class="btn-i" onclick="exportReportPDF('+r.id+')">📄 PDF</button>'+
+    '<button class="btn-v" onclick="exportReportWord('+r.id+')">📝 Word</button>'+
+    '<button class="btn-s" onclick="exportReportText('+r.id+')">💾 متن</button>'+
+  '</div>';
+  h+='<div class="row" style="margin-top:6px">'+
+    '<button class="btn-y" onclick="exportReportJSON('+r.id+')">📋 JSON</button>'+
+    '<button class="btn-p" onclick="shareReport('+r.id+')">🔗 اشتراک</button>'+
+    '<button class="btn-i" onclick="printReport('+r.id+')">🖨 چاپ</button>'+
+  '</div>'+
+  '<div class="row" style="margin-top:6px">'+
+    (u.role=='ADMIN'||u.role=='EVALUATOR'?'<button class="btn-v" onclick="evaluateReport('+r.id+')">🎯 ارزیابی</button>':'')+
+    '<button class="btn-s" onclick="editReport('+r.id+')">✎ ویرایش</button>'+
+  '</div>';
+  // Status change for ADMIN/EVALUATOR
+  if(u.role=='ADMIN'||u.role=='EVALUATOR'){
+    h+='<div class="card"><h2>تغییر وضعیت</h2>'+
+      '<div class="row">'+
+        '<button class="btn-p" onclick="changeReportStatus('+r.id+',\'APPROVED\')">✓ تأیید</button>'+
+        '<button class="btn-d" onclick="changeReportStatus('+r.id+',\'REJECTED\')">✗ رد</button>'+
+      '</div></div>';
+  }
+  // Evaluations
+  var evals=d.evaluations.filter(function(e){return e.targetId==r.id});
+  if(evals.length){
+    h+='<div class="card"><h2>ارزیابی‌ها ('+evals.length+')</h2>';
+    evals.forEach(function(e){
+      var eu=d.users.find(function(x){return x.id==e.evaluatorId});
+      h+='<div class="list-item"><div class="li-ic">🎯</div>'+
+        '<div class="li-t"><div class="t">امتیاز: '+e.totalScore+' از '+e.maxScore+'</div>'+
+        '<div class="s">توسط '+esc(eu?eu.name:'نامشخص')+' • '+pdate(e.date)+'</div></div></div>';
+    });
+    h+='</div>';
+  }
+  // Comments
+  h+='<div class="card"><h2>نظرات</h2>';
+  var comments=d.comments.filter(function(c){return c.targetType=='REPORT'&&c.targetId==r.id});
+  if(!comments.length)h+='<div class="empty">نظری ثبت نشده</div>';
+  else comments.forEach(function(c){
+    var cu=d.users.find(function(x){return x.id==c.userId});
+    h+='<div class="comment"><div class="ch">'+esc(cu?cu.name:'ناشناس')+' • '+pdate(c.date)+'</div><div class="cb">'+esc(c.text).replace(/\n/g,'<br>')+'</div></div>';
+  });
+  h+='<div class="f"><textarea id="commentText" placeholder="نظر خود را بنویسید..."></textarea></div>'+
+    '<button class="btn-p" onclick="addComment(\'REPORT\','+r.id+')">ثبت نظر</button></div>';
+  h+='<button class="btn-d" onclick="deleteReport('+r.id+')" style="margin-top:10px">🗑 حذف گزارش</button>';
+  return h;
+}
+function changeReportStatus(id,status){
+  var d=db();
+  var r=d.reports.find(function(x){return x.id==id});
+  if(!r)return;
+  r.status=status;
+  var u=gs();
+  d.notifications.push({id:uid('n'),title:'تغییر وضعیت گزارش',body:'گزارش «'+r.subject+'» به وضعیت '+(status=='APPROVED'?'تأیید‌شده':'ردشده')+' تغییر یافت.',date:Date.now(),read:false,targetUid:r.uid});
+  if(status=='APPROVED')awardPoints(r.uid,10,'تأیید گزارش: '+r.subject);
+  sv(d);
+  tg('وضعیت به‌روزرسانی شد');
+  if(window.API&&API.base()&&r.sid){
+    var ms={DRAFT:'DRAFT',SUBMITTED:'SUBMITTED',APPROVED:'APPROVED',REJECTED:'RETURNED'}[status]||'DRAFT';
+    API.push('reportStatus',{id:r.sid,status:ms,note:''}).catch(function(){});
+  }
+  render();
+}
+function addComment(type,id){
+  var t=document.getElementById('commentText').value.trim();
+  if(!t){tg('نظر را بنویسید',1);return}
+  var u=gs(),d=db();
+  d.comments.push({id:Date.now(),userId:u.id,targetType:type,targetId:id,text:t,date:Date.now()});
+  sv(d);tg('نظر ثبت شد');render();
+}
+function evaluateReport(id){
+  var d=db();
+  var report=d.reports.find(function(x){return x.id==id});
+  var reportCriteria=d.criteria.filter(function(c){return c.type=='REPORT'});
+  var h='<h3>ارزیابی گزارش</h3><p style="font-size:12px;color:var(--m);margin-bottom:8px">گزارش: '+esc(report.subject)+'</p>';
+  reportCriteria.forEach(function(c){
+    h+='<div class="eval-row"><div class="er-n">'+esc(c.name)+' <span style="color:var(--m);font-size:10px">(از '+c.maxScore+')</span></div>'+
+      '<div class="er-s"><select id="ev_'+c.id+'">';
+    for(var i=0;i<=c.maxScore;i++)h+='<option value="'+i+'">'+i+'</option>';
+    h+='</select></div></div>';
+  });
+  h+='<div class="f"><label>توضیحات ارزیاب</label><textarea id="evNote" placeholder="توضیحات اختیاری"></textarea></div>'+
+    '<button class="btn-p" onclick="saveEvaluation('+id+')">ثبت ارزیابی</button>'+
+    '<button class="btn-s" onclick="closeModal()">انصراف</button>';
+  showModal(h);
+}
+function saveEvaluation(reportId){
+  var d=db();
+  var report=d.reports.find(function(x){return x.id==reportId});
+  var criteria=d.criteria.filter(function(c){return c.type=='REPORT'});
+  var total=0,maxTotal=0;
+  var scores=[];
+  criteria.forEach(function(c){
+    var s=parseInt(v('ev_'+c.id)||'0');
+    total+=s;maxTotal+=c.maxScore;
+    scores.push({criteriaId:c.id,criteriaName:c.name,score:s,maxScore:c.maxScore});
+  });
+  var u=gs();
+  d.evaluations.push({
+    id:Date.now(),targetType:'REPORT',targetId:reportId,
+    targetUid:report.uid,evaluatorId:u.id,
+    scores:scores,totalScore:total,maxScore:maxTotal,
+    note:v('evNote'),date:Date.now()
+  });
+  if(total>=maxTotal*0.8){
+    awardPoints(report.uid,15,'ارزیابی عالی گزارش: '+report.subject);
+    d.recognitions.push({id:Date.now(),userId:report.uid,level:'GOOD',title:'ارزیابی عالی',description:'گزارش «'+report.subject+'» با امتیاز '+total+' از '+maxTotal+' ارزیابی شد.',date:Date.now(),awardedBy:u.id});
+    var ru=d.users.find(function(x){return x.id==report.uid});
+    if(ru)ru.recognitions=(ru.recognitions||0)+1;
+  }
+  sv(d);
+  closeModal();tg('ارزیابی ثبت شد');
+  if(window.API&&API.base()&&report.sid){
+    API.push('evaluation',{targetType:'REPORT',targetId:report.sid,scores:scores,overallComment:v('evNote')}).catch(function(){tg('ارزیابی در سرور ثبت نشد (آفلاین)',1)});
+  }
+  render();
+}
+function deleteReport(id){
+  if(!confirm('آیا از حذف این گزارش مطمئن هستید؟'))return;
+  var d=db();
+  d.reports=d.reports.filter(function(x){return x.id!=id});
+  d.comments=d.comments.filter(function(c){return !(c.targetType=='REPORT'&&c.targetId==id)});
+  d.evaluations=d.evaluations.filter(function(e){return !(e.targetType=='REPORT'&&e.targetId==id)});
+  sv(d);tg('گزارش حذف شد');nav('reports');
+}
+function exportReportPDF(id){
+  var r=db().reports.find(function(x){return x.id==id});
+  if(!r)return;
+  var h='<!doctype html><html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>'+esc(r.subject)+'</title><style>body{font:14px Tahoma;padding:30px;color:#1f2937}h1{color:#059669;border-bottom:3px solid #059669;padding-bottom:8px;margin-bottom:15px}h2{color:#047857;background:#d1fae5;padding:6px 10px;border-radius:6px;margin:15px 0 8px;font-size:14px}p{line-height:1.8;margin:6px 0}table{width:100%;border-collapse:collapse;margin:10px 0}td{padding:6px;border:1px solid #e5e7eb}.head{display:flex;justify-content:space-between;margin-bottom:15px;font-size:12px;color:#666}</style></head><body>';
+  h+='<div class="head"><div><b>سامانه نهضت تربیتی</b><br>حضرت سیدالشهدا علیه‌السلام</div><div>تاریخ صدور: '+pdate()+'</div></div>';
+  h+='<h1>'+esc(r.subject)+'</h1>';
+  h+='<table><tr><td><b>مربی</b></td><td>'+esc(r.instructorName||r.name||'-')+'</td><td><b>تاریخ جلسه</b></td><td>'+esc(r.jdate||pdate(r.date))+'</td></tr>'+
+    (r.count?'<tr><td><b>تعداد</b></td><td>'+esc(r.count)+'</td><td><b>وضعیت</b></td><td>'+statusText(r.status)+'</td></tr>':'')+'</table>';
+  h+='<h2>متن گزارش</h2><p>'+esc(r.content).replace(/\n/g,'<br>')+'</p>';
+  if(r.s1||r.s2||r.s3||r.s4){
+    h+='<h2>چهار مرحله تربیتی</h2>';
+    if(r.s1)h+='<p><b>۱. ارائه مطلب:</b> '+esc(r.s1).replace(/\n/g,'<br>')+'</p>';
+    if(r.s2)h+='<p><b>۲. تفکر:</b> '+esc(r.s2).replace(/\n/g,'<br>')+'</p>';
+    if(r.s3)h+='<p><b>۳. مباحثه:</b> '+esc(r.s3).replace(/\n/g,'<br>')+'</p>';
+    if(r.s4)h+='<p><b>۴. ارائه به مربی:</b> '+esc(r.s4).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.g1||r.g2||r.g3){
+    h+='<h2>سه گروه پیشرفت</h2>';
+    if(r.g1)h+='<p><b>استقامتی:</b> '+esc(r.g1).replace(/\n/g,'<br>')+'</p>';
+    if(r.g2)h+='<p><b>نیمه‌سرعتی:</b> '+esc(r.g2).replace(/\n/g,'<br>')+'</p>';
+    if(r.g3)h+='<p><b>سرعتی:</b> '+esc(r.g3).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.ev){h+='<h2>خودارزیابی</h2><p>'+esc(r.ev).replace(/\n/g,'<br>')+'</p>'}
+  h+='<p style="margin-top:30px;color:#888;font-size:11px;text-align:center">سامانه مدیریت نهضت تربیتی v22 - تولید '+pdate()+' '+ptime()+'</p></body></html>';
+  var w=window.open('','_blank');w.document.write(h);w.document.close();w.focus();
+  setTimeout(function(){w.print()},500);
+}
+function statusText(s){return {DRAFT:'پیش‌نویس',SUBMITTED:'ارسال‌شده',APPROVED:'تأییدشده',REJECTED:'ردشده'}[s]||s}
+function exportReportWord(id){
+  var r=db().reports.find(function(x){return x.id==id});if(!r)return;
+  var h='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>'+esc(r.subject)+'</title></head><body dir="rtl" style="font-family:Tahoma;font-size:14px">';
+  h+='<h1 style="color:#059669">'+esc(r.subject)+'</h1>';
+  h+='<p><b>مربی:</b> '+esc(r.instructorName||r.name||'-')+' <b>تاریخ:</b> '+esc(r.jdate||pdate(r.date))+'</p>';
+  h+='<p>'+esc(r.content).replace(/\n/g,'<br>')+'</p>';
+  if(r.s1)h+='<h3>چهار مرحله</h3><p>۱. '+esc(r.s1)+'<br>۲. '+esc(r.s2)+'<br>۳. '+esc(r.s3)+'<br>۴. '+esc(r.s4)+'</p>';
+  if(r.g1)h+='<h3>سه گروه</h3><p>استقامتی: '+esc(r.g1)+'<br>نیمه‌سرعتی: '+esc(r.g2)+'<br>سرعتی: '+esc(r.g3)+'</p>';
+  if(r.ev)h+='<h3>خودارزیابی</h3><p>'+esc(r.ev)+'</p>';
+  h+='</body></html>';
+  var b=new Blob(['\ufeff'+h],{type:'application/msword'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='report-'+r.id+'.doc';a.click();
+  tg('فایل Word ذخیره شد');
+}
+function exportReportText(id){
+  var r=db().reports.find(function(x){return x.id==id});if(!r)return;
+  var s='═══════════════════════════\nسامانه نهضت تربیتی\nحضرت سیدالشهدا علیه‌السلام\n═══════════════════════════\n\n';
+  s+='موضوع: '+r.subject+'\nمربی: '+(r.instructorName||r.name||'-')+'\nتاریخ ثبت: '+pdate(r.date)+'\n';
+  if(r.jdate)s+='تاریخ جلسه: '+r.jdate+'\n';
+  if(r.count)s+='تعداد شرکت‌کنندگان: '+r.count+'\n';
+  s+='وضعیت: '+statusText(r.status||'DRAFT')+'\n';
+  s+='\n── متن گزارش ──\n'+r.content+'\n';
+  if(r.s1||r.s2||r.s3||r.s4){s+='\n── چهار مرحله ──\n';if(r.s1)s+='۱. ارائه مطلب: '+r.s1+'\n';if(r.s2)s+='۲. تفکر: '+r.s2+'\n';if(r.s3)s+='۳. مباحثه: '+r.s3+'\n';if(r.s4)s+='۴. ارائه به مربی: '+r.s4+'\n'}
+  if(r.g1||r.g2||r.g3){s+='\n── سه گروه ──\n';if(r.g1)s+='استقامتی: '+r.g1+'\n';if(r.g2)s+='نیمه‌سرعتی: '+r.g2+'\n';if(r.g3)s+='سرعتی: '+r.g3+'\n'}
+  if(r.ev)s+='\n── خودارزیابی ──\n'+r.ev+'\n';
+  s+='\n═══════════════════════════\n';
+  var b=new Blob([s],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='report-'+r.id+'.txt';a.click();
+  tg('فایل متن ذخیره شد');
+}
+function exportReportJSON(id){
+  var r=db().reports.find(function(x){return x.id==id});if(!r)return;
+  var b=new Blob([JSON.stringify(r,null,2)],{type:'application/json;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='report-'+r.id+'.json';a.click();
+  tg('فایل JSON ذخیره شد');
+}
+function shareReport(id){
+  var r=db().reports.find(function(x){return x.id==id});if(!r)return;
+  var t='═══════════════════════════\n';
+  t+='نهضت تربیتی حضرت سیدالشهدا علیه‌السلام\n';
+  t+='═══════════════════════════\n\n';
+  t+='موضوع: '+r.subject+'\nمربی: '+(r.instructorName||r.name||'-')+'\nتاریخ: '+pdate(r.date)+'\n\n';
+  t+=r.content;
+  if(r.s1)t+='\n\n۱. '+r.s1+'\n۲. '+r.s2+'\n۳. '+r.s3+'\n۴. '+r.s4;
+  if(r.g1)t+='\n\nاستقامتی: '+r.g1+'\nنیمه‌سرعتی: '+r.g2+'\nسرعتی: '+r.g3;
+  shareText('گزارش: '+r.subject,t);
+}
+
+// ========= LESSONS =========
+function lessonsPage(){
+  var u=gs(),d=db();
+  var r=d.lessons.filter(function(x){return x.uid==u.id}).reverse();
+  var allL=u.role=='ADMIN'||u.role=='EVALUATOR'?d.lessons:r;
+  var h='<div class="search"><input id="lsearch" placeholder="جستجو در طرح‌درس..." oninput="filterLessons()"><button onclick="filterLessons()">🔍</button></div>';
+  h+='<button class="btn-p" onclick="nav(\'lessons\',\'form\')" style="margin-bottom:8px">+ طرح درس جدید</button>';
+  if(!allL.length)return h+'<div class="empty"><span class="e-ic">📋</span>طرح درسی یافت نشد</div>';
+  h+='<div id="lessonsList"><div class="card"><h2>طرح درس‌ها ('+allL.length+')</h2>';
+  allL.forEach(function(x){
+    h+='<div class="list-item" data-search="'+(esc(x.title)+' '+esc(x.subject)).toLowerCase()+'">'+
+      '<div class="li-ic">📋</div>'+
+      '<div class="li-t" onclick="openLesson('+x.id+')"><div class="t">'+esc(x.title)+'</div><div class="s">'+esc(x.subject||'-')+' • '+pdate(x.date)+'</div></div>'+
+      '<div class="li-a"><button class="btn-i" onclick="openLesson('+x.id+')">نمایش</button></div>'+
+    '</div>';
+  });
+  h+='</div></div>';
+  return h;
+}
+function filterLessons(){
+  var q=(document.getElementById('lsearch').value||'').toLowerCase();
+  document.querySelectorAll('#lessonsList .list-item').forEach(function(li){
+    var s=li.getAttribute('data-search');
+    li.style.display=s.indexOf(q)>=0?'flex':'none';
+  });
+}
+function lessonForm(){
+  return '<div class="bar-back"><button onclick="nav(\'lessons\')">‹ بازگشت</button><span class="t">طرح درس جدید</span></div>'+
+    '<div class="card">'+
+    '<div class="f"><label>عنوان طرح درس *</label><input id="ltitle" placeholder="مثال: طرح درس اخلاق - جلسه اول"></div>'+
+    '<div class="row"><div class="f"><label>موضوع</label><input id="lsubject" placeholder="موضوع درس"></div>'+
+    '<div class="f"><label>تاریخ</label><input id="ldate" value="'+pdate()+'"></div></div>'+
+    '<div class="row"><div class="f"><label>مدت (دقیقه)</label><input id="lduration" inputmode="numeric" value="60"></div>'+
+    '<div class="f"><label>تعداد افراد</label><input id="lcount" inputmode="numeric" value="15"></div></div>'+
+    '<div class="row"><div class="f"><label>پایه تحصیلی</label><input id="lgrade" placeholder="مثال: هفتم"></div>'+
+    '<div class="f"><label>وضعیت</label><select id="lstatus"><option value="DRAFT">پیش‌نویس</option><option value="SUBMITTED">ارسال برای ارزیابی</option></select></div></div>'+
+    '<div class="sec-h">اهداف رفتاری</div>'+
+    '<div class="f"><label>هدف اصلی</label><textarea id="lgoal" placeholder="هدف کلی این جلسه"></textarea></div>'+
+    '<div class="f"><label>اهداف جزئی (هر خط یک هدف)</label><textarea id="lsubgoals" placeholder="اهداف خرد"></textarea></div>'+
+    '<div class="sec-h">منابع آموزشی</div>'+
+    '<div class="row"><button class="btn-y" onclick="insertQuranLesson()">📖 درج آیه</button><button class="btn-v" onclick="insertHadithLesson()">☪️ درج حدیث</button></div>'+
+    '<div class="f"><label>آیات مرتبط</label><textarea id="lquran" placeholder="آیات قرآن مرتبط با درس"></textarea></div>'+
+    '<div class="f"><label>احادیث مرتبط</label><textarea id="lhadith" placeholder="احادیث مرتبط"></textarea></div>'+
+    '<div class="sec-h">مراحل تدریس</div>'+
+    '<div class="f"><label>۱. مقدمه و ارزشیابی تشخیصی</label><textarea id="lp1" placeholder="ارزشیابی اولیه"></textarea></div>'+
+    '<div class="f"><label>۲. ارائه مطلب</label><textarea id="lp2" placeholder="محتوای اصلی"></textarea></div>'+
+    '<div class="f"><label>۳. تفکر و مباحثه</label><textarea id="lp3" placeholder="پرسش و گفتگو"></textarea></div>'+
+    '<div class="f"><label>۴. جمع‌بندی و ارزشیابی</label><textarea id="lp4" placeholder="جمع‌بندی نهایی"></textarea></div>'+
+    '<div class="sec-h">ابزار و تکالیف</div>'+
+    '<div class="f"><label>وسایل آموزشی</label><textarea id="ltools" placeholder="کتاب، ویدیو، نمودار"></textarea></div>'+
+    '<div class="f"><label>منابع</label><textarea id="lrefs" placeholder="قرآن، نهج‌البلاغه، کتاب‌های مرجع"></textarea></div>'+
+    '<div class="f"><label>تکالیف</label><textarea id="lhw" placeholder="تکلیف جلسه بعد"></textarea></div>'+
+    '<button class="btn-p" onclick="saveLesson()">ذخیره طرح درس</button>'+
+    '<button class="btn-s" onclick="nav(\'lessons\')" style="margin-top:6px">انصراف</button></div>';
+}
+function insertQuranLesson(){var d=db();var h='<h3>انتخاب آیه</h3>';d.quran.forEach(function(q){h+='<div class="verse" onclick="appendText(\'lquran\',\'[قرآن-'+esc(q.surah)+':'+q.verseNo+'] '+esc(q.text)+'\\n\');closeModal()"><div>'+esc(q.text)+'</div><span class="vref">'+esc(q.surah)+' • '+q.verseNo+' • '+esc(q.topic)+'</span></div>'});showModal(h)}
+function insertHadithLesson(){var d=db();var h='<h3>انتخاب حدیث</h3>';d.hadiths.forEach(function(hd){h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" onclick="appendText(\'lhadith\',\'['+esc(hd.source)+' - '+esc(hd.narrator)+'] '+esc(hd.text)+'\\n\');closeModal()"><div>'+esc(hd.text)+'</div><span class="vref" style="color:#6d28d9">'+esc(hd.source)+' • '+esc(hd.narrator)+'</span></div>'});showModal(h)}
+function saveLesson(){
+  var t=document.getElementById('ltitle').value.trim();
+  if(!t){tg('عنوان را وارد کنید',1);return}
+  var u=gs(),d=db();
+  var les={
+    id:Date.now(),uid:u.id,name:u.name,date:Date.now(),
+    title:t,subject:v('lsubject'),jdate:v('ldate'),status:v('lstatus'),
+    duration:v('lduration'),count:v('lcount'),grade:v('lgrade'),
+    goal:v('lgoal'),subgoals:v('lsubgoals'),
+    quran:v('lquran'),hadith:v('lhadith'),
+    p1:v('lp1'),p2:v('lp2'),p3:v('lp3'),p4:v('lp4'),
+    tools:v('ltools'),refs:v('lrefs'),hw:v('lhw')
+  };
+  d.lessons.push(les);
+  awardPoints(u.id,8,'ثبت طرح درس: '+t);
+  sv(d);tg('طرح درس ذخیره شد');
+  if(window.API&&API.base()&&u.serverId)API.push('lesson',les,String(les.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  nav('lessons');
+}
+function openLesson(id){curSub='view';curLessonId=id;render()}
+function lessonView(){
+  var d=db();var r=d.lessons.find(function(x){return x.id==curLessonId});
+  if(!r)return '<div class="empty">یافت نشد</div>';
+  var u=gs();
+  var h='<div class="bar-back"><button onclick="nav(\'lessons\')">‹ بازگشت</button><span class="t">طرح درس</span></div>';
+  h+='<div class="card"><h2>'+esc(r.title)+'</h2>';
+  h+='<div class="kv"><span class="k">موضوع</span><span class="v">'+esc(r.subject||'-')+'</span></div>';
+  h+='<div class="kv"><span class="k">تاریخ</span><span class="v">'+esc(r.jdate||pdate(r.date))+'</span></div>';
+  h+='<div class="kv"><span class="k">مدت</span><span class="v">'+esc(r.duration||'-')+' دقیقه</span></div>';
+  h+='<div class="kv"><span class="k">افراد</span><span class="v">'+esc(r.count||'-')+'</span></div>';
+  if(r.grade)h+='<div class="kv"><span class="k">پایه</span><span class="v">'+esc(r.grade)+'</span></div>';
+  h+='<div class="kv"><span class="k">وضعیت</span><span class="v">'+statusTag(r.status||'DRAFT')+'</span></div>';
+  if(r.goal){h+='<div class="divider"></div><h2 style="font-size:13px">هدف اصلی</h2><p style="font-size:13px">'+esc(r.goal).replace(/\n/g,'<br>')+'</p>'}
+  if(r.subgoals){h+='<h2 style="font-size:13px">اهداف جزئی</h2><p style="font-size:12px;white-space:pre-line">'+esc(r.subgoals)+'</p>'}
+  if(r.quran){h+='<div class="divider"></div><h2 style="font-size:13px">آیات قرآن</h2><div style="background:#fef9c3;padding:8px;border-radius:6px;font-size:12px;line-height:1.8">'+esc(r.quran).replace(/\n/g,'<br>')+'</div>'}
+  if(r.hadith){h+='<h2 style="font-size:13px">احادیث</h2><div style="background:#ede9fe;padding:8px;border-radius:6px;font-size:12px;line-height:1.8">'+esc(r.hadith).replace(/\n/g,'<br>')+'</div>'}
+  if(r.p1){h+='<div class="divider"></div><h2 style="font-size:13px">مراحل تدریس</h2><p style="font-size:12px;margin:4px 0"><b>۱. مقدمه:</b> '+esc(r.p1).replace(/\n/g,'<br>')+'</p>'}
+  if(r.p2)h+='<p style="font-size:12px;margin:4px 0"><b>۲. ارائه:</b> '+esc(r.p2).replace(/\n/g,'<br>')+'</p>';
+  if(r.p3)h+='<p style="font-size:12px;margin:4px 0"><b>۳. تفکر:</b> '+esc(r.p3).replace(/\n/g,'<br>')+'</p>';
+  if(r.p4)h+='<p style="font-size:12px;margin:4px 0"><b>۴. جمع‌بندی:</b> '+esc(r.p4).replace(/\n/g,'<br>')+'</p>';
+  if(r.tools){h+='<div class="divider"></div><h2 style="font-size:13px">وسایل</h2><p style="font-size:12px">'+esc(r.tools).replace(/\n/g,'<br>')+'</p>'}
+  if(r.refs){h+='<h2 style="font-size:13px">منابع</h2><p style="font-size:12px">'+esc(r.refs).replace(/\n/g,'<br>')+'</p>'}
+  if(r.hw){h+='<h2 style="font-size:13px">تکالیف</h2><p style="font-size:12px">'+esc(r.hw).replace(/\n/g,'<br>')+'</p>'}
+  h+='</div>';
+  h+='<div class="row"><button class="btn-i" onclick="exportLessonPDF('+r.id+')">📄 PDF</button><button class="btn-v" onclick="exportLessonWord('+r.id+')">📝 Word</button><button class="btn-s" onclick="exportLessonText('+r.id+')">💾 متن</button></div>';
+  h+='<div class="row" style="margin-top:6px"><button class="btn-y" onclick="exportLessonJSON('+r.id+')">📋 JSON</button><button class="btn-p" onclick="shareLesson('+r.id+')">🔗 اشتراک</button>'+(u.role=='ADMIN'||u.role=='EVALUATOR'?'<button class="btn-v" onclick="evaluateLesson('+r.id+')">🎯 ارزیابی</button>':'')+'</div>';
+  // comments
+  h+='<div class="card"><h2>نظرات</h2>';
+  var comments=d.comments.filter(function(c){return c.targetType=='LESSON'&&c.targetId==r.id});
+  if(!comments.length)h+='<div class="empty">نظری نیست</div>';
+  else comments.forEach(function(c){var cu=d.users.find(function(x){return x.id==c.userId});h+='<div class="comment"><div class="ch">'+esc(cu?cu.name:'ناشناس')+' • '+pdate(c.date)+'</div><div class="cb">'+esc(c.text).replace(/\n/g,'<br>')+'</div></div>'});
+  h+='<div class="f"><textarea id="commentText" placeholder="نظر..."></textarea></div><button class="btn-p" onclick="addComment(\'LESSON\','+r.id+')">ثبت نظر</button></div>';
+  h+='<button class="btn-d" onclick="deleteLesson('+r.id+')" style="margin-top:10px">🗑 حذف</button>';
+  return h;
+}
+function evaluateLesson(id){
+  var d=db();
+  var lesson=d.lessons.find(function(x){return x.id==id});
+  var criteria=d.criteria.filter(function(c){return c.type=='LESSON'});
+  var h='<h3>ارزیابی طرح درس</h3><p style="font-size:12px;color:var(--m);margin-bottom:8px">'+esc(lesson.title)+'</p>';
+  criteria.forEach(function(c){
+    h+='<div class="eval-row"><div class="er-n">'+esc(c.name)+' <span style="color:var(--m);font-size:10px">(از '+c.maxScore+')</span></div><div class="er-s"><select id="ev_'+c.id+'">';
+    for(var i=0;i<=c.maxScore;i++)h+='<option value="'+i+'">'+i+'</option>';
+    h+='</select></div></div>';
+  });
+  h+='<div class="f"><label>توضیحات</label><textarea id="evNote"></textarea></div><button class="btn-p" onclick="saveLessonEval('+id+')">ثبت</button><button class="btn-s" onclick="closeModal()">انصراف</button>';
+  showModal(h);
+}
+function saveLessonEval(lessonId){
+  var d=db();var lesson=d.lessons.find(function(x){return x.id==lessonId});
+  var criteria=d.criteria.filter(function(c){return c.type=='LESSON'});
+  var total=0,maxTotal=0,scores=[];
+  criteria.forEach(function(c){var s=parseInt(v('ev_'+c.id)||'0');total+=s;maxTotal+=c.maxScore;scores.push({criteriaId:c.id,criteriaName:c.name,score:s,maxScore:c.maxScore})});
+  var u=gs();
+  d.evaluations.push({id:Date.now(),targetType:'LESSON',targetId:lessonId,targetUid:lesson.uid,evaluatorId:u.id,scores:scores,totalScore:total,maxScore:maxTotal,note:v('evNote'),date:Date.now()});
+  if(total>=maxTotal*0.8){awardPoints(lesson.uid,20,'ارزیابی عالی طرح درس: '+lesson.title);d.recognitions.push({id:Date.now(),userId:lesson.uid,level:'EXCELLENT',title:'طرح درس عالی',description:'طرح درس «'+lesson.title+'» با امتیاز '+total+'/'+maxTotal,date:Date.now(),awardedBy:u.id});var ru=d.users.find(function(x){return x.id==lesson.uid});if(ru)ru.recognitions=(ru.recognitions||0)+1}
+  sv(d);closeModal();tg('ثبت شد');
+  if(window.API&&API.base()&&lesson.sid){
+    API.push('evaluation',{targetType:'LESSON',targetId:lesson.sid,scores:scores,overallComment:v('evNote')}).catch(function(){tg('ارزیابی در سرور ثبت نشد (آفلاین)',1)});
+  }
+  render();
+}
+function deleteLesson(id){if(!confirm('حذف؟'))return;var d=db();d.lessons=d.lessons.filter(function(x){return x.id!=id});d.comments=d.comments.filter(function(c){return !(c.targetType=='LESSON'&&c.targetId==id)});d.evaluations=d.evaluations.filter(function(e){return !(e.targetType=='LESSON'&&e.targetId==id)});sv(d);tg('حذف شد');nav('lessons')}
+function exportLessonPDF(id){
+  var r=db().lessons.find(function(x){return x.id==id});if(!r)return;
+  var h='<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>'+esc(r.title)+'</title><style>body{font:14px Tahoma;padding:30px;color:#1f2937}h1{color:#059669;border-bottom:3px solid #059669;padding-bottom:8px}h2{color:#047857;background:#d1fae5;padding:6px 10px;border-radius:6px;margin:15px 0 8px;font-size:14px}table{width:100%;border-collapse:collapse;margin:10px 0}td{padding:6px;border:1px solid #e5e7eb}</style></head><body>';
+  h+='<h1>'+esc(r.title)+'</h1>';
+  h+='<table><tr><td><b>موضوع</b></td><td>'+esc(r.subject||'-')+'</td><td><b>تاریخ</b></td><td>'+esc(r.jdate||pdate(r.date))+'</td></tr><tr><td><b>مدت</b></td><td>'+(r.duration||'-')+'</td><td><b>افراد</b></td><td>'+(r.count||'-')+'</td></tr></table>';
+  if(r.goal)h+='<h2>هدف اصلی</h2><p>'+esc(r.goal).replace(/\n/g,'<br>')+'</p>';
+  if(r.subgoals)h+='<h2>اهداف جزئی</h2><p style="white-space:pre-line">'+esc(r.subgoals)+'</p>';
+  if(r.quran)h+='<h2>آیات قرآن</h2><div style="background:#fef9c3;padding:8px">'+esc(r.quran).replace(/\n/g,'<br>')+'</div>';
+  if(r.hadith)h+='<h2>احادیث</h2><div style="background:#ede9fe;padding:8px">'+esc(r.hadith).replace(/\n/g,'<br>')+'</div>';
+  if(r.p1)h+='<h2>مراحل تدریس</h2><p><b>۱.</b> '+esc(r.p1).replace(/\n/g,'<br>')+'</p>';
+  if(r.p2)h+='<p><b>۲.</b> '+esc(r.p2).replace(/\n/g,'<br>')+'</p>';
+  if(r.p3)h+='<p><b>۳.</b> '+esc(r.p3).replace(/\n/g,'<br>')+'</p>';
+  if(r.p4)h+='<p><b>۴.</b> '+esc(r.p4).replace(/\n/g,'<br>')+'</p>';
+  if(r.tools)h+='<h2>وسایل</h2><p>'+esc(r.tools).replace(/\n/g,'<br>')+'</p>';
+  if(r.refs)h+='<h2>منابع</h2><p>'+esc(r.refs).replace(/\n/g,'<br>')+'</p>';
+  if(r.hw)h+='<h2>تکالیف</h2><p>'+esc(r.hw).replace(/\n/g,'<br>')+'</p>';
+  h+='</body></html>';
+  var w=window.open('','_blank');w.document.write(h);w.document.close();w.focus();setTimeout(function(){w.print()},500);
+}
+function exportLessonWord(id){
+  var r=db().lessons.find(function(x){return x.id==id});if(!r)return;
+  var h='<html xmlns:w="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"></head><body dir="rtl" style="font-family:Tahoma">';
+  h+='<h1 style="color:#059669">'+esc(r.title)+'</h1>';
+  h+='<p><b>موضوع:</b> '+esc(r.subject||'-')+' <b>تاریخ:</b> '+esc(r.jdate||pdate(r.date))+'</p>';
+  if(r.goal)h+='<h3>هدف اصلی</h3><p>'+esc(r.goal)+'</p>';
+  if(r.p1)h+='<h3>مراحل تدریس</h3><p>۱. '+esc(r.p1)+'<br>۲. '+esc(r.p2)+'<br>۳. '+esc(r.p3)+'<br>۴. '+esc(r.p4)+'</p>';
+  if(r.tools)h+='<h3>وسایل</h3><p>'+esc(r.tools)+'</p>';
+  if(r.hw)h+='<h3>تکالیف</h3><p>'+esc(r.hw)+'</p>';
+  h+='</body></html>';
+  var b=new Blob(['\ufeff'+h],{type:'application/msword'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='lesson-'+r.id+'.doc';a.click();tg('Word ذخیره شد');
+}
+function exportLessonText(id){
+  var r=db().lessons.find(function(x){return x.id==id});if(!r)return;
+  var s='═══════════════════════════\nطرح درس: '+r.title+'\n═══════════════════════════\n\nموضوع: '+(r.subject||'-')+'\nتاریخ: '+(r.jdate||pdate(r.date))+'\nمدت: '+(r.duration||'-')+'\nافراد: '+(r.count||'-')+'\n';
+  if(r.goal)s+='\n── هدف اصلی ──\n'+r.goal+'\n';
+  if(r.p1)s+='\n── مراحل تدریس ──\n۱. '+r.p1+'\n۲. '+r.p2+'\n۳. '+r.p3+'\n۴. '+r.p4+'\n';
+  if(r.tools)s+='\n── وسایل ──\n'+r.tools+'\n';
+  if(r.hw)s+='\n── تکالیف ──\n'+r.hw+'\n';
+  var b=new Blob([s],{type:'text/plain;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='lesson-'+r.id+'.txt';a.click();tg('ذخیره شد');
+}
+function exportLessonJSON(id){
+  var r=db().lessons.find(function(x){return x.id==id});if(!r)return;
+  var b=new Blob([JSON.stringify(r,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='lesson-'+r.id+'.json';a.click();tg('JSON ذخیره شد');
+}
+function shareLesson(id){
+  var r=db().lessons.find(function(x){return x.id==id});if(!r)return;
+  var t='طرح درس: '+r.title+'\nموضوع: '+(r.subject||'-')+'\nتاریخ: '+(r.jdate||pdate(r.date))+'\n\n'+(r.goal||'');
+  shareText('طرح درس: '+r.title,t);
+}
+
+// ========= PEOPLE =========
+function peoplePage(){
+  var d=db();var r=d.people;
+  var h='<div class="search"><input id="psearch" placeholder="جستجو در افراد..." oninput="filterPeople()"><button onclick="filterPeople()">🔍</button></div>';
+  h+='<button class="btn-p" onclick="nav(\'people\',\'form\')" style="margin-bottom:8px">+ افزودن فرد</button>';
+  if(!r.length)return h+'<div class="empty"><span class="e-ic">👥</span>هنوز فردی ثبت نشده</div>';
+  h+='<div class="tab-sel"><button class="on" onclick="filterPeopleGroup(this,\'all\')">همه ('+r.length+')</button>';
+  var byGroup={ESTEGHLATI:0,NIMESORAT:0,SORATI:0,NONE:0};
+  r.forEach(function(p){var g=p.group||'NONE';byGroup[g]=(byGroup[g]||0)+1});
+  h+='<button onclick="filterPeopleGroup(this,\'ESTEGHLATI\')">استقامتی ('+byGroup.ESTEGHLATI+')</button>';
+  h+='<button onclick="filterPeopleGroup(this,\'NIMESORAT\')">نیمه‌سرعتی ('+byGroup.NIMESORAT+')</button>';
+  h+='<button onclick="filterPeopleGroup(this,\'SORATI\')">سرعتی ('+byGroup.SORATI+')</button></div>';
+  h+='<div id="peopleList">';
+  r.forEach(function(p){h+=personRow(p)});
+  h+='</div>';
+  return h;
+}
+function personRow(p){
+  var gLabel={ESTEGHLATI:'استقامتی',NIMESORAT:'نیمه‌سرعتی',SORATI:'سرعتی'};
+  var gTag=p.group?'<span class="tag'+(p.group=='SORATI'?' y':p.group=='NIMESORAT'?' i':'')+'">'+gLabel[p.group]+'</span>':'';
+  return '<div class="list-item" data-search="'+(esc(p.name)+' '+esc(p.phone||'')).toLowerCase()+'" data-group="'+(p.group||'NONE')+'">'+
+    '<div class="li-ic">👤</div>'+
+    '<div class="li-t"><div class="t">'+esc(p.name)+'</div><div class="s">'+esc(p.phone||'-')+' '+gTag+(p.grade?' • '+esc(p.grade):'')+'</div></div>'+
+    '<div class="li-a"><button class="btn-i" onclick="editPerson('+p.id+')">✎</button><button class="btn-d" onclick="deletePerson('+p.id+')">🗑</button></div></div>';
+}
+function filterPeople(){
+  var q=(document.getElementById('psearch').value||'').toLowerCase();
+  document.querySelectorAll('#peopleList .list-item').forEach(function(li){
+    var s=li.getAttribute('data-search');
+    li.style.display=s.indexOf(q)>=0?'flex':'none';
+  });
+}
+function filterPeopleGroup(btn,g){
+  var all=btn.parentNode.querySelectorAll('button');all.forEach(function(b){b.className=''});btn.className='on';
+  document.querySelectorAll('#peopleList .list-item').forEach(function(li){
+    var s=li.getAttribute('data-group');
+    li.style.display=(g=='all'||s==g)?'flex':'none';
+  });
+}
+function personForm(){
+  var d=db(),p=null;
+  if(curPersonId)p=d.people.find(function(x){return x.id==curPersonId});
+  return '<div class="bar-back"><button onclick="nav(\'people\')">‹ بازگشت</button><span class="t">'+(p?'ویرایش فرد':'افزودن فرد')+'</span></div>'+
+    '<div class="card">'+
+    '<div class="f"><label>نام و نام خانوادگی *</label><input id="pname" value="'+(p?esc(p.name):'')+'" placeholder="مثال: احمد محمدی"></div>'+
+    '<div class="row"><div class="f"><label>کد ملی</label><input id="pcode" inputmode="numeric" maxlength="10" value="'+(p?esc(p.code||''):'')+'"></div>'+
+    '<div class="f"><label>سن</label><input id="page" inputmode="numeric" value="'+(p?esc(p.age||''):'')+'"></div></div>'+
+    '<div class="row"><div class="f"><label>تلفن</label><input id="pphone" inputmode="numeric" value="'+(p?esc(p.phone||''):'')+'"></div>'+
+    '<div class="f"><label>پایه</label><input id="pgrade" value="'+(p?esc(p.grade||''):'')+'" placeholder="هفتم"></div></div>'+
+    '<div class="f"><label>گروه تربیتی</label><select id="pgroup">'+
+    '<option value=""'+(p&&!p.group?' selected':'')+'>-- انتخاب --</option>'+
+    '<option value="ESTEGHLATI"'+(p&&p.group=='ESTEGHLATI'?' selected':'')+'>استقامتی</option>'+
+    '<option value="NIMESORAT"'+(p&&p.group=='NIMESORAT'?' selected':'')+'>نیمه‌سرعتی</option>'+
+    '<option value="SORATI"'+(p&&p.group=='SORATI'?' selected':'')+'>سرعتی</option></select></div>'+
+    '<div class="f"><label>تاریخ عضویت</label><input id="pjoin" value="'+(p&&p.joinDate?p.joinDate:pdate())+'"></div>'+
+    '<div class="f"><label>یادداشت</label><textarea id="pnote">'+(p?esc(p.note||''):'')+'</textarea></div>'+
+    '<button class="btn-p" onclick="savePerson()">'+(p?'ذخیره تغییرات':'افزودن فرد')+'</button>'+
+    '<button class="btn-s" onclick="nav(\'people\')" style="margin-top:6px">انصراف</button></div>';
+}
+function editPerson(id){curPersonId=id;nav('people','form')}
+function savePerson(){
+  var n=document.getElementById('pname').value.trim();
+  if(!n){tg('نام را وارد کنید',1);return}
+  var d=db();
+  var data={name:n,code:v('pcode'),age:v('page'),phone:v('pphone'),grade:v('pgrade'),group:v('pgroup'),joinDate:v('pjoin'),note:v('pnote')};
+  var saved=null;
+  if(curPersonId){var p=d.people.find(function(x){return x.id==curPersonId});if(p)Object.assign(p,data);tg('تغییرات ذخیره شد');saved=p}
+  else{data.id=Date.now();data.created=Date.now();d.people.push(data);tg('فرد اضافه شد');saved=data}
+  sv(d);
+  if(window.API&&API.base()&&saved){
+    if(saved.sid)API.patchPerson(saved.sid,saved).catch(function(){});
+    else API.push('person',saved,String(saved.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  }
+  curPersonId=null;nav('people');
+}
+function deletePerson(id){if(!confirm('حذف؟'))return;var d=db();var p=d.people.find(function(x){return x.id==id});d.people=d.people.filter(function(x){return x.id!=id});sv(d);tg('حذف شد');
+  if(window.API&&API.base()&&p&&p.sid)API.remove('person',p.sid);
+  render()}
+
+// ========= MORE =========
+function morePage(){
+  var u=gs();
+  var html='<div class="card"><h2>امکانات</h2><div class="menu">'+
+    '<button onclick="nav(\'more\',\'attendance\')"><span class="ic">✓</span>حضور غیاب</button>'+
+    '<button onclick="nav(\'more\',\'sessions\')"><span class="ic">📅</span>صورتجلسه</button>'+
+    '<button onclick="nav(\'more\',\'notifications\')"><span class="ic">🔔</span>اطلاعیه</button>'+
+    '<button onclick="nav(\'more\',\'calendar\')"><span class="ic">📆</span>تقویم</button>'+
+    '<button onclick="nav(\'more\',\'stats\')"><span class="ic">📊</span>آمار</button>'+
+    '<button onclick="nav(\'more\',\'quran\')"><span class="ic">📖</span>قرآن</button>'+
+    '<button onclick="nav(\'more\',\'hadith\')"><span class="ic">☪️</span>حدیث</button>'+
+    '<button onclick="nav(\'more\',\'evaluations\')"><span class="ic">🎯</span>ارزیابی‌ها</button>'+
+    '<button onclick="nav(\'more\',\'criteria\')"><span class="ic">📐</span>معیارها</button>'+
+    '<button onclick="nav(\'more\',\'points\')"><span class="ic">⭐</span>امتیازها</button>'+
+    '<button onclick="nav(\'more\',\'recognitions\')"><span class="ic">🏆</span>تقدیرها</button>'+
+    '<button onclick="nav(\'more\',\'leaderboard\')"><span class="ic">📈</span>رتبه‌بندی</button>'+
+    '<button onclick="nav(\'more\',\'profile\')"><span class="ic">👤</span>پروفایل</button>'+
+    '<button onclick="nav(\'more\',\'settings\')"><span class="ic">⚙️</span>تنظیمات</button>'+
+    '<button onclick="nav(\'more\',\'about\')"><span class="ic">ℹ️</span>درباره</button>'+
+  '</div></div>';
+  // Admin section
+  if(u.role=='ADMIN'){
+    html+='<div class="card"><h2>مدیریت سیستم</h2><div class="menu">'+
+      '<button onclick="nav(\'more\',\'branches\')"><span class="ic">🏛</span>شعب و مکاتب</button>'+
+      '<button onclick="nav(\'more\',\'users\')"><span class="ic">👥</span>کاربران</button>'+
+      '<button onclick="nav(\'more\',\'approvals\')"><span class="ic">✅</span>تأیید ثبت‌نام</button>'+
+    '</div></div>';
+  }
+  // Evaluator section
+  if(u.role=='EVALUATOR'||u.role=='ADMIN'){
+    var pending=db().reports.filter(function(r){return r.status=='SUBMITTED'}).length;
+    html+='<div class="card"><h2>ارزیاب</h2>'+
+      '<div class="kv"><span class="k">گزارش‌های در انتظار ارزیابی</span><span class="v">'+pending+'</span></div>'+
+      '<button class="btn-p" onclick="nav(\'more\',\'evaluations\')">مشاهده ارزیابی‌ها</button></div>';
+  }
+  // Account
+  html+='<div class="card"><h2>حساب کاربری</h2>'+
+    '<div class="kv"><span class="k">نام</span><span class="v">'+esc(u.name)+'</span></div>'+
+    '<div class="kv"><span class="k">نقش</span><span class="v"><span class="role-badge role-'+u.role+'">'+roleLabel(u.role)+'</span></span></div>'+
+    '<div class="kv"><span class="k">تلفن</span><span class="v">'+esc(u.phone)+'</span></div>'+
+    '<div class="kv"><span class="k">امتیاز</span><span class="v">'+(u.points||0)+'</span></div>'+
+    '<div class="kv"><span class="k">تقدیرها</span><span class="v">'+(u.recognitions||0)+'</span></div>'+
+  '</div>';
+  html+='<button class="btn-d" onclick="logout()" style="margin-top:10px">🚪 خروج از حساب</button>';
+  return html;
+}
+
+// ========= ATTENDANCE =========
+function attendancePage(){
+  var d=db();var today=pdate();
+  var existing=d.attendance.filter(function(a){return a.date==today});
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">حضور و غیاب</span></div>';
+  if(!d.people.length)return h+'<div class="empty"><span class="e-ic">👥</span>ابتدا افراد را اضافه کنید</div>';
+  h+='<div class="card"><h2>حضور و غیاب امروز</h2><p style="color:var(--m);font-size:12px;margin-bottom:8px">تاریخ: '+today+'</p>';
+  h+='<div class="tab-sel"><button class="on" onclick="attTab(this,\'all\')">همه</button><button onclick="attTab(this,\'present\')">حاضر</button><button onclick="attTab(this,\'absent\')">غایب</button></div><div id="attList">';
+  d.people.forEach(function(p){
+    var rec=existing.find(function(e){return e.pid==p.id});
+    var status=rec?rec.status:'PENDING';
+    h+='<div class="list-item" data-status="'+status+'"><div class="li-ic">👤</div>'+
+      '<div class="li-t"><div class="t">'+esc(p.name)+'</div><div class="s">'+esc(p.grade||'')+'</div></div>'+
+      '<div class="li-a"><button class="btn-i" onclick="attSet('+p.id+',\'PRESENT\')"'+(status=='PRESENT'?' style="background:var(--p)"':'')+'>حاضر</button>'+
+      '<button class="btn-d" onclick="attSet('+p.id+',\'ABSENT\')"'+(status=='ABSENT'?' style="background:var(--d)"':'')+'>غایب</button></div></div>';
+  });
+  h+='</div></div>';
+  var present=existing.filter(function(e){return e.status=='PRESENT'}).length;
+  var absent=existing.filter(function(e){return e.status=='ABSENT'}).length;
+  h+='<div class="card"><h2>خلاصه امروز</h2><div class="grid">'+
+    '<div class="stat"><div class="n">'+present+'</div><div class="l">حاضر</div></div>'+
+    '<div class="stat d"><div class="n">'+absent+'</div><div class="l">غایب</div></div>'+
+    '<div class="stat y"><div class="n">'+(d.people.length-present-absent)+'</div><div class="l">ثبت‌نشده</div></div>'+
+    '<div class="stat i"><div class="n">'+d.people.length+'</div><div class="l">کل</div></div></div></div>';
+  var days=d.attendance.map(function(a){return a.date}).filter(function(v,i,s){return s.indexOf(v)===i}).slice(-10).reverse();
+  if(days.length>1){
+    h+='<div class="card"><h2>تاریخچه</h2>';
+    days.forEach(function(day){
+      var recs=d.attendance.filter(function(a){return a.date==day});
+      var p=recs.filter(function(r){return r.status=='PRESENT'}).length;
+      var ab=recs.filter(function(r){return r.status=='ABSENT'}).length;
+      h+='<div class="kv"><span class="k">'+esc(day)+'</span><span class="v">حاضر '+p+' / غایب '+ab+'</span></div>';
+    });
+    h+='</div>';
+  }
+  return h;
+}
+function attTab(btn,filter){
+  var all=btn.parentNode.querySelectorAll('button');all.forEach(function(b){b.className=''});btn.className='on';
+  document.querySelectorAll('#attList .list-item').forEach(function(li){
+    var s=li.getAttribute('data-status');
+    if(filter=='all')li.style.display='flex';
+    else if(filter=='present')li.style.display=s=='PRESENT'?'flex':'none';
+    else li.style.display=s=='ABSENT'?'flex':'none';
+  });
+}
+function attSet(pid,status){
+  var d=db();var today=pdate();
+  var existing=d.attendance.find(function(a){return a.pid==pid&&a.date==today});
+  if(existing)existing.status=status;
+  else d.attendance.push({id:Date.now(),pid:pid,date:today,status:status});
+  sv(d);
+  if(window.API&&API.base()){
+    var pp=d.people.find(function(x){return x.id==pid});
+    if(pp&&pp.sid)API.push('attendance',{personId:pp.sid,date:today,status:status}).catch(function(){});
+  }
+  render();
+}
+
+// ========= SESSIONS =========
+function sessionsPage(){
+  var u=gs(),d=db();
+  var r=d.sessions.filter(function(x){return x.uid==u.id}).reverse();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">صورتجلسه‌ها</span></div>';
+  h+='<button class="btn-p" onclick="nav(\'more\',\'sform\')" style="margin-bottom:8px">+ صورتجلسه جدید</button>';
+  if(!r.length)return h+'<div class="empty"><span class="e-ic">📅</span>هنوز صورتجلسه‌ای ثبت نشده</div>';
+  h+='<div class="card"><h2>صورتجلسه‌ها ('+r.length+')</h2>';
+  r.forEach(function(x){
+    h+='<div class="list-item" onclick="openSession('+x.id+')"><div class="li-ic">📅</div>'+
+      '<div class="li-t"><div class="t">'+esc(x.title)+'</div><div class="s">'+pdate(x.date)+' • '+esc(x.attendees||'0')+' نفر</div></div><div class="li-a">›</div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+function sessionForm(){
+  return '<div class="bar-back"><button onclick="nav(\'more\',\'sessions\')">‹ بازگشت</button><span class="t">صورتجلسه جدید</span></div>'+
+    '<div class="card">'+
+    '<div class="f"><label>عنوان جلسه *</label><input id="stitle" placeholder="مثال: جلسه برنامه‌ریزی هفته"></div>'+
+    '<div class="row"><div class="f"><label>تاریخ</label><input id="sdate" value="'+pdate()+'"></div><div class="f"><label>تعداد حاضرین</label><input id="satt" inputmode="numeric" value="10"></div></div>'+
+    '<div class="f"><label>محل برگزاری</label><input id="splace" placeholder="مثال: مسجد مدرسه"></div>'+
+    '<div class="f"><label>موضوعات مطرح‌شده</label><textarea id="sagenda" placeholder="هر خط یک موضوع"></textarea></div>'+
+    '<div class="f"><label>تصمیمات</label><textarea id="sdecisions" placeholder="مصوبات"></textarea></div>'+
+    '<div class="f"><label>پیگیری‌ها</label><textarea id="sfollowup" placeholder="اقدامات و مسئولان"></textarea></div>'+
+    '<div class="f"><label>یادداشت</label><textarea id="snote"></textarea></div>'+
+    '<button class="btn-p" onclick="saveSession()">ذخیره</button>'+
+    '<button class="btn-s" onclick="nav(\'more\',\'sessions\')" style="margin-top:6px">انصراف</button></div>';
+}
+function saveSession(){
+  var t=document.getElementById('stitle').value.trim();
+  if(!t){tg('عنوان را وارد کنید',1);return}
+  var u=gs(),d=db();
+  var ses={id:Date.now(),uid:u.id,name:u.name,title:t,date:Date.now(),jdate:v('sdate'),attendees:v('satt'),place:v('splace'),agenda:v('sagenda'),decisions:v('sdecisions'),followup:v('sfollowup'),note:v('snote')};
+  d.sessions.push(ses);
+  awardPoints(u.id,3,'ثبت صورتجلسه: '+t);
+  sv(d);tg('ذخیره شد');
+  if(window.API&&API.base()&&u.serverId)API.push('session',ses,String(ses.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  nav('more','sessions');
+}
+function openSession(id){curSub='sview';curSessionId=id;render()}
+function sessionView(){
+  var d=db();var r=d.sessions.find(function(x){return x.id==curSessionId});
+  if(!r)return '<div class="empty">یافت نشد</div>';
+  var h='<div class="bar-back"><button onclick="nav(\'more\',\'sessions\')">‹ بازگشت</button><span class="t">صورتجلسه</span></div>';
+  h+='<div class="card"><h2>'+esc(r.title)+'</h2>';
+  h+='<div class="kv"><span class="k">تاریخ</span><span class="v">'+esc(r.jdate||pdate(r.date))+'</span></div>';
+  h+='<div class="kv"><span class="k">محل</span><span class="v">'+esc(r.place||'-')+'</span></div>';
+  h+='<div class="kv"><span class="k">حاضرین</span><span class="v">'+esc(r.attendees||'0')+' نفر</span></div>';
+  if(r.agenda){h+='<div class="divider"></div><h2 style="font-size:13px">موضوعات</h2><p style="font-size:12px;white-space:pre-line">'+esc(r.agenda)+'</p>'}
+  if(r.decisions){h+='<div class="divider"></div><h2 style="font-size:13px">تصمیمات</h2><p style="font-size:12px">'+esc(r.decisions).replace(/\n/g,'<br>')+'</p>'}
+  if(r.followup){h+='<div class="divider"></div><h2 style="font-size:13px">پیگیری‌ها</h2><p style="font-size:12px">'+esc(r.followup).replace(/\n/g,'<br>')+'</p>'}
+  if(r.note){h+='<div class="divider"></div><h2 style="font-size:13px">یادداشت</h2><p style="font-size:12px">'+esc(r.note).replace(/\n/g,'<br>')+'</p>'}
+  h+='</div>';
+  h+='<div class="row"><button class="btn-i" onclick="expSessPDF('+r.id+')">📄 PDF</button><button class="btn-p" onclick="shareSess('+r.id+')">🔗 اشتراک</button><button class="btn-d" onclick="delSess('+r.id+')">🗑 حذف</button></div>';
+  return h;
+}
+function delSess(id){if(!confirm('حذف؟'))return;var d=db();var s=d.sessions.find(function(x){return x.id==id});d.sessions=d.sessions.filter(function(x){return x.id!=id});sv(d);tg('حذف شد');
+  if(window.API&&API.base()&&s&&s.sid)API.remove('session',s.sid);
+  nav('more','sessions')}
+function expSessPDF(id){
+  var r=db().sessions.find(function(x){return x.id==id});if(!r)return;
+  var h='<!doctype html><html dir="rtl"><head><meta charset="utf-8"><title>'+esc(r.title)+'</title><style>body{font:14px Tahoma;padding:30px;color:#1f2937}h1{color:#059669;border-bottom:3px solid #059669;padding-bottom:8px}h2{color:#047857;background:#d1fae5;padding:6px 10px;border-radius:6px;margin:15px 0 8px;font-size:14px}table{width:100%;border-collapse:collapse;margin:10px 0}td{padding:6px;border:1px solid #e5e7eb}</style></head><body>';
+  h+='<h1>'+esc(r.title)+'</h1>';
+  h+='<table><tr><td><b>تاریخ</b></td><td>'+esc(r.jdate||pdate(r.date))+'</td><td><b>محل</b></td><td>'+esc(r.place||'-')+'</td></tr><tr><td><b>حاضرین</b></td><td>'+(r.attendees||'0')+'</td><td><b>دبیر</b></td><td>'+esc(r.name)+'</td></tr></table>';
+  if(r.agenda)h+='<h2>موضوعات</h2><p style="white-space:pre-line">'+esc(r.agenda)+'</p>';
+  if(r.decisions)h+='<h2>تصمیمات</h2><p>'+esc(r.decisions).replace(/\n/g,'<br>')+'</p>';
+  if(r.followup)h+='<h2>پیگیری‌ها</h2><p>'+esc(r.followup).replace(/\n/g,'<br>')+'</p>';
+  if(r.note)h+='<h2>یادداشت</h2><p>'+esc(r.note).replace(/\n/g,'<br>')+'</p>';
+  h+='</body></html>';
+  var w=window.open('','_blank');w.document.write(h);w.document.close();w.focus();setTimeout(function(){w.print()},500);
+}
+function shareSess(id){
+  var r=db().sessions.find(function(x){return x.id==id});if(!r)return;
+  shareText(r.title,'صورتجلسه: '+r.title+'\nتاریخ: '+(r.jdate||pdate(r.date))+'\nمحل: '+(r.place||'-')+'\n\n'+(r.decisions||''));
+}
+
+// ========= NOTIFICATIONS =========
+function notificationsPage(){
+  var d=db();var n=d.notifications.slice().reverse();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">اطلاعیه‌ها</span></div>';
+  if(!n.length)return h+'<div class="empty"><span class="e-ic">🔔</span>اطلاعیه‌ای نیست</div>';
+  h+='<div class="card"><h2>اطلاعیه‌ها ('+n.length+')</h2>';
+  n.forEach(function(x){
+    h+='<div class="list-item"><div class="li-ic">'+(x.read?'📩':'🔔')+'</div>'+
+      '<div class="li-t"><div class="t">'+esc(x.title)+'</div><div class="s">'+pdate(x.date)+' '+ptime(x.date)+'</div>'+
+      '<p style="font-size:12px;color:var(--t);margin:4px 0;line-height:1.6">'+esc(x.body)+'</p></div></div>';
+  });
+  h+='<button class="btn-s" onclick="markAllRead()">علامت‌گذاری همه به عنوان خوانده‌شده</button></div>';
+  return h;
+}
+function markAllRead(){var d=db();d.notifications.forEach(function(n){n.read=true});sv(d);tg('همه خوانده شدند');render()}
+
+// ========= CALENDAR =========
+function calendarPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">تقویم فعالیت‌ها</span></div>';
+  var dates={};
+  d.reports.forEach(function(r){var dt=pdate(r.date);dates[dt]=(dates[dt]||0)+1});
+  d.lessons.forEach(function(r){var dt=pdate(r.date);dates[dt]=(dates[dt]||0)+1});
+  d.sessions.forEach(function(r){var dt=pdate(r.date);dates[dt]=(dates[dt]||0)+1});
+  h+='<div class="card"><h2>رویدادهای اخیر</h2>';
+  var allEvents=[];
+  d.reports.forEach(function(r){allEvents.push({date:r.date,subj:r.subject,type:'گزارش',icon:'📝'})});
+  d.lessons.forEach(function(r){allEvents.push({date:r.date,subj:r.title,type:'طرح درس',icon:'📋'})});
+  d.sessions.forEach(function(r){allEvents.push({date:r.date,subj:r.title,type:'جلسه',icon:'📅'})});
+  allEvents.sort(function(a,b){return b.date-a.date});
+  if(!allEvents.length)h+='<div class="empty">رویدادی ثبت نشده</div>';
+  else allEvents.slice(0,20).forEach(function(e){
+    h+='<div class="list-item"><div class="li-ic">'+e.icon+'</div><div class="li-t"><div class="t">'+esc(e.subj)+'</div><div class="s"><span class="tag i">'+e.type+'</span> '+pdate(e.date)+'</div></div></div>';
+  });
+  h+='</div>';
+  h+='<div class="card"><h2>روزهای فعال</h2>';
+  var days=Object.keys(dates);
+  if(!days.length)h+='<div class="empty">هنوز فعالیتی ثبت نشده</div>';
+  else days.slice(-10).reverse().forEach(function(day){
+    h+='<div class="kv"><span class="k">'+esc(day)+'</span><span class="v">'+dates[day]+' رویداد</span></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= STATS =========
+function statsPage(){
+  var u=gs(),d=db();
+  var myR=d.reports.filter(function(r){return r.uid==u.id});
+  var myL=d.lessons.filter(function(r){return r.uid==u.id});
+  var myS=d.sessions.filter(function(r){return r.uid==u.id});
+  var ppl=d.people.length;
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">آمار و گزارش</span></div>';
+  h+='<div class="card"><h2>خلاصه کلی</h2><div class="grid">'+
+    '<div class="stat"><div class="n">'+myR.length+'</div><div class="l">گزارش</div></div>'+
+    '<div class="stat i"><div class="n">'+myL.length+'</div><div class="l">طرح درس</div></div>'+
+    '<div class="stat y"><div class="n">'+ppl+'</div><div class="l">افراد</div></div>'+
+    '<div class="stat d"><div class="n">'+myS.length+'</div><div class="l">جلسه</div></div></div></div>';
+  if(ppl>0){
+    var g={ESTEGHLATI:0,NIMESORAT:0,SORATI:0,NONE:0};
+    d.people.forEach(function(p){g[p.group||'NONE']++});
+    h+='<div class="card"><h2>ترکیب گروه‌ها</h2><div class="grid">'+
+      '<div class="stat"><div class="n">'+g.ESTEGHLATI+'</div><div class="l">استقامتی</div></div>'+
+      '<div class="stat i"><div class="n">'+g.NIMESORAT+'</div><div class="l">نیمه‌سرعتی</div></div>'+
+      '<div class="stat y"><div class="n">'+g.SORATI+'</div><div class="l">سرعتی</div></div>'+
+      '<div class="stat d"><div class="n">'+g.NONE+'</div><div class="l">بدون گروه</div></div></div></div>';
+  }
+  if(myR.length>0||myL.length>0||myS.length>0){
+    var months={};
+    function mkey(t){try{var d2=new Date(t);return d2.toLocaleDateString('fa-IR',{year:'numeric',month:'long'})}catch(e){return 'نامشخص'}}
+    myR.forEach(function(r){var k=mkey(r.date);months[k]=months[k]||{reports:0,lessons:0,sessions:0};months[k].reports++});
+    myL.forEach(function(r){var k=mkey(r.date);months[k]=months[k]||{reports:0,lessons:0,sessions:0};months[k].lessons++});
+    myS.forEach(function(r){var k=mkey(r.date);months[k]=months[k]||{reports:0,lessons:0,sessions:0};months[k].sessions++});
+    h+='<div class="card"><h2>فعالیت ماهانه</h2>';
+    Object.keys(months).forEach(function(k){var m=months[k];h+='<div class="kv"><span class="k">'+esc(k)+'</span><span class="v">📝 '+m.reports+' • 📋 '+m.lessons+' • 📅 '+m.sessions+'</span></div>'});
+    h+='</div>';
+  }
+  if(d.attendance.length>0){
+    var pres=d.attendance.filter(function(a){return a.status=='PRESENT'}).length;
+    var abs=d.attendance.filter(function(a){return a.status=='ABSENT'}).length;
+    var rate=d.attendance.length?Math.round(pres*100/d.attendance.length):0;
+    h+='<div class="card"><h2>حضور و غیاب</h2><div class="grid">'+
+      '<div class="stat"><div class="n">'+pres+'</div><div class="l">حضور</div></div>'+
+      '<div class="stat d"><div class="n">'+abs+'</div><div class="l">غیاب</div></div>'+
+      '<div class="stat i"><div class="n">'+rate+'%</div><div class="l">نرخ حضور</div></div>'+
+      '<div class="stat y"><div class="n">'+d.attendance.length+'</div><div class="l">کل ثبت</div></div></div></div>';
+  }
+  h+='<div class="card"><h2>خروجی آمار</h2><button class="btn-i" onclick="exportStats()">📥 خروجی CSV</button></div>';
+  return h;
+}
+function exportStats(){
+  var d=db(),u=gs();
+  var csv='نوع,عنوان,تاریخ,وضعیت,مربی\n';
+  d.reports.filter(function(r){return r.uid==u.id}).forEach(function(r){csv+='گزارش,"'+r.subject.replace(/"/g,'""')+'",'+pdate(r.date)+','+(r.status||'DRAFT')+','+(r.instructorName||r.name||'')+'\n'});
+  d.lessons.filter(function(r){return r.uid==u.id}).forEach(function(r){csv+='طرح درس,"'+r.title.replace(/"/g,'""')+'",'+pdate(r.date)+','+(r.status||'DRAFT')+','+(r.name||'')+'\n'});
+  d.sessions.filter(function(r){return r.uid==u.id}).forEach(function(r){csv+='جلسه,"'+r.title.replace(/"/g,'""')+'",'+pdate(r.date)+',,'+(r.name||'')+'\n'});
+  var b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='morabbi-stats.csv';a.click();tg('CSV ذخیره شد');
+}
+
+// ========= QURAN =========
+function quranPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">آیات قرآن</span></div>';
+  h+='<div class="search"><input id="qsearch" placeholder="جستجو در آیات (موضوع، سوره، متن)..." oninput="searchQuran()"><button onclick="searchQuran()">🔍</button></div>';
+  h+='<div id="quranList"><div class="card"><h2>آیات قرآن ('+d.quran.length+')</h2>';
+  d.quran.forEach(function(q){
+    h+='<div class="verse" data-search="'+(esc(q.text)+' '+esc(q.surah)+' '+esc(q.topic)).toLowerCase()+'"><div>'+esc(q.text)+'</div><span class="vref">'+esc(q.surah)+' • آیه '+q.verseNo+' • موضوع: '+esc(q.topic)+'</span></div>';
+  });
+  h+='</div></div>';
+  return h;
+}
+var _quranSrvTimer=null;
+function searchQuran(){
+  var raw=(document.getElementById('qsearch').value||'').trim();
+  var q=raw.toLowerCase();
+  document.querySelectorAll('#quranList .verse').forEach(function(v){
+    var s=v.getAttribute('data-search');
+    v.style.display=s.indexOf(q)>=0?'block':'none';
+  });
+  if(q.length>=2&&window.API&&API.getToken&&API.getToken()){
+    clearTimeout(_quranSrvTimer);
+    _quranSrvTimer=setTimeout(function(){
+      API.pullQuranSearch(raw).then(function(n){
+        if(!n)return;
+        var d=db(),list=document.getElementById('quranList');
+        if(!list)return;
+        d.quran.forEach(function(v){
+          if(!v.sid)return;
+          var s=(v.text+' '+v.surah+' '+v.topic).toLowerCase();
+          if(s.indexOf(q)<0)return;
+          var ex=list.querySelector('.verse[data-sid="'+v.sid+'"]');
+          if(ex){ex.style.display='block';return;}
+          var div=document.createElement('div');
+          div.className='verse';
+          div.setAttribute('data-sid',v.sid);
+          div.setAttribute('data-search',s);
+          div.innerHTML='<div>'+esc(v.text)+'</div><span class="vref" style="color:#059669">🌐 '+esc(v.surah)+' • آیه '+v.verseNo+(v.topic?' • موضوع: '+esc(v.topic):'')+'</span>';
+          list.appendChild(div);
+        });
+      }).catch(function(){});
+    },400);
+  }
+}
+
+// ========= HADITH =========
+function hadithPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">احادیث</span></div>';
+  h+='<div class="search"><input id="hsearch" placeholder="جستجو در احادیث..." oninput="searchHadith()"><button onclick="searchHadith()">🔍</button></div>';
+  h+='<div id="hadithList"><div class="card"><h2>احادیث ('+d.hadiths.length+')</h2>';
+  d.hadiths.forEach(function(hd){
+    h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" data-search="'+(esc(hd.text)+' '+esc(hd.source)+' '+esc(hd.narrator)+' '+esc(hd.topic)).toLowerCase()+'"><div>'+esc(hd.text)+'</div><span class="vref" style="color:#6d28d9">'+esc(hd.source)+' • '+esc(hd.narrator)+' • موضوع: '+esc(hd.topic)+'</span></div>';
+  });
+  h+='</div></div>';
+  return h;
+}
+function searchHadith(){
+  var q=(document.getElementById('hsearch').value||'').toLowerCase();
+  document.querySelectorAll('#hadithList .verse').forEach(function(v){
+    var s=v.getAttribute('data-search');
+    v.style.display=s.indexOf(q)>=0?'block':'none';
+  });
+}
+
+// ========= EVALUATIONS =========
+function evaluationsPage(){
+  var d=db(),u=gs();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">ارزیابی‌ها</span></div>';
+  var evals=d.evaluations.slice().reverse();
+  if(!evals.length)return h+'<div class="empty"><span class="e-ic">🎯</span>هنوز ارزیابی‌ای ثبت نشده</div>';
+  h+='<div class="card"><h2>ارزیابی‌ها ('+evals.length+')</h2>';
+  evals.forEach(function(e){
+    var target=null,tt='';
+    if(e.targetType=='REPORT'){target=d.reports.find(function(r){return r.id==e.targetId});tt='گزارش: '+(target?target.subject:'حذف‌شده')}
+    else if(e.targetType=='LESSON'){target=d.lessons.find(function(l){return l.id==e.targetId});tt='طرح درس: '+(target?target.title:'حذف‌شده')}
+    var eu=d.users.find(function(x){return x.id==e.evaluatorId});
+    var tu=d.users.find(function(x){return x.id==e.targetUid});
+    h+='<div class="list-item"><div class="li-ic">🎯</div>'+
+      '<div class="li-t"><div class="t">'+esc(tt)+'</div>'+
+      '<div class="s">امتیاز: '+e.totalScore+' از '+e.maxScore+' • '+pdate(e.date)+'</div>'+
+      '<div class="s">ارزیاب: '+esc(eu?eu.name:'نامشخص')+' • مربی: '+esc(tu?tu.name:'نامشخص')+'</div></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= EVAL CRITERIA =========
+function evalCriteriaPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">معیارهای ارزیابی</span></div>';
+  h+='<div class="card"><h2>معیارهای ارزیابی ('+d.criteria.length+')</h2>';
+  var types={'REPORT':'گزارش','LESSON':'طرح درس','INSTRUCTOR':'مربی'};
+  d.criteria.forEach(function(c){
+    h+='<div class="list-item"><div class="li-ic">📐</div>'+
+      '<div class="li-t"><div class="t">'+esc(c.name)+'</div><div class="s"><span class="tag i">'+types[c.type]+'</span> حداکثر امتیاز: '+c.maxScore+'</div></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= POINTS =========
+function pointsPage(){
+  var d=db(),u=gs();
+  var myPoints=d.points.filter(function(p){return p.uid==u.id}).reverse();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">امتیازهای من</span></div>';
+  h+='<div class="card" style="text-align:center"><h2 style="text-align:center;border:none">امتیاز کل</h2><div style="font-size:42px;font-weight:700;color:var(--p)">'+(u.points||0)+'</div></div>';
+  if(!myPoints.length)return h+'<div class="empty"><span class="e-ic">⭐</span>هنوز امتیازی دریافت نکرده‌اید</div>';
+  h+='<div class="card"><h2>تاریخچه امتیازها ('+myPoints.length+')</h2>';
+  myPoints.forEach(function(p){
+    h+='<div class="point"><div class="pp">+'+p.amount+'</div><div><div style="font-size:12px;font-weight:600">'+esc(p.reason)+'</div><div style="font-size:11px;color:var(--m)">'+pdate(p.date)+' '+ptime(p.date)+'</div></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= RECOGNITIONS =========
+function recognitionsPage(){
+  var d=db(),u=gs();
+  var myRecs=d.recognitions.filter(function(r){return r.userId==u.id}).reverse();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">تقدیرهای من</span></div>';
+  h+='<div class="card" style="text-align:center"><h2 style="text-align:center;border:none">تعداد تقدیرها</h2><div style="font-size:42px;font-weight:700;color:var(--y)">'+(u.recognitions||0)+'</div></div>';
+  if(!myRecs.length)return h+'<div class="empty"><span class="e-ic">🏆</span>هنوز تقدیری دریافت نکرده‌اید</div>';
+  h+='<div class="card"><h2>تاریخچه تقدیرها</h2>';
+  myRecs.forEach(function(r){
+    var au=d.users.find(function(x){return x.id==r.awardedBy});
+    var lvl={GOOD:'خوب',EXCELLENT:'عالی',OUTSTANDING:'برجسته'}[r.level]||r.level;
+    h+='<div class="rec-card"><div class="rl">🏆 '+lvl+'</div><div class="rn">'+esc(r.title)+'</div><div style="font-size:12px;color:#78350f;line-height:1.6">'+esc(r.description)+'</div><div class="rp">'+pdate(r.date)+' • توسط '+esc(au?au.name:'نامشخص')+'</div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= LEADERBOARD =========
+function leaderboardPage(){
+  var d=db();
+  var users=d.users.filter(function(u){return u.active}).slice().sort(function(a,b){return (b.points||0)-(a.points||0)});
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">رتبه‌بندی</span></div>';
+  h+='<div class="card"><h2>جدول امتیازات</h2>';
+  users.forEach(function(u,idx){
+    var medal=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':(idx+1);
+    h+='<div class="list-item"><div class="li-ic" style="background:'+(idx<3?'#fef3c7':'var(--pl)')+';color:'+(idx<3?'#92400e':'var(--p)')+';font-weight:700">'+medal+'</div>'+
+      '<div class="li-t"><div class="t">'+esc(u.name)+'</div><div class="s">'+roleLabel(u.role)+' • تقدیر: '+(u.recognitions||0)+'</div></div>'+
+      '<div style="font-weight:700;color:var(--p);font-size:18px">'+(u.points||0)+'</div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= BRANCHES =========
+function branchesPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">شعب و مکاتب</span></div>';
+  h+='<div class="card"><h2>مکاتب ('+d.maktabs.length+')</h2>';
+  d.maktabs.forEach(function(m){
+    var brs=d.branches.filter(function(b){return b.maktabId==m.id});
+    h+='<div class="list-item"><div class="li-ic">🏛</div><div class="li-t"><div class="t">'+esc(m.name)+'</div><div class="s">کد: '+esc(m.code)+' • '+brs.length+' شعبه</div></div></div>';
+  });
+  h+='</div>';
+  h+='<div class="card"><h2>شعب ('+d.branches.length+')</h2>';
+  d.branches.forEach(function(b){
+    var mk=d.maktabs.find(function(m){return m.id==b.maktabId});
+    var userCount=d.users.filter(function(u){return u.branchId==b.id}).length;
+    h+='<div class="list-item"><div class="li-ic">🏢</div><div class="li-t"><div class="t">'+esc(b.name)+'</div><div class="s">کد: '+esc(b.code)+(b.phone?' • تلفن: '+esc(b.phone):'')+(mk?' • '+esc(mk.name):'')+'</div><div class="s">'+userCount+' کاربر</div></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// ========= USERS =========
+function usersPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">کاربران</span></div>';
+  h+='<div class="search"><input id="usearch" placeholder="جستجو در کاربران..." oninput="filterUsers()"><button onclick="filterUsers()">🔍</button></div>';
+  h+='<div class="tab-sel">'+
+    '<button class="on" onclick="filterUsersByRole(this,\'all\')">همه ('+d.users.length+')</button>'+
+    '<button onclick="filterUsersByRole(this,\'ADMIN\')">مدیر</button>'+
+    '<button onclick="filterUsersByRole(this,\'INSTRUCTOR\')">مربی</button>'+
+    '<button onclick="filterUsersByRole(this,\'EVALUATOR\')">ارزیاب</button>'+
+    '<button onclick="filterUsersByRole(this,\'TRAINEE\')">تربیت‌پذیر</button></div>';
+  h+='<div id="usersList">';
+  d.users.forEach(function(u){
+    var br=d.branches.find(function(b){return b.id==u.branchId});
+    h+='<div class="list-item" data-search="'+(esc(u.name)+' '+esc(u.phone)+' '+esc(u.area||'')).toLowerCase()+'" data-role="'+u.role+'">'+
+      '<div class="li-ic">👤</div>'+
+      '<div class="li-t"><div class="t">'+esc(u.name)+'</div><div class="s"><span class="role-badge role-'+u.role+'">'+roleLabel(u.role)+'</span> '+esc(u.phone)+(br?' • '+esc(br.name):'')+'</div>'+
+      '<div class="s">امتیاز: '+(u.points||0)+' • تقدیر: '+(u.recognitions||0)+'</div></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+function filterUsers(){
+  var q=(document.getElementById('usearch').value||'').toLowerCase();
+  document.querySelectorAll('#usersList .list-item').forEach(function(li){
+    var s=li.getAttribute('data-search');
+    li.style.display=s.indexOf(q)>=0?'flex':'none';
+  });
+}
+function filterUsersByRole(btn,role){
+  var all=btn.parentNode.querySelectorAll('button');all.forEach(function(b){b.className=''});btn.className='on';
+  document.querySelectorAll('#usersList .list-item').forEach(function(li){
+    var r=li.getAttribute('data-role');
+    li.style.display=(role=='all'||r==role)?'flex':'none';
+  });
+}
+
+// ========= APPROVALS =========
+function approvalsPage(){
+  var d=db();
+  var pending=d.users.filter(function(u){return u.approvalStatus=='PENDING'});
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">تأیید ثبت‌نام</span></div>';
+  if(!pending.length)return h+'<div class="empty"><span class="e-ic">✅</span>هیچ درخواستی در انتظار نیست</div>';
+  h+='<div class="card"><h2>در انتظار تأیید ('+pending.length+')</h2>';
+  pending.forEach(function(u){
+    var br=d.branches.find(function(b){return b.id==u.branchId});
+    h+='<div class="list-item"><div class="li-ic">👤</div>'+
+      '<div class="li-t"><div class="t">'+esc(u.name)+'</div>'+
+      '<div class="s">تلفن: '+esc(u.phone)+'</div>'+
+      '<div class="s">نقش درخواستی: <span class="role-badge role-'+u.requestedRole+'">'+roleLabel(u.requestedRole)+'</span></div>'+
+      '<div class="s">'+(u.area?esc(u.area):'')+(br?' • '+esc(br.name):'')+'</div>'+
+      '<div class="s">تاریخ: '+pdate(u.created)+'</div></div>'+
+      '<div class="li-a" style="flex-direction:column"><button class="btn-p" onclick="approveUser(\''+u.id+'\')">✓</button><button class="btn-d" onclick="rejectUser(\''+u.id+'\')">✗</button></div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+function approveUser(id){
+  var d=db();
+  var u=d.users.find(function(x){return x.id==id});
+  if(!u)return;
+  u.approvalStatus='APPROVED';
+  u.role=u.requestedRole||u.role;
+  d.notifications.push({id:uid('n'),title:'تأیید ثبت‌نام',body:'درخواست ثبت‌نام شما تأیید شد. نقش: '+roleLabel(u.role),date:Date.now(),read:false,targetUid:u.id});
+  sv(d);tg('کاربر تأیید شد');render();
+}
+function rejectUser(id){
+  if(!confirm('رد درخواست؟'))return;
+  var d=db();
+  var u=d.users.find(function(x){return x.id==id});
+  if(!u)return;
+  u.approvalStatus='REJECTED';
+  u.active=false;
+  d.notifications.push({id:uid('n'),title:'رد ثبت‌نام',body:'متأسفانه درخواست ثبت‌نام شما رد شد.',date:Date.now(),read:false,targetUid:u.id});
+  sv(d);tg('درخواست رد شد');render();
+}
+
+// ========= PROFILE =========
+function profilePage(){
+  var u=gs(),d=db();
+  var br=d.branches.find(function(b){return b.id==u.branchId});
+  var mk=br?d.maktabs.find(function(m){return m.id==br.maktabId}):null;
+  var myPoints=d.points.filter(function(p){return p.uid==u.id}).length;
+  var myEvals=d.evaluations.filter(function(e){return e.targetUid==u.id}).length;
+  var myRecs=d.recognitions.filter(function(r){return r.userId==u.id}).length;
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">پروفایل</span></div>';
+  h+='<div class="card" style="text-align:center"><div style="width:80px;height:80px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin:0 auto 10px">'+esc(u.name.charAt(0))+'</div><h2 style="text-align:center;border:none">'+esc(u.name)+'</h2><p style="color:var(--m)"><span class="role-badge role-'+u.role+'">'+roleLabel(u.role)+'</span></p></div>';
+  h+='<div class="card"><h2>اطلاعات</h2>'+
+    '<div class="kv"><span class="k">نام کامل</span><span class="v">'+esc(u.name)+'</span></div>'+
+    '<div class="kv"><span class="k">شماره تلفن</span><span class="v">'+esc(u.phone)+'</span></div>'+
+    '<div class="kv"><span class="k">کد ملی</span><span class="v">'+esc(u.nationalId||'-')+'</span></div>'+
+    '<div class="kv"><span class="k">نقش</span><span class="v">'+roleLabel(u.role)+'</span></div>'+
+    (u.area?'<div class="kv"><span class="k">منطقه</span><span class="v">'+esc(u.area)+'</span></div>':'')+
+    (u.school?'<div class="kv"><span class="k">مدرسه</span><span class="v">'+esc(u.school)+'</span></div>':'')+
+    (br?'<div class="kv"><span class="k">شعبه</span><span class="v">'+esc(br.name)+'</span></div>':'')+
+    (mk?'<div class="kv"><span class="k">مکتب</span><span class="v">'+esc(mk.name)+'</span></div>':'')+
+    '<div class="kv"><span class="k">وضعیت</span><span class="v">'+{APPROVED:'تأییدشده',PENDING:'در انتظار',REJECTED:'ردشده'}[u.approvalStatus]+'</span></div>'+
+    '<div class="kv"><span class="k">تاریخ عضویت</span><span class="v">'+pdate(u.created||Date.now())+'</span></div></div>';
+  h+='<div class="card"><h2>آمار شخصی</h2><div class="grid">'+
+    '<div class="stat"><div class="n">'+(u.points||0)+'</div><div class="l">امتیاز</div></div>'+
+    '<div class="stat y"><div class="n">'+myRecs+'</div><div class="l">تقدیر</div></div>'+
+    '<div class="stat v"><div class="n">'+myEvals+'</div><div class="l">ارزیابی</div></div>'+
+    '<div class="stat i"><div class="n">'+myPoints+'</div><div class="l">تراکنش</div></div></div></div>';
+  h+='<div class="card"><h2>ویرایش پروفایل</h2>'+
+    '<div class="f"><label>نام</label><input id="pname" value="'+esc(u.name)+'"></div>'+
+    '<div class="f"><label>منطقه</label><input id="parea" value="'+esc(u.area||'')+'"></div>'+
+    '<div class="f"><label>مدرسه</label><input id="pschool" value="'+esc(u.school||'')+'"></div>'+
+    '<div class="f"><label>شعبه</label>'+branchSelectWithCurrent('pbranch',u.branchId)+'</div>'+
+    '<div class="f"><label>رمز جدید (اختیاری)</label><input id="pcode" inputmode="numeric" maxlength="6" placeholder="۶ رقم جدید"></div>'+
+    '<button class="btn-p" onclick="saveProfile()">ذخیره تغییرات</button></div>';
+  return h;
+}
+function branchSelectWithCurrent(id,cur){
+  var d=db();var h='<select id="'+id+'">';
+  d.branches.forEach(function(b){var mk=d.maktabs.find(function(m){return m.id==b.maktabId});h+='<option value="'+b.id+'"'+(b.id==cur?' selected':'')+'>'+esc(b.name)+(mk?' ('+esc(mk.name)+')':'')+'</option>'});
+  h+='</select>';return h;
+}
+function saveProfile(){
+  var u=gs(),d=db();
+  var n=document.getElementById('pname').value.trim();
+  if(!n){tg('نام نمی‌تواند خالی باشد',1);return}
+  var user=d.users.find(function(x){return x.id==u.id});
+  if(!user){tg('خطا',1);return}
+  user.name=n;user.area=document.getElementById('parea').value.trim();
+  user.school=document.getElementById('pschool').value.trim();
+  user.branchId=v('pbranch');
+  var newCode=document.getElementById('pcode').value.trim();
+  if(newCode){if(newCode.length!=6){tg('رمز باید ۶ رقم باشد',1);return}user.code=newCode}
+  sv(d);ss(user);tg('پروفایل به‌روزرسانی شد');render();
+}
+
+// ========= SETTINGS =========
+function settingsPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">تنظیمات</span></div>';
+  h+='<div class="card"><h2>داده‌ها</h2>'+
+    '<button class="btn-i" onclick="exportBackup()" style="margin-bottom:6px">📥 پشتیبان‌گیری (JSON)</button>'+
+    '<button class="btn-y" onclick="importBackup()">📤 بازیابی از فایل</button></div>';
+  h+='<div class="card"><h2>تنظیمات سرور (اختیاری)</h2>'+
+    '<div class="note">در صورتی که سرور همگام‌سازی دارید، آدرس آن را وارد کنید. در حالت آفلاین نیازی نیست.</div>'+
+    '<div class="f"><label>آدرس سرور</label><input id="srvUrl" value="'+esc(d.settings.serverUrl||'')+'" placeholder="https://example.com/api"></div>'+
+    '<button class="btn-s" onclick="saveServer()">ذخیره</button></div>';
+  h+='<div class="card"><h2>نوتیفیکیشن‌های پوش</h2>'+
+    '<div class="note">برای دریافت اعلان‌ها (نتیجه ارزیابی، گزارش جدید و...) حتی وقتی برنامه بسته است.</div>'+
+    '<div id="pushStatus" style="margin:6px 0;color:var(--m);font-size:12px">'+pushStateText()+'</div>'+
+    '<button class="btn-s" id="pushBtn" onclick="togglePush()">'+pushBtnText()+'</button></div>';
+  h+='<div class="card"><h2>پاک‌سازی</h2>'+
+    '<button class="btn-d" onclick="clearAll()" style="margin-bottom:6px">🗑 پاک‌سازی همه داده‌ها</button>'+
+    '<button class="btn-d" onclick="clearReportsOnly()">🧹 پاک‌سازی فقط گزارش‌ها</button></div>';
+  h+='<div class="card"><h2>درباره نسخه</h2>'+
+    '<div class="kv"><span class="k">نسخه</span><span class="v">v4.0.0 یکپارچه</span></div>'+
+    '<div class="kv"><span class="k">سازماندهنده</span><span class="v">نهضت تربیتی</span></div>'+
+    '<div class="kv"><span class="k">حالت</span><span class="v">'+(window.API&&API.base()&&API.getToken()?'آنلاین — '+esc(API.base()):'آفلاین (localStorage)')+'</span></div>'+
+    '<div class="kv"><span class="k">سرور</span><span class="v">'+esc(d.settings.serverUrl||'همان دامنه (خودکار)')+'</span></div>'+
+    '<div class="kv"><span class="k">کاربران فعال</span><span class="v">'+d.users.filter(function(u){return u.active}).length+'</span></div></div>';
+  return h;
+}
+function saveServer(){
+  var d=db();d.settings.serverUrl=document.getElementById('srvUrl').value.trim();sv(d);
+  tg('آدرس سرور ذخیره شد');
+  if(window.API&&API.base()){
+    var s=gs();
+    if(s){
+      API.login(s.phone,s.code).then(function(r){ss(r.user);sv(db());API.start();tg('اتصال به سرور برقرار شد');})
+        .catch(function(){tg('اتصال به سرور ناموفق — بررسی آدرس',1)});
+    }else tg('برای اتصال وارد شوید');
+  }
+  render();
+}
+function exportBackup(){
+  var d=db();var data=JSON.stringify(d,null,2);
+  var b=new Blob([data],{type:'application/json;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='morabbi-backup-'+pdate()+'.json';a.click();tg('پشتیبان ذخیره شد');
+}
+function importBackup(){
+  var input=document.createElement('input');
+  input.type='file';input.accept='application/json,.json';
+  input.onchange=function(){
+    var f=input.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{var data=JSON.parse(r.result);
+        if(!data.users||!data.reports)throw 'invalid';
+        sv(data);tg('داده‌ها بازیابی شد');setTimeout(function(){location.reload()},1000);
+      }catch(e){tg('فایل نامعتبر',1)}
+    };
+    r.readAsText(f);
+  };
+  input.click();
+}
+function clearAll(){
+  if(!confirm('هشدار! همه داده‌ها حذف می‌شوند. مطمئن هستید؟'))return;
+  if(!confirm('تأیید نهایی؟'))return;
+  localStorage.removeItem(DB_KEY);localStorage.removeItem(SS_KEY);
+  tg('همه داده‌ها حذف شد');setTimeout(function(){location.reload()},1000);
+}
+function clearReportsOnly(){
+  if(!confirm('همه گزارش‌ها حذف شوند؟'))return;
+  var d=db();d.reports=[];sv(d);tg('گزارش‌ها حذف شد');nav('reports');
+}
+function pushStateText(){
+  if(!window.API)return 'لایه آنلاین بارگذاری نشده است';
+  var p=API.pushPermission();
+  if(p==='unsupported')return 'مرورگر شما از نوتیفیکیشن پشتیبانی نمی‌کند';
+  if(p==='denied')return 'دسترسی نوتیفیکیشن در مرورگر مسدود است (از تنظیمات مرورگر فعال کنید)';
+  if(p==='granted')return '✅ اجازه نوتیفیکیشن داده شده';
+  return 'اجازه نوتیفیکیشن هنوز داده نشده است';
+}
+function pushBtnText(){
+  if(!window.API)return 'فعال‌سازی';
+  var p=API.pushPermission();
+  if(p==='granted')return '✅ فعال — برای لغو: نقره دوباره';
+  if(p==='denied')return 'در مرورگر مسدود است';
+  if(p==='unsupported')return 'پشتیبانی نمی‌شود';
+  return '🔔 فعال‌سازی نوتیفیکیشن';
+}
+function togglePush(){
+  if(!window.API){tg('لایه آنلاین در دسترس نیست',1);return}
+  var btn=document.getElementById('pushBtn');
+  if(API.pushPermission()==='granted'&&API.getToken()){
+    /* already granted — unsubscribe */
+    if(btn){btn.disabled=true;btn.textContent='در حال لغو...'}
+    API.disablePush().then(function(ok){
+      tg(ok?'نوتیفیکیشن لغو شد':'اشتراکی برای لغو نیافت');
+      setTimeout(function(){render()},600);
+    });
+    return;
+  }
+  if(!API.getToken()){tg('برای فعال‌سازی ابتدا وارد شوید',1);return}
+  if(btn){btn.disabled=true;btn.textContent='در حال فعال‌سازی...'}
+  API.enablePush().then(function(){
+    tg('نوتیفیکیشن فعال شد ✅');
+    setTimeout(function(){render()},600);
+  }).catch(function(e){
+    tg('فعال‌سازی ناموفق: '+(e&&e.message||e),1);
+    if(btn){btn.disabled=false;btn.textContent=pushBtnText()}
+  });
+}
+
+// ========= ABOUT =========
+function aboutPage(){
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">درباره</span></div>';
+  h+='<div class="card about">'+
+    '<h1 style="color:var(--p);text-align:center;font-size:18px;margin:8px 0">نهضت تربیتی</h1>'+
+    '<p style="text-align:center;color:var(--m);margin-bottom:12px">حضرت سیدالشهدا علیه‌السلام</p>'+
+    '<p>این سامانه جامع به منظور مدیریت فعالیت‌های فرهنگی‌تربیتی نهضت حضرت سیدالشهدا علیه‌السلام طراحی شده و به مربیان، ارزیابان و مدیران کمک می‌کند تا گزارش‌گیری، طرح‌درس‌نویسی، مدیریت افراد، حضور و غیاب، ارزیابی، امتیازدهی و تقدیر را به‌صورت آفلاین و بدون نیاز به اینترنت انجام دهند.</p>'+
+    '<div class="divider"></div>'+
+    '<h2 style="font-size:14px">امکانات کامل (نسخه ۲۲)</h2>'+
+    '<ul>'+
+    '<li>📝 ثبت و مدیریت گزارش تربیتی با الگوی چهار مرحله‌ای و سه گروهی</li>'+
+    '<li>📋 نگارش طرح درس با مراحل تدریس، اهداف رفتاری، آیات و احادیث</li>'+
+    '<li>👤 مدیریت لیست افراد و گروه‌بندی (استقامتی، نیمه‌سرعتی، سرعتی)</li>'+
+    '<li>✓ ثبت حضور و غیاب روزانه با گزارش‌گیری</li>'+
+    '<li>📅 ثبت صورتجلسه و مصوبات</li>'+
+    '<li>🔔 اطلاعیه‌های داخلی</li>'+
+    '<li>📆 تقویم فعالیت‌ها</li>'+
+    '<li>📊 آمار و گزارش‌های تحلیلی</li>'+
+    '<li>📖 جستجوی آیات قرآن (۱۵ آیه)</li>'+
+    '<li>☪️ جستجوی احادیث (۱۰ حدیث)</li>'+
+    '<li>🎯 ارزیابی گزارش‌ها و طرح‌درس‌ها با ۱۵ معیار</li>'+
+    '<li>📐 مدیریت معیارهای ارزیابی</li>'+
+    '<li>⭐ سیستم امتیازدهی خودکار</li>'+
+    '<li>🏆 تقدیر و نشان‌ها</li>'+
+    '<li>📈 رتبه‌بندی مربیان</li>'+
+    '<li>🏛 مدیریت مکاتب (۴ مکتب) و شعب (۶ شعبه)</li>'+
+    '<li>👥 مدیریت کاربران با ۴ نقش (مدیر، مربی، ارزیاب، تربیت‌پذیر)</li>'+
+    '<li>✅ تأیید ثبت‌نام کاربران جدید</li>'+
+    '<li>💬 ثبت نظر روی گزارش‌ها و طرح‌درس‌ها</li>'+
+    '<li>🔍 جستجو و فیلتر در همه بخش‌ها</li>'+
+    '<li>📄 خروجی PDF از گزارش‌ها و طرح‌درس‌ها</li>'+
+    '<li>📝 خروجی Word (.doc) از گزارش‌ها و طرح‌درس‌ها</li>'+
+    '<li>💾 خروجی متنی (.txt)</li>'+
+    '<li>📋 خروجی JSON از هر آیتم</li>'+
+    '<li>🔗 اشتراک‌گذاری با Web Share API یا کپی به کلیپ‌بورد</li>'+
+    '<li>📥 خروجی CSV از آمار</li>'+
+    '<li>💾 پشتیبان‌گیری و بازیابی کامل داده‌ها</li>'+
+    '<li>⚙️ تنظیمات سرور (اختیاری)</li>'+
+    '<li>🎨 رابط کاربری RTL فارسی با تم سبز</li>'+
+    '<li>📱 نوار ناوبری پایین با ۵ تب اصلی</li>'+
+    '<li>💤 ذخیره‌سازی کامل آفلاین روی دستگاه</li>'+
+    '</ul>'+
+    '<div class="divider"></div>'+
+    '<h2 style="font-size:14px">راهنمای استفاده</h2>'+
+    '<p><b>ورود:</b> با شماره تلفن و رمز (۶ رقم آخر کد ملی) وارد شوید. در صورت عدم وجود حساب، از فرم ثبت‌نام استفاده کنید (نیاز به تأیید مدیر دارد).</p>'+
+    '<p><b>ثبت گزارش:</b> از منوی «گزارش» با الگوی چهار مرحله و سه گروه ثبت کنید. می‌توانید با دکمه «📖 درج آیه» و «☪️ درج حدیث» آیات و احادیث را به راحتی به گزارش اضافه کنید.</p>'+
+    '<p><b>ارزیابی:</b> ارزیابان و مدیران می‌توانند روی هر گزارش یا طرح درس، با ۱۵ معیار، ارزیابی کنند. امتیاز و تقدیر خودکار به مربی داده می‌شود.</p>'+
+    '<p><b>نقش‌ها:</b> مدیر (مدیریت کامل)، مربی (ثبت گزارش و طرح درس)، ارزیاب (ارزیابی)، تربیت‌پذیر (مشارکت محدود).</p>'+
+    '<div class="divider"></div>'+
+    '<h2 style="font-size:14px">حساب‌های پیش‌فرض</h2>'+
+    '<table style="width:100%;font-size:12px;border-collapse:collapse">'+
+    '<tr style="background:var(--pl)"><th style="padding:6px;text-align:right">نقش</th><th style="padding:6px;text-align:right">تلفن</th><th style="padding:6px;text-align:right">رمز</th></tr>'+
+    '<tr><td style="padding:6px">مدیر</td><td style="padding:6px">09120000001</td><td style="padding:6px">567890</td></tr>'+
+    '<tr><td style="padding:6px">مربی</td><td style="padding:6px">09120000002</td><td style="padding:6px">543210</td></tr>'+
+    '<tr><td style="padding:6px">ارزیاب</td><td style="padding:6px">09120000003</td><td style="padding:6px">111111</td></tr>'+
+    '</table>'+
+    '<div class="divider"></div>'+
+    '<h2 style="font-size:14px">نکات امنیتی</h2>'+
+    '<ul>'+
+    '<li>داده‌ها فقط روی همین دستگاه ذخیره می‌شوند.</li>'+
+    '<li>به‌طور دوره‌ای از تنظیمات پشتیبان بگیرید.</li>'+
+    '<li>رمز خود را به کسی ندهید.</li>'+
+    '<li>در صورت تغییر دستگاه، از فایل پشتیبان برای انتقال استفاده کنید.</li>'+
+    '</ul>'+
+    '<div class="divider"></div>'+
+    '<p style="text-align:center;color:var(--m);font-size:12px">نسخه 22.0.0 • تولید '+pdate()+'<br>© نهضت تربیتی حضرت سیدالشهدا علیه‌السلام</p></div>';
+  return h;
+}
+
+// ========= INIT =========
+function logout(){
+  if(!confirm('آیا می‌خواهید خارج شوید؟'))return;
+  if(window.API){API.stop();API.logout();}
+  ss(null);curPage='home';curSub=null;
+  document.getElementById('tabs').style.display='none';
+  document.getElementById('topbar').style.display='none';
+  render();tg('خارج شدید');
+}
+
+// ========= v23 NEW FEATURES =========
+
+// Theme toggle (dark mode)
+function toggleTheme(){
+  var html=document.documentElement;
+  html.classList.toggle('dark');
+  var isDark=html.classList.contains('dark');
+  localStorage.setItem(THEME_KEY,isDark?'dark':'light');
+  document.getElementById('themeBtn').textContent=isDark?'☀️':'🌙';
+  tg(isDark?'حالت تاریک فعال شد':'حالت روشن فعال شد');
+}
+function loadTheme(){
+  var t=localStorage.getItem(THEME_KEY);
+  if(t==='dark'){
+    document.documentElement.classList.add('dark');
+    var b=document.getElementById('themeBtn');
+    if(b)b.textContent='☀️';
+  }
+}
+
+// Voice input (ASR): Web Speech API (Chrome/Android) with MediaRecorder→server fallback (Firefox/Safari)
+var voiceTarget=null,voiceRecording=false,voiceMode=null; // 'speech' | 'media'
+var voiceRecognition=null,voiceFinalText='',voiceResume=true;
+var voiceMediaRecorder=null,voiceMediaChunks=[],voiceMediaStream=null;
+function _voiceBtn(){return document.getElementById('voiceBtn')}
+function _voiceStartUI(){
+  voiceRecording=true;
+  var b=_voiceBtn();
+  if(b){b.textContent='⏹ توقف';b.classList.add('recording')}
+  tg(voiceMode==='speech'?'در حال شنیدن... (برای توقف دوباره بزنید)':'در حال ضبط صدا... (برای توقف دوباره بزنید)');
+}
+function _voiceStopUI(msg){
+  voiceRecording=false;
+  var b=_voiceBtn();
+  if(b){b.textContent='🎤 ضبط صوت';b.classList.remove('recording')}
+  if(msg)tg(msg);
+}
+function toggleVoice(targetId){
+  voiceTarget=targetId;
+  if(voiceRecording){ // stop
+    voiceResume=false;
+    if(voiceMode==='speech'&&voiceRecognition){try{voiceRecognition.stop()}catch(e){}}
+    if(voiceMode==='media'&&voiceMediaRecorder){try{voiceMediaRecorder.stop()}catch(e){}}
+    return;
+  }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){voiceMode='speech';_startSpeech(SR)}
+  else if(window.MediaRecorder&&navigator.mediaDevices){voiceMode='media';_startMediaRecord()}
+  else{tg('مرورگر شما از ضبط صوت پشتیبانی نمی‌کند. از Chrome استفاده کنید',1)}
+}
+function _startSpeech(SR){
+  voiceFinalText='';
+  var el=document.getElementById(voiceTarget);
+  var base=el?el.value:'';
+  voiceRecognition=new SR();
+  voiceRecognition.lang='fa-IR';
+  voiceRecognition.continuous=true;
+  voiceRecognition.interimResults=true;
+  voiceRecognition.onstart=function(){_voiceStartUI()};
+  voiceRecognition.onresult=function(event){
+    var interim='',finals='';
+    for(var i=0;i<event.results.length;i++){
+      var t=event.results[i][0].transcript;
+      if(event.results[i].isFinal)finals+=t;
+      else interim+=t;
+    }
+    if(finals)voiceFinalText+=finals;
+    var el=document.getElementById(voiceTarget);
+    if(el)el.value=base+(base&&voiceFinalText?' ':'')+(voiceFinalText+interim);
+  };
+  voiceRecognition.onerror=function(e){
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      voiceResume=false;
+      _voiceStopUI('دسترسی به میکروفر ممنوع است');
+    } else if(e.error!=='aborted'&&e.error!=='no-speech'){
+      tg('خطا در ضبط: '+e.error,1);
+    }
+    // onend fires after error; resume logic there decides
+  };
+  voiceRecognition.onend=function(){
+    if(voiceResume){
+      // browser auto-stopped (silence) — restart to keep listening
+      try{voiceRecognition.start();return}catch(e){}
+    }
+    if(voiceFinalText){
+      _voiceStopUI('صوت به متن تبدیل شد');
+    } else {
+      _voiceStopUI('ضبط متوقف شد');
+    }
+  };
+  voiceResume=true;
+  try{voiceRecognition.start()}catch(e){tg('شروع ضبط ناموفق: '+e.message,1)}
+}
+function _startMediaRecord(){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    voiceMediaStream=stream;
+    voiceMediaChunks=[];
+    var mime=MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
+    voiceMediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);
+    voiceMediaRecorder.ondataavailable=function(e){if(e.data.size>0)voiceMediaChunks.push(e.data)};
+    voiceMediaRecorder.onstop=function(){
+      // stop tracks, upload to server ASR
+      if(voiceMediaStream)voiceMediaStream.getTracks().forEach(function(t){t.stop()});
+      var blob=new Blob(voiceMediaChunks,{type:mime||'audio/webm'});
+      _uploadAudioForASR(blob);
+    };
+    voiceMediaRecorder.onerror=function(){_voiceStopUI('خطا در ضبط صدا',true)};
+    voiceMediaRecorder.start(250);
+    _voiceStartUI();
+  }).catch(function(e){
+    tg('دسترسی به میکروفر: '+(e.name||e.message),1);
+  });
+}
+function _uploadAudioForASR(blob){
+  tg('صورت در حال ارسال به سرور برای تبدیل به متن...');
+  var fd=new FormData();
+  fd.append('audio',blob,'recording.webm');
+  var base='',el=document.getElementById(voiceTarget);
+  if(el)base=el.value;
+  fetch(API.base()+'/api/media/transcribe',{method:'POST',headers:{'x-user-id':API.getToken()||''},body:fd}).then(function(r){
+    if(!r.ok)return r.json().then(function(j){throw new Error(j.error||('HTTP '+r.status))});
+    return r.json();
+  }).then(function(j){
+    if(j.text&&!/در دسترس نیست/.test(j.text)){
+      var el=document.getElementById(voiceTarget);
+      if(el)el.value=base+(base&&j.text?'\n':'')+j.text;
+      _voiceStopUI('صوت به متن تبدیل شد');
+    } else {
+      _voiceStopUI('تبدیل صوت در دسترس نیست؛ لطفاً دستی بنویسید',true);
+    }
+  }).catch(function(e){
+    _voiceStopUI('ارسال صوت به سرور ناموفق: '+(e.message||''),true);
+  });
+}
+
+// Insert methodology template into report
+function insertMethodology(){
+  var d=db();
+  var h='<h3>انتخاب روش تدریس</h3><div style="max-height:300px;overflow-y:auto">';
+  d.methodologies.forEach(function(m){
+    h+='<div class="method-card" onclick="appendText(\'fcontent\',\'\\n[روش: '+esc(m.name)+']\\n'+esc(m.steps).replace(/\n/g,'\\n')+'\\n\');closeModal()">'+
+      '<div class="mn">'+esc(m.name)+'</div>'+
+      '<div class="md">'+esc(m.desc)+'</div>'+
+      '<div class="ms" style="white-space:pre-line">'+esc(m.steps)+'</div></div>';
+  });
+  h+='</div>';
+  showModal(h);
+}
+
+// Print report directly
+function printReport(id){
+  exportReportPDF(id);
+}
+
+// Edit report
+function editReport(id){
+  var d=db();
+  var r=d.reports.find(function(x){return x.id==id});
+  if(!r)return;
+  // Pre-fill the form
+  nav('reports','form');
+  setTimeout(function(){
+    if(document.getElementById('fsubject'))document.getElementById('fsubject').value=r.subject||'';
+    if(document.getElementById('fdate'))document.getElementById('fdate').value=r.jdate||pdate(r.date);
+    if(document.getElementById('fcount'))document.getElementById('fcount').value=r.count||'0';
+    if(document.getElementById('fcontent'))document.getElementById('fcontent').value=r.content||'';
+    if(document.getElementById('fs1'))document.getElementById('fs1').value=r.s1||'';
+    if(document.getElementById('fs2'))document.getElementById('fs2').value=r.s2||'';
+    if(document.getElementById('fs3'))document.getElementById('fs3').value=r.s3||'';
+    if(document.getElementById('fs4'))document.getElementById('fs4').value=r.s4||'';
+    if(document.getElementById('fg1'))document.getElementById('fg1').value=r.g1||'';
+    if(document.getElementById('fg2'))document.getElementById('fg2').value=r.g2||'';
+    if(document.getElementById('fg3'))document.getElementById('fg3').value=r.g3||'';
+    if(document.getElementById('fev'))document.getElementById('fev').value=r.ev||'';
+    // Delete the old one (will be re-saved on saveReport)
+    if(confirm('گزارش در حالت ویرایش است. ادامه می‌دهید؟ (گزارش قبلی با ذخیره جایگزین می‌شود)')){
+      d.reports=d.reports.filter(function(x){return x.id!=id});sv(d);
+    }
+  },100);
+}
+
+// Export all reports as single text file
+function exportAllReports(){
+  var d=db(),u=gs();
+  var reports=d.reports.filter(function(r){return r.uid==u.id});
+  if(!reports.length){tg('گزارشی برای خروجی نیست',1);return}
+  var s='═══════════════════════════════════\n';
+  s+='خروجی همه گزارش‌ها\n';
+  s+='نهضت تربیتی حضرت سیدالشهدا علیه‌السلام\n';
+  s+='مربی: '+u.name+' • تعداد گزارش‌ها: '+reports.length+'\n';
+  s+='تاریخ صدور: '+pdate()+' '+ptime()+'\n';
+  s+='═══════════════════════════════════\n\n';
+  reports.sort(function(a,b){return a.date-b.date}).forEach(function(r,i){
+    s+='───────────────────────────────\n';
+    s+='گزارش '+(i+1)+' از '+reports.length+'\n';
+    s+='───────────────────────────────\n';
+    s+='موضوع: '+r.subject+'\n';
+    s+='تاریخ: '+(r.jdate||pdate(r.date))+'\n';
+    s+='وضعیت: '+statusText(r.status||'DRAFT')+'\n';
+    if(r.count)s+='تعداد: '+r.count+'\n';
+    s+='\nمتن:\n'+r.content+'\n';
+    if(r.s1)s+='\nچهار مرحله:\n۱. '+r.s1+'\n۲. '+r.s2+'\n۳. '+r.s3+'\n۴. '+r.s4+'\n';
+    if(r.g1)s+='\nسه گروه:\nاستقامتی: '+r.g1+'\nنیمه‌سرعتی: '+r.g2+'\nسرعتی: '+r.g3+'\n';
+    if(r.ev)s+='\nخودارزیابی:\n'+r.ev+'\n';
+    s+='\n\n';
+  });
+  s+='═══════════════════════════════════\n';
+  s+='پایان خروجی\n';
+  s+='═══════════════════════════════════\n';
+  var b=new Blob([s],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download='all-reports-'+pdate()+'.txt';
+  a.click();
+  tg(reports.length+' گزارش خروجی گرفته شد');
+}
+
+// AI Assistant (rule-based)
+function aiAssistantPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">🤖 دستیار هوشمند</span></div>';
+  h+='<div class="card"><h2>دستیار هوشمند نهضت</h2>';
+  h+='<p style="font-size:12px;color:var(--m);margin-bottom:10px">سؤالات خود درباره گزارش‌نویسی، طرح‌درس، روش‌های تدریس و... بپرسید.</p>';
+  h+='<div id="chatBox" style="max-height:400px;overflow-y:auto;margin-bottom:8px">';
+  if(d.chatHistory&&d.chatHistory.length){
+    d.chatHistory.forEach(function(m){
+      h+='<div class="chat-msg '+(m.role==='user'?'user':'bot')+'">'+esc(m.text)+'</div>';
+    });
+  }else{
+    h+='<div class="chat-msg bot">سلام! من دستیار هوشمند نهضت تربیتی هستم. می‌توانم در موارد زیر کمک کنم:<br>• گزارش‌نویسی (چهار مرحله، سه گروه)<br>• طرح‌درس‌نویسی<br>• روش‌های تدریس<br>• ارزیابی<br>• مدیریت افراد<br><br>سؤال خود را بپرسید.</div>';
+  }
+  h+='</div>';
+  h+='<div class="chat-input">'+
+    '<input id="chatInput" placeholder="سؤال خود را بنویسید..." onkeypress="if(event.key===\'Enter\')sendChat()">'+
+    '<button class="btn-p" onclick="sendChat()">ارسال</button></div>';
+  h+='<button class="btn-s" onclick="clearChat()" style="margin-top:6px">پاک کردن گفتگو</button>';
+  h+='</div>';
+  h+='<div class="card"><h2>سؤالات پیشنهادی</h2>';
+  var suggestions=['چگونه گزارش بنویسم؟','چهار مرحله چیست؟','سه گروه چه هستند؟','روش تدریس خوب چیست؟','چگونه ارزیابی کنم؟','طرح درس چگونه باشد؟'];
+  suggestions.forEach(function(s){
+    h+='<button class="btn-s" onclick="askSuggestion(\''+s.replace(/'/g,'\\\'')+'\')" style="margin:4px 0">'+s+'</button>';
+  });
+  h+='</div>';
+  return h;
+}
+function askSuggestion(q){
+  document.getElementById('chatInput').value=q;
+  sendChat();
+}
+function sendChat(){
+  var q=document.getElementById('chatInput').value.trim();
+  if(!q)return;
+  var d=db();
+  if(!d.chatHistory)d.chatHistory=[];
+  d.chatHistory.push({role:'user',text:q,date:Date.now()});
+  var answer=aiAnswer(q,d);
+  d.chatHistory.push({role:'bot',text:answer,date:Date.now()});
+  if(d.chatHistory.length>50)d.chatHistory=d.chatHistory.slice(-50);
+  sv(d);
+  render();
+  setTimeout(function(){
+    var box=document.getElementById('chatBox');
+    if(box)box.scrollTop=box.scrollHeight;
+  },50);
+}
+function aiAnswer(q,d){
+  q=q.toLowerCase();
+  if(q.indexOf('گزارش')>=0&&(q.indexOf('بنویس')>=0||q.indexOf('چگونه')>=0||q.indexOf('چطور')>=0)){
+    return 'برای نوشتن گزارش:\n۱. موضوع را مشخص کنید (مثلاً: جلسه ۱۵ آبان)\n۲. تاریخ و تعداد شرکت‌کنندگان را وارد کنید\n۳. متن اصلی گزارش را بنویسید\n۴. چهار مرحله را تکمیل کنید:\n   - ارائه مطلب\n   - تفکر\n   - مباحثه\n   - ارائه به مربی\n۵. سه گروه را تفکیک کنید:\n   - استقامتی (افراد مبتدی)\n   - نیمه‌سرعتی (در حال پیشرفت)\n   - سرعتی (پیشرفته)\n۶. خودارزیابی کنید\n۷. با دکمه «📖 درج آیه» و «☪️ درج حدیث» محتوای غنی اضافه کنید\n۸. می‌توانید با «🎤 ضبط صوت» صحبت کنید و متن تبدیل شود';
+  }
+  if(q.indexOf('چهار مرحله')>=0){
+    return 'الگوی چهار مرحله‌ای تربیتی:\n۱. ارائه مطلب: محتوای اصلی جلسه را به افراد ارائه دهید\n۲. تفکر: پرسش و تأمل در مطلب، ایجاد فضای اندیشه\n۳. مباحثه: گفتگو و تبادل نظر بین افراد\n۴. ارائه به مربی: نتیجه و جمع‌بندی نهایی به مربی ارائه شود\n\nاین الگو از الگوی تربیتی نهضت الهی گرفته شده است.';
+  }
+  if(q.indexOf('سه گروه')>=0){
+    return 'سه گروه پیشرفت تربیتی:\n• استقامتی: افرادی که در مرحله شروع و استقامت هستند. تازه وارد، در حال یادگیری اصول\n• نیمه‌سرعتی: افرادی که پیشرفت کرده‌اند و در حال تسلط بر مطالب هستند\n• سرعتی: افرادی که پیشرفته شده‌اند و می‌توانند به دیگران آموزش دهند\n\nاین تفکیک به مربی کمک می‌کند برنامه متناسب با هر گروه طراحی کند.';
+  }
+  if(q.indexOf('روش')>=0&&(q.indexOf('تدریس')>=0||q.indexOf('خوب')>=0)){
+    return 'روش‌های تدریس تربیتی (۸ روش اصلی):\n۱. روش چهار مرحله‌ای (پیش‌فرض)\n۲. روش سه گروهی\n۳. روش سخنرانی فعال\n۴. روش بحث گروهی\n۵. روش ایفای نقش\n۶. روش مطالعه موردی\n۷. روش پروژه محور\n۸. روش قرآنی\n\nبرای مشاهده جزئیات هر روش، به منوی «روش‌ها» بروید. هر روش مناسب شرایط خاصی است.';
+  }
+  if(q.indexOf('ارزیابی')>=0){
+    return 'سیستم ارزیابی:\n• ۱۵ معیار ارزیابی در سه دسته: گزارش، طرح درس، مربی\n• هر معیار حداکثر امتیاز ۵ تا ۱۰ دارد\n• ارزیابان و مدیران می‌توانند ارزیابی کنند\n• امتیاز کل و درصد محاسبه می‌شود\n• اگر امتیاز ≥ ۸۰٪ باشد، تقدیر خودکار به مربی داده می‌شود\n• هر ارزیابی عالی = +۱۵ امتیاز، تأیید گزارش = +۱۰ امتیاز';
+  }
+  if(q.indexOf('طرح درس')>=0){
+    return 'طرح درس شامل:\n• عنوان و موضوع\n• مدت زمان و تعداد افراد\n• پایه تحصیلی\n• هدف اصلی و اهداف جزئی\n• آیات و احادیث مرتبط\n• مراحل تدریس (۴ مرحله)\n• وسایل آموزشی\n• منابع\n• تکالیف\n\nبرای طرح درس عالی، حتماً از آیات قرآن و احادیث استفاده کنید.';
+  }
+  if(q.indexOf('امتیاز')>=0||q.indexOf('نقط')>=0){
+    return 'سیستم امتیازدهی:\n• ثبت گزارش: +۵ امتیاز\n• ثبت طرح درس: +۸ امتیاز\n• ثبت صورتجلسه: +۳ امتیاز\n• تأیید گزارش توسط ارزیاب: +۱۰ امتیاز\n• ارزیابی عالی (≥۸۰٪): +۱۵ امتیاز\n• ارزیابی عالی طرح درس: +۲۰ امتیاز\n\nامتیازها در رتبه‌بندی مربیان مؤثر است.';
+  }
+  if(q.indexOf('تقدیر')>=0){
+    return 'سیستم تقدیر:\n• تقدیر با سه سطح: خوب، عالی، برجسته\n• به‌صورت خودکار با ارزیابی عالی داده می‌شود\n• در صفحه «تقدیرهای من» قابل مشاهده است\n• تعداد تقدیرها در پروفایل و رتبه‌بندی مؤثر است';
+  }
+  if(q.indexOf('قرآن')>=0||q.indexOf('آیه')>=0){
+    return 'پایگاه قرآنی:\n• ۳۰ آیه قرآن با موضوعات مختلف موجود است\n• در فرم گزارش/طرح درس، دکمه «📖 درج آیه» را بزنید\n• می‌توانید جستجو کنید (در صفحه قرآن)\n• موضوعات: صبر، استقامت، توحید، حجاب، نیکی به والدین و...';
+  }
+  if(q.indexOf('حدیث')>=0){
+    return 'پایگاه احادیث:\n• ۲۰ حدیث از منابع معتبر (نهج‌البلاغه، کافی، بحارالانوار، خصال، وسائل الشیعه)\n• در فرم گزارش/طرح درس، دکمه «☪️ درج حدیث» را بزنید\n• جستجو در صفحه احادیث';
+  }
+  if(q.indexOf('سلام')>=0||q.indexOf('درود')>=0){
+    return 'سلام! من دستیار هوشمند نهضت تربیتی هستم. می‌توانم درباره گزارش‌نویسی، طرح‌درس، روش‌های تدریس، ارزیابی، امتیاز، تقدیر، قرآن و حدیث کمک کنم. سؤال خود را بپرسید.';
+  }
+  if(q.indexOf('مرسی')>=0||q.indexOf('ممنون')>=0||q.indexOf('تشکر')>=0){
+    return 'خواهش می‌کنم! اگر سؤال دیگری دارید، بپرسید. 🌹';
+  }
+  // Default
+  return 'سؤال شما را متوجه نشدم. می‌توانید درباره این موضوعات بپرسید:\n• گزارش‌نویسی\n• چهار مرحله و سه گروه\n• روش‌های تدریس\n• ارزیابی و امتیاز\n• طرح درس\n• تقدیر و رتبه‌بندی\n• قرآن و حدیث\n\nیا از سؤالات پیشنهادی زیر صفحه استفاده کنید.';
+}
+function clearChat(){
+  if(!confirm('پاک کردن گفتگو؟'))return;
+  var d=db();d.chatHistory=[];sv(d);tg('پاک شد');render();
+}
+
+// Tasks (To-Do list)
+function tasksPage(){
+  var d=db(),u=gs();
+  if(!d.tasks)d.tasks=[];
+  var myTasks=d.tasks.filter(function(t){return t.uid==u.id});
+  var pending=myTasks.filter(function(t){return !t.done}).length;
+  var done=myTasks.filter(function(t){return t.done}).length;
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">✓ کارهای من</span></div>';
+  h+='<div class="card" style="text-align:center"><div class="grid">'+
+    '<div class="stat y"><div class="n">'+pending+'</div><div class="l">باقی‌مانده</div></div>'+
+    '<div class="stat"><div class="n">'+done+'</div><div class="l">انجام‌شده</div></div>'+
+    '<div class="stat i"><div class="n">'+myTasks.length+'</div><div class="l">کل</div></div></div></div>';
+  h+='<div class="card"><h2>افزودن کار جدید</h2>'+
+    '<div class="f"><input id="taskInput" placeholder="مثال: تماس با ولی فرد جدید" onkeypress="if(event.key===\'Enter\')addTask()"></div>'+
+    '<div class="row"><div class="f"><label>اولویت</label><select id="taskPriority">'+
+    '<option value="HIGH">بالا</option><option value="MED" selected>متوسط</option><option value="LOW">پایین</option></select></div>'+
+    '<div class="f"><label>تاریخ سررسید</label><input id="taskDue" value="'+pdate()+'"></div></div>'+
+    '<button class="btn-p" onclick="addTask()">+ افزودن</button></div>';
+  h+='<div class="card"><h2>لیست کارها</h2>';
+  if(!myTasks.length){
+    h+='<div class="empty"><span class="e-ic">✓</span>کاری ثبت نشده</div>';
+  }else{
+    myTasks.sort(function(a,b){
+      if(a.done!==b.done)return a.done?1:-1;
+      var pr={HIGH:0,MED:1,LOW:2};
+      return (pr[a.priority]||1)-(pr[b.priority]||1);
+    });
+    myTasks.forEach(function(t){
+      var pTag=t.priority=='HIGH'?'<span class="tag d">فوری</span>':t.priority=='LOW'?'<span class="tag">کم</span>':'<span class="tag y">متوسط</span>';
+      h+='<div class="task-item'+(t.done?' done':'')+'">'+
+        '<input type="checkbox" '+(t.done?'checked':'')+' onchange="toggleTask('+t.id+')">'+
+        '<div class="tt">'+esc(t.text)+' '+pTag+(t.due?'<div style="font-size:11px;color:var(--m)">سررسید: '+esc(t.due)+'</div>':'')+'</div>'+
+        '<button class="btn-d" onclick="deleteTask('+t.id+')" style="padding:6px 10px">🗑</button></div>';
+    });
+  }
+  h+='</div>';
+  return h;
+}
+function addTask(){
+  var t=document.getElementById('taskInput').value.trim();
+  if(!t){tg('متن کار را وارد کنید',1);return}
+  var d=db(),u=gs();
+  if(!d.tasks)d.tasks=[];
+  var tk={id:Date.now(),uid:u.id,text:t,priority:v('taskPriority'),due:v('taskDue'),done:false,created:Date.now()};
+  d.tasks.push(tk);
+  sv(d);tg('کار اضافه شد');
+  if(window.API&&API.base()&&u.serverId)API.push('task',tk,String(tk.id)).catch(function(){});
+  render();
+}
+function toggleTask(id){
+  var d=db();
+  var t=d.tasks.find(function(x){return x.id==id});
+  if(t){
+    t.done=!t.done;
+    if(t.done)awardPoints(gs().id,1,'انجام کار: '+t.text);
+    sv(d);
+    if(window.API&&API.base()&&t.sid)API.patchTask(t.sid,{text:t.text,priority:t.priority,due:t.due,done:t.done},String(t.id)).catch(function(){});
+    render();
+  }
+}
+function deleteTask(id){
+  var d=db();var t=d.tasks.find(function(x){return x.id==id});
+  d.tasks=d.tasks.filter(function(x){return x.id!=id});sv(d);tg('حذف شد');
+  if(window.API&&API.base()&&t&&t.sid)API.remove('task',t.sid);
+  render();
+}
+
+// Daily spiritual tracker
+function dailyTrackerPage(){
+  var d=db(),u=gs();
+  if(!d.dailyTracker)d.dailyTracker=[];
+  var today=pdate();
+  var todayRec=d.dailyTracker.find(function(t){return t.uid==u.id&&t.date==today});
+  if(!todayRec){
+    todayRec={id:Date.now(),uid:u.id,date:today,salat_fajr:false,salat_zuhr:false,salat_asr:false,salat_magrib:false,salat_isha:false,quran:false,dhikr_morning:false,dhikr_evening:false,fasting:false,study:false};
+    d.dailyTracker.push(todayRec);sv(d);
+  }
+  var items=[
+    {key:'salat_fajr',label:'نماز صبح',icon:'🌅'},
+    {key:'salat_zuhr',label:'نماز ظهر',icon:'☀️'},
+    {key:'salat_asr',label:'نماز عصر',icon:'🌤'},
+    {key:'salat_magrib',label:'نماز مغرب',icon:'🌆'},
+    {key:'salat_isha',label:'نماز عشاء',icon:'🌃'},
+    {key:'quran',label:'تلاوت قرآن',icon:'📖'},
+    {key:'dhikr_morning',label:'ذکر صبح',icon:'📿'},
+    {key:'dhikr_evening',label:'ذکر شب',icon:'🌙'},
+    {key:'fasting',label:'روزه مستحبی',icon:'gien'},
+    {key:'study',label:'مطالعه',icon:'📚'}
+  ];
+  var doneCount=items.filter(function(i){return todayRec[i.key]}).length;
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">📿 برنامه روزانه</span></div>';
+  h+='<div class="card" style="text-align:center"><h2 style="text-align:center;border:none">پیشرفت امروز</h2>';
+  h+='<div style="font-size:42px;font-weight:700;color:var(--p)">'+doneCount+' از '+items.length+'</div>';
+  h+='<div style="height:8px;background:var(--l);border-radius:4px;margin:10px 0"><div style="height:100%;background:var(--p);border-radius:4px;width:'+(doneCount*100/items.length)+'%;transition:.3s"></div></div>';
+  h+='<p style="font-size:11px;color:var(--m)">'+pdate()+'</p></div>';
+  h+='<div class="card"><h2>برنامه امروز</h2>';
+  items.forEach(function(item){
+    h+='<div class="check-item'+(todayRec[item.key]?' done':'')+'">'+
+      '<input type="checkbox" '+(todayRec[item.key]?'checked':'')+' onchange="toggleTracker(\''+item.key+'\')">'+
+      '<div class="ci-t">'+item.icon+' '+item.label+'</div></div>';
+  });
+  h+='</div>';
+  // History
+  var myHistory=d.dailyTracker.filter(function(t){return t.uid==u.id}).slice(-7).reverse();
+  if(myHistory.length>1){
+    h+='<div class="card"><h2>تاریخچه هفت روز اخیر</h2>';
+    myHistory.forEach(function(rec){
+      var cnt=items.filter(function(i){return rec[i.key]}).length;
+      h+='<div class="kv"><span class="k">'+esc(rec.date)+'</span><span class="v">'+cnt+' / '+items.length+'</span></div>';
+    });
+    h+='</div>';
+  }
+  return h;
+}
+function toggleTracker(key){
+  var d=db(),u=gs(),today=pdate();
+  var rec=d.dailyTracker.find(function(t){return t.uid==u.id&&t.date==today});
+  if(!rec){
+    rec={id:Date.now(),uid:u.id,date:today,salat_fajr:false,salat_zuhr:false,salat_asr:false,salat_magrib:false,salat_isha:false,quran:false,dhikr_morning:false,dhikr_evening:false,fasting:false,study:false};
+    d.dailyTracker.push(rec);
+  }
+  rec[key]=!rec[key];
+  if(rec[key])awardPoints(u.id,1,'برنامه روزانه: '+key);
+  sv(d);
+  if(window.API&&API.base()&&u.serverId)API.push('tracker',rec).catch(function(){});
+  render();
+}
+
+// Methodologies page
+function methodologiesPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">📐 روش‌های تدریس</span></div>';
+  h+='<div class="card"><h2>روش‌های تدریس تربیتی ('+d.methodologies.length+')</h2>';
+  h+='<p style="font-size:12px;color:var(--m);margin-bottom:10px">در فرم گزارش/طرح درس، می‌توانید با دکمه «📐 درج روش» هر کدام را به متن اضافه کنید.</p>';
+  d.methodologies.forEach(function(m,i){
+    h+='<div class="method-card">'+
+      '<div class="mn">'+(i+1)+'. '+esc(m.name)+'</div>'+
+      '<div class="md">'+esc(m.desc)+'</div>'+
+      '<div class="ms" style="white-space:pre-line">'+esc(m.steps)+'</div></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+// Help page
+function helpPage(){
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">❓ راهنما</span></div>';
+  h+='<div class="card"><h2>راهنمای استفاده</h2>'+
+    '<div class="help-step"><div class="hs-n">۱</div><div class="hs-t"><b>ورود:</b> با شماره تلفن و رمز (۶ رقم آخر کد ملی) وارد شوید. اگر حساب ندارید، ثبت‌نام کنید (نیاز به تأیید مدیر).</div></div>'+
+    '<div class="help-step"><div class="hs-n">۲</div><div class="hs-t"><b>ثبت گزارش:</b> از منوی «گزارش» → «+ ثبت گزارش جدید». موضوع، متن، چهار مرحله و سه گروه را تکمیل کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۳</div><div class="hs-t"><b>ضبط صوت:</b> در فرم گزارش، دکمه «🎤 ضبط صوت» را بزنید و صحبت کنید. متن خودکار وارد می‌شود. (نیاز به Chrome)</div></div>'+
+    '<div class="help-step"><div class="hs-n">۴</div><div class="hs-t"><b>درج آیه/حدیث:</b> با دکمه‌های «📖 درج آیه» و «☪️ درج حدیث» از پایگاه قرآنی و احادیث به گزارش اضافه کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۵</div><div class="hs-t"><b>درج روش تدریس:</b> با دکمه «📐 درج روش» یکی از ۸ روش تدریس را به متن اضافه کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۶</div><div class="hs-t"><b>طرح درس:</b> از منوی «طرح درس» → «+ طرح درس جدید». اهداف، مراحل تدریس، وسایل، منابع و تکالیف را وارد کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۷</div><div class="hs-t"><b>افراد:</b> از منوی «افراد» لیست افراد را مدیریت کنید و در سه گروه (استقامتی، نیمه‌سرعتی، سرعتی) تفکیک کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۸</div><div class="hs-t"><b>حضور و غیاب:</b> روزانه از منوی «بیشتر» → «حضور و غیاب» ثبت کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۹</div><div class="hs-t"><b>خروجی:</b> از هر گزارش/طرح درس، خروجی PDF، Word، Text، JSON یا چاپ مستقیم بگیرید. با «📦 خروجی همه» همه گزارش‌ها را یکجا خروجی بگیرید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۰</div><div class="hs-t"><b>اشتراک:</b> با دکمه «🔗 اشتراک» گزارش را در پیام‌رسان‌ها به اشتراک بگذارید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۱</div><div class="hs-t"><b>دستیار هوشمند:</b> در منوی «بیشتر» → «دستیار هوشمند» سؤالات خود را بپرسید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۲</div><div class="hs-t"><b>برنامه روزانه:</b> از منوی «بیشتر» → «برنامه روزانه» برنامه عبادی خود را ثبت کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۳</div><div class="hs-t"><b>کارها:</b> لیست کارهای روزانه خود را مدیریت کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۴</div><div class="hs-t"><b>حالت تاریک:</b> با دکمه 🌙 در نوار بالا، حالت تاریک را فعال کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۵</div><div class="hs-t"><b>جستجوی کل:</b> با دکمه 🔍 در نوار بالا، در همه داده‌ها (گزارش، طرح درس، افراد، قرآن، حدیث) جستجو کنید.</div></div>'+
+    '<div class="help-step"><div class="hs-n">۱۶</div><div class="hs-t"><b>پشتیبان‌گیری:</b> در «تنظیمات» → «پشتیبان‌گیری» از همه داده‌ها فایل JSON بگیرید و در دستگاه دیگر بازیابی کنید.</div></div>'+
+  '</div>';
+  h+='<div class="card"><h2>میان‌برها</h2>'+
+    '<div class="kv"><span class="k">ثبت گزارش سریع</span><span class="v">منوی خانه → 📝 ثبت گزارش</span></div>'+
+    '<div class="kv"><span class="k">جستجوی قرآن</span><span class="v">منوی بیشتر → 📖 قرآن</span></div>'+
+    '<div class="kv"><span class="k">دستیار هوشمند</span><span class="v">منوی بیشتر → 🤖 دستیار</span></div>'+
+  '</div>';
+  return h;
+}
+
+// Global search
+function globalSearchPage(){
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">🔍 جستجوی کل</span></div>';
+  h+='<div class="card"><h2>جستجو در همه داده‌ها</h2>'+
+    '<div class="search"><input id="globalSearchInput" placeholder="جستجو در گزارش‌ها، طرح‌درس، افراد، قرآن، حدیث..." oninput="doGlobalSearch()"><button onclick="doGlobalSearch()">🔍</button></div>'+
+    '<div id="searchResults" style="margin-top:10px"></div></div>';
+  return h;
+}
+function doGlobalSearch(){
+  var q=(document.getElementById('globalSearchInput').value||'').toLowerCase().trim();
+  var results=document.getElementById('searchResults');
+  if(q.length<2){results.innerHTML='';return}
+  var d=db(),u=gs();
+  var html='';
+  var count=0;
+  // Search reports
+  d.reports.forEach(function(r){
+    if((r.subject&&r.subject.toLowerCase().indexOf(q)>=0)||(r.content&&r.content.toLowerCase().indexOf(q)>=0)){
+      if(r.uid==u.id||u.role=='ADMIN'||u.role=='EVALUATOR'){
+        html+='<div class="list-item" onclick="openReport('+r.id+')"><div class="li-ic">📝</div>'+
+          '<div class="li-t"><div class="t">'+esc(r.subject)+'</div><div class="s">گزارش • '+pdate(r.date)+'</div></div></div>';
+        count++;
+      }
+    }
+  });
+  // Search lessons
+  d.lessons.forEach(function(l){
+    if((l.title&&l.title.toLowerCase().indexOf(q)>=0)||(l.subject&&l.subject.toLowerCase().indexOf(q)>=0)){
+      if(l.uid==u.id||u.role=='ADMIN'||u.role=='EVALUATOR'){
+        html+='<div class="list-item" onclick="openLesson('+l.id+')"><div class="li-ic">📋</div>'+
+          '<div class="li-t"><div class="t">'+esc(l.title)+'</div><div class="s">طرح درس • '+pdate(l.date)+'</div></div></div>';
+        count++;
+      }
+    }
+  });
+  // Search people
+  d.people.forEach(function(p){
+    if((p.name&&p.name.toLowerCase().indexOf(q)>=0)||(p.phone&&p.phone.indexOf(q)>=0)){
+      html+='<div class="list-item"><div class="li-ic">👤</div>'+
+        '<div class="li-t"><div class="t">'+esc(p.name)+'</div><div class="s">فرد • '+(p.phone||'')+'</div></div></div>';
+      count++;
+    }
+  });
+  // Search Quran
+  d.quran.forEach(function(v){
+    if((v.text&&v.text.toLowerCase().indexOf(q)>=0)||(v.surah&&v.surah.toLowerCase().indexOf(q)>=0)||(v.topic&&v.topic.toLowerCase().indexOf(q)>=0)){
+      html+='<div class="list-item" onclick="nav(\'more\',\'quran\')"><div class="li-ic">📖</div>'+
+        '<div class="li-t"><div class="t">'+esc(v.surah)+' • آیه '+v.verseNo+'</div><div class="s">قرآن • '+esc(v.topic)+'</div></div></div>';
+      count++;
+    }
+  });
+  // Search Hadiths
+  d.hadiths.forEach(function(hd){
+    if((hd.text&&hd.text.toLowerCase().indexOf(q)>=0)||(hd.source&&hd.source.toLowerCase().indexOf(q)>=0)||(hd.topic&&hd.topic.toLowerCase().indexOf(q)>=0)){
+      html+='<div class="list-item" onclick="nav(\'more\',\'hadith\')"><div class="li-ic">☪️</div>'+
+        '<div class="li-t"><div class="t">'+esc(hd.source)+'</div><div class="s">حدیث • '+esc(hd.topic)+'</div></div></div>';
+      count++;
+    }
+  });
+  if(count===0){
+    results.innerHTML='<div class="empty">نتیجه‌ای یافت نشد</div>';
+  }else{
+    results.innerHTML='<div class="card"><h2>نتایج ('+count+')</h2>'+html+'</div>';
+  }
+}
+
+// Export All page
+function exportAllPage(){
+  var d=db();
+  var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">📦 خروجی همه</span></div>';
+  h+='<div class="card"><h2>خروجی جمعی</h2>'+
+    '<p style="font-size:12px;color:var(--m);margin-bottom:10px">از هر بخش می‌توانید خروجی کامل بگیرید.</p>'+
+    '<button class="btn-p" onclick="exportAllReports()" style="margin-bottom:6px">📝 خروجی همه گزارش‌ها (TXT)</button>'+
+    '<button class="btn-i" onclick="exportStats()" style="margin-bottom:6px">📊 خروجی آمار (CSV)</button>'+
+    '<button class="btn-y" onclick="exportBackup()" style="margin-bottom:6px">💾 پشتیبان کامل (JSON)</button>'+
+    '<button class="btn-v" onclick="exportAllLessons()">📋 خروجی همه طرح‌درس‌ها (TXT)</button></div>';
+  h+='<div class="card"><h2>آمار فعلی</h2>'+
+    '<div class="kv"><span class="k">گزارش‌ها</span><span class="v">'+d.reports.length+'</span></div>'+
+    '<div class="kv"><span class="k">طرح درس‌ها</span><span class="v">'+d.lessons.length+'</span></div>'+
+    '<div class="kv"><span class="k">افراد</span><span class="v">'+d.people.length+'</span></div>'+
+    '<div class="kv"><span class="k">جلسات</span><span class="v">'+d.sessions.length+'</span></div>'+
+    '<div class="kv"><span class="k">ارزیابی‌ها</span><span class="v">'+d.evaluations.length+'</span></div>'+
+    '<div class="kv"><span class="k">کاربران</span><span class="v">'+d.users.length+'</span></div>'+
+  '</div>';
+  return h;
+}
+function exportAllLessons(){
+  var d=db(),u=gs();
+  var lessons=d.lessons.filter(function(l){return l.uid==u.id});
+  if(!lessons.length){tg('طرح درسی نیست',1);return}
+  var s='═══════════════════════════════════\nخروجی همه طرح‌درس‌ها\nمربی: '+u.name+' • تعداد: '+lessons.length+'\n'+pdate()+'\n═══════════════════════════════════\n\n';
+  lessons.forEach(function(l,i){
+    s+='─── '+(i+1)+'. '+l.title+' ───\n';
+    s+='موضوع: '+(l.subject||'-')+'\nتاریخ: '+(l.jdate||pdate(l.date))+'\n';
+    if(l.goal)s+='هدف: '+l.goal+'\n';
+    if(l.p1)s+='مراحل:\n۱. '+l.p1+'\n۲. '+l.p2+'\n۳. '+l.p3+'\n۴. '+l.p4+'\n';
+    s+='\n';
+  });
+  var b=new Blob([s],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='all-lessons-'+pdate()+'.txt';a.click();
+  tg(lessons.length+' طرح درس خروجی شد');
+}
+
+// PWA install
+var deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  deferredPrompt=e;
+  document.getElementById('pwaBanner').classList.add('show');
+});
+function installPWA(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(){
+      deferredPrompt=null;
+      document.getElementById('pwaBanner').classList.remove('show');
+    });
+  }else{
+    tg('برای نصب، از منوی مرورگر «Add to Home Screen» را بزنید');
+  }
+}
+
+function init(){
+  loadTheme();
+  if('serviceWorker' in navigator&&location.protocol!=='file:'){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+  var u=gs();
+  if(u){
+    nav('home');
+    if(window.API&&API.base()&&API.getToken())API.start();
+  }
+  else{
+    document.getElementById('tabs').style.display='none';
+    document.getElementById('topbar').style.display='none';
+    render();
+  }
+}
+init();
+</script>
+</body>
+</html>
