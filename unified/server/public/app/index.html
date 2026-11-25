@@ -125,7 +125,7 @@ button:active{transform:scale(.97)}
 .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
 .toolbar button{padding:8px 12px;font-size:12px;border-radius:20px}
 /* Chat */
-.chat-msg{padding:10px;margin:6px 0;border-radius:10px;max-width:85%;font-size:13px;line-height:1.6}
+.chat-msg{padding:10px;margin:6px 0;border-radius:10px;max-width:85%;font-size:13px;line-height:1.6;white-space:pre-line;overflow-wrap:anywhere}
 .chat-msg.user{background:var(--p);color:#fff;margin-right:auto}
 .chat-msg.bot{background:var(--l);color:var(--t);margin-left:auto}
 .chat-input{display:flex;gap:6px;position:sticky;bottom:0;background:var(--w);padding:8px;border-top:1px solid var(--l)}
@@ -185,25 +185,13 @@ button:active{transform:scale(.97)}
 </div>
 <script>
 // ========= STORAGE =========
-var DB_KEY='morabbi_db_v23',SS_KEY='morabbi_session_v23',THEME_KEY='morabbi_theme';
+var DB_KEY='morabbi_db_v24',SS_KEY='morabbi_session_v24',THEME_KEY='morabbi_theme';
 function db(){
   var r=localStorage.getItem(DB_KEY);
   if(r){try{return JSON.parse(r)}catch(e){}}
   var seed={
-    maktabs:[
-      {id:'mk1',name:'مکتب حضرت سیدالشهدا',code:'MK-SYED',active:true},
-      {id:'mk2',name:'مکتب امام رضا',code:'MK-REZA',active:true},
-      {id:'mk3',name:'مکتب امام خمینی',code:'MK-KHOMEINI',active:true},
-      {id:'mk4',name:'مکتب شهید بهشتی',code:'MK-BEHESHTI',active:true}
-    ],
-    branches:[
-      {id:'br1',name:'شعبه مرکزی',code:'BR-01',maktabId:'mk1',phone:'021-12345678'},
-      {id:'br2',name:'شعبه север',code:'BR-02',maktabId:'mk1',phone:'021-87654321'},
-      {id:'br3',name:'شعبه جنوب',code:'BR-03',maktabId:'mk2',phone:'021-11112222'},
-      {id:'br4',name:'شعبه شرق',code:'BR-04',maktabId:'mk3',phone:'021-33334444'},
-      {id:'br5',name:'شعبه غرب',code:'BR-05',maktabId:'mk3',phone:'021-55556666'},
-      {id:'br6',name:'شعبه کرج',code:'BR-06',maktabId:'mk4',phone:'026-99998888'}
-    ],
+    maktabs:[],
+    branches:[],
     users:[
       {id:'u1',name:'مدیر سامانه',phone:'09120000001',code:'567890',nationalId:'1234567890',role:'ADMIN',branchId:'br1',area:'تهران',school:'مدارس شهید همدانی',points:0,recognitions:0,approvalStatus:'APPROVED',active:true,created:Date.now()},
       {id:'u2',name:'مربی نمونه',phone:'09120000002',code:'543210',nationalId:'9876543210',role:'INSTRUCTOR',branchId:'br1',area:'تهران',school:'مدرسه همدانی',points:120,recognitions:2,approvalStatus:'APPROVED',active:true,created:Date.now()},
@@ -429,9 +417,12 @@ function loginPage(){
     '<div class="f"><label>نام و نام خانوادگی</label><input id="rname" placeholder="مثال: علی رضایی"></div>'+
     '<div class="f"><label>کد ملی (۱۰ رقم)</label><input id="rcode" inputmode="numeric" maxlength="10" placeholder="xxxxxxxxxx"></div>'+
     '<div class="f"><label>شماره تلفن</label><input id="rphone" inputmode="numeric" placeholder="09xxxxxxxxx"></div>'+
-    '<div class="f"><label>نقش درخواستی</label><select id="rrole"><option value="INSTRUCTOR">مربی</option><option value="EVALUATOR">ارزیاب</option><option value="TRAINEE">تربیت‌پذیر</option></select></div>'+
-    '<div class="f"><label>منطقه / مدرسه</label><input id="rarea" placeholder="مثال: تهران - مدرسه همدانی"></div>'+
+    '<div class="f"><label>نقش درخواستی</label><select id="rrole"><option value="INSTRUCTOR">مربی</option><option value="EVALUATOR">ارزیاب</option><option value="TRAINEE">متربی</option><option value="BRANCH_MANAGER">مسئول شعبه</option><option value="ADMIN">مدیر</option></select></div>'+
+    '<div class="f"><label>کشور</label><input id="rcountry" value="ایران"></div>'+
+    '<div class="f"><label>استان</label><input id="rprovince" placeholder="مثال: تهران"></div>'+
+    '<div class="f"><label>مکتب</label>'+maktabSelect('rmaktab')+'</div>'+
     '<div class="f"><label>شعبه</label>'+branchSelect('rbranch')+'</div>'+
+    '<div class="f"><label>منطقه / مدرسه</label><input id="rarea" placeholder="مثال: تهران - مدرسه همدانی"></div>'+
     '<button class="btn-s" onclick="doRegister()">ثبت‌نام</button>'+
     '<div style="text-align:center;margin-top:10px;color:var(--m);font-size:11px">رمز شما = ۶ رقم آخر کد ملی</div>'+
     '</div>';
@@ -443,6 +434,13 @@ function branchSelect(id){
     var mk=d.maktabs.find(function(m){return m.id==b.maktabId});
     h+='<option value="'+b.id+'">'+esc(b.name)+(mk?' ('+esc(mk.name)+')':'')+'</option>';
   });
+  h+='</select>';
+  return h;
+}
+function maktabSelect(id){
+  var d=db();
+  var h='<select id="'+id+'"><option value="">—</option>';
+  d.maktabs.forEach(function(m){ h+='<option value="'+m.id+'">'+esc(m.name)+'</option>'; });
   h+='</select>';
   return h;
 }
@@ -474,14 +472,14 @@ function doRegister(){
   var p=document.getElementById('rphone').value.trim();
   var a=document.getElementById('rarea').value.trim();
   var role=document.getElementById('rrole').value;
-  var br=v('rbranch');
+  var br=v('rbranch');var mk=v('rmaktab');var pv=v('rprovince');var ct=v('rcountry')||'ایران';
   if(!n){tg('نام را وارد کنید',1);return}
   if(c.length<10){tg('کد ملی باید ۱۰ رقم باشد',1);return}
   if(p.length<11){tg('شماره تلفن نامعتبر',1);return}
   var d=db();
   if(d.users.find(function(x){return x.phone==p})){tg('این شماره قبلا ثبت شده',1);return}
   var w=c.slice(-6);
-  var u={id:uid('u'),name:n,phone:p,code:w,nationalId:c,role:'TRAINEE',requestedRole:role,branchId:br,area:a,school:'',points:0,recognitions:0,approvalStatus:'PENDING',active:true,created:Date.now()};
+  var u={id:uid('u'),name:n,phone:p,code:w,nationalId:c,role:'TRAINEE',requestedRole:role,branchId:br,maktabId:mk,province:pv,country:ct,area:a,school:'',points:0,recognitions:0,approvalStatus:'PENDING',active:true,created:Date.now()};
   d.users.push(u);
   d.notifications.push({id:uid('n'),title:'درخواست ثبت‌نام جدید',body:'کاربر '+n+' با نقش '+role+' ثبت‌نام کرد. در انتظار تأیید مدیر.',date:Date.now(),read:false});
   sv(d);ss(u);
@@ -489,7 +487,7 @@ function doRegister(){
     var br2=d.branches.find(function(x){return x.id==br});
     API.register({
       name:n, nationalId:c, phone:p,
-      requestedRole:(role=='EVALUATOR'?'EVALUATOR':(role=='ADMIN'?'ADMIN':'INSTRUCTOR')),
+      requestedRole:(role=='EVALUATOR'?'EVALUATOR':(role=='ADMIN'?'ADMIN':(role=='BRANCH_MANAGER'?'BRANCH_MANAGER':'INSTRUCTOR'))),
       branchId:(br2&&br2.serverId)?br2.serverId:null
     }).then(function(res){
       if(res&&res.userId){var d2=db();var u2=d2.users.find(function(x){return x.id==u.id});if(u2){u2.serverId=res.userId;sv(d2)}
@@ -573,7 +571,7 @@ function homePage(){
   html+='</div>';
   return html;
 }
-function roleLabel(r){return {ADMIN:'مدیر',INSTRUCTOR:'مربی',EVALUATOR:'ارزیاب',TRAINEE:'تربیت‌پذیر'}[r]||r}
+function roleLabel(r){return {ADMIN:'مدیر',INSTRUCTOR:'مربی',EVALUATOR:'ارزیاب',TRAINEE:'تربیت‌پذیر',BRANCH_MANAGER:'مسئول شعبه'}[r]||r}
 function statusTag(s){
   if(!s||s=='DRAFT')return '<span class="tag">پیش‌نویس</span>';
   if(s=='SUBMITTED')return '<span class="tag i">ارسال‌شده</span>';
@@ -646,7 +644,29 @@ function reportForm(){
         '<option value="DRAFT">پیش‌نویس</option>'+
         '<option value="SUBMITTED">ارسال برای ارزیابی</option>'+
       '</select></div></div>'+
-    '<div class="f"><label>تعداد شرکت‌کنندگان</label><input id="fcount" inputmode="numeric" value="0"></div>'+
+    '<div class="row"><div class="f"><label>تعداد شرکت‌کنندگان</label><input id="fcount" inputmode="numeric" value="0"></div>'+
+      '<div class="f"><label>مخاطب</label><select id="faudience">'+
+        '<option value="">—</option>'+
+        '<option value="تربیت‌پذیران">تربیت‌پذیران</option>'+
+        '<option value="مربیان">مربیان</option>'+
+        '<option value="مسئول شعبه">مسئول شعبه</option>'+
+        '<option value="مدیریت">مدیریت</option>'+
+        '<option value="والدین">والدین</option>'+
+      '</select></div></div>'+
+    '<div class="row"><div class="f"><label>الگوی گزارش</label><select id="fpattern">'+
+        '<option value="">—</option>'+
+        '<option value="تقدّم زمانی">تقدّم زمانی</option>'+
+        '<option value="قیاسی">قیاسی</option>'+
+        '<option value="استقرایی">استقرایی</option>'+
+      '</select></div>'+
+      '<div class="f"><label>سبک نگارش</label><select id="fstyle">'+
+        '<option value="">—</option>'+
+        '<option value="توصیفی">توصیفی</option>'+
+        '<option value="تحلیلی">تحلیلی</option>'+
+        '<option value="انتقادی">انتقادی</option>'+
+        '<option value="تجویزی">تجویزی</option>'+
+      '</select></div></div>'+
+    '<div class="f"><label>خلاصه</label><textarea id="fsummary" rows="2" placeholder="چکیده یک‌خطی گزارش"></textarea></div>'+
     '<div class="f"><label>متن گزارش *</label><textarea id="fcontent" placeholder="شرح مختصر جلسه و فعالیت‌های انجام شده"></textarea></div>'+
     '<div class="toolbar">'+
       '<button class="btn-voice" id="voiceBtn" onclick="toggleVoice(\'fcontent\')">🎤 ضبط صوت</button>'+
@@ -654,6 +674,10 @@ function reportForm(){
       '<button class="btn-v" onclick="insertHadith()">☪️ درج حدیث</button>'+
       '<button class="btn-photo" onclick="insertMethodology()">📐 درج روش</button>'+
     '</div>'+
+    '<div id="frefsBox"></div>'+
+    '<div class="f"><label>توصیه‌ها</label><textarea id="frecs" rows="2" placeholder="توصیه‌های مربی"></textarea></div>'+
+    '<div class="f"><label>چالش‌ها</label><textarea id="fchal" rows="2" placeholder="موانع و چالش‌های جلسه"></textarea></div>'+
+    '<div class="f"><label>راه‌حل‌ها</label><textarea id="fsol" rows="2" placeholder="راه‌حل‌های اجراشده یا پیشنهادی"></textarea></div>'+
     '<div class="sec-h">چهار مرحله (الگوی تربیتی)</div>'+
     '<div class="f"><label>۱. ارائه مطلب</label><textarea id="fs1" placeholder="موضوع ارائه‌شده به افراد"></textarea></div>'+
     '<div class="f"><label>۲. تفکر</label><textarea id="fs2" placeholder="پرسش و تأمل در مطلب"></textarea></div>'+
@@ -663,6 +687,7 @@ function reportForm(){
     '<div class="f"><label>گروه استقامتی</label><textarea id="fg1" placeholder="افراد در مرحله استقامت"></textarea></div>'+
     '<div class="f"><label>گروه نیمه‌سرعتی</label><textarea id="fg2" placeholder="افراد در مرحله نیمه‌سرعت"></textarea></div>'+
     '<div class="f"><label>گروه سرعتی</label><textarea id="fg3" placeholder="افراد در مرحله سرعت"></textarea></div>'+
+    '<div class="f"><label>یادداشت‌های تربیتی</label><textarea id="fped" placeholder="یادداشت‌های تربیتی/آموزشی مربی"></textarea></div>'+
     '<div class="f"><label>خودارزیابی</label><textarea id="fev" placeholder="ارزیابی مربی از عملکرد خود در جلسه"></textarea></div>'+
     '<button class="btn-p" onclick="saveReport()">ذخیره گزارش</button>'+
     '<button class="btn-s" onclick="nav(\'reports\')" style="margin-top:6px">انصراف</button>'+
@@ -672,7 +697,7 @@ function insertQuran(){
   var d=db();
   var h='<h3>انتخاب آیه قرآن</h3><div style="max-height:300px;overflow-y:auto">';
   d.quran.forEach(function(q){
-    h+='<div class="verse" onclick="appendText(\'fcontent\',\'\\n[قرآن کریم - '+esc(q.surah)+':'+q.verseNo+'] '+esc(q.text)+'\\n\');closeModal()">'+
+    h+='<div class="verse" onclick="addQuranRef(\''+q.surah+'\',\''+q.verseNo+'\',\''+esc(q.text).replace(/'/g,"\\'")+'\')">'+
       '<div>'+esc(q.text)+'</div><span class="vref">'+esc(q.surah)+' • آیه '+q.verseNo+' • '+esc(q.topic)+'</span></div>';
   });
   h+='</div>';
@@ -682,12 +707,47 @@ function insertHadith(){
   var d=db();
   var h='<h3>انتخاب حدیث</h3><div style="max-height:300px;overflow-y:auto">';
   d.hadiths.forEach(function(hd){
-    h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" onclick="appendText(\'fcontent\',\'\\n['+esc(hd.source)+' - '+esc(hd.narrator)+'] '+esc(hd.text)+'\\n\');closeModal()">'+
+    h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" onclick="addHadithRef(\''+esc(hd.source).replace(/'/g,"\\'")+'\',\''+esc(hd.narrator).replace(/'/g,"\\'")+'\',\''+esc(hd.text).replace(/'/g,"\\'")+'\')">'+
       '<div>'+esc(hd.text)+'</div><span class="vref" style="color:#6d28d9">'+esc(hd.source)+' • '+esc(hd.narrator)+' • '+esc(hd.topic)+'</span></div>';
   });
   h+='</div>';
   showModal(h);
 }
+function addQuranRef(surah,verseNo,text){
+  if(!window._quranRefs)window._quranRefs=[];
+  var key=surah+':'+verseNo;
+  window._quranRefs.push({surah:surah,verseNo:verseNo,text:text});
+  appendText('fcontent','\n[قرآن کریم - '+surah+':'+verseNo+'] '+text+'\n');
+  renderRefsBox();
+  closeModal();
+}
+function addHadithRef(source,narrator,text){
+  if(!window._hadithRefs)window._hadithRefs=[];
+  window._hadithRefs.push({source:source,narrator:narrator,text:text});
+  appendText('fcontent','\n['+source+' - '+narrator+'] '+text+'\n');
+  renderRefsBox();
+  closeModal();
+}
+function renderRefsBox(){
+  var b=document.getElementById('frefsBox');
+  if(!b)return;
+  var h='';
+  if(window._quranRefs&&window._quranRefs.length){
+    h+='<div class="sec-h">آیات درج‌شده ('+window._quranRefs.length+')</div>';
+    window._quranRefs.forEach(function(q,i){
+      h+='<div class="list-item" style="padding:6px"><div class="li-t"><div class="t" style="font-size:12px">'+esc(q.surah)+':'+q.verseNo+'</div><div class="s">'+esc(q.text)+'</div></div><button class="btn-d" style="padding:4px 8px;font-size:11px" onclick="rmQuranRef('+i+')">✕</button></div>';
+    });
+  }
+  if(window._hadithRefs&&window._hadithRefs.length){
+    h+='<div class="sec-h">احادیث درج‌شده ('+window._hadithRefs.length+')</div>';
+    window._hadithRefs.forEach(function(q,i){
+      h+='<div class="list-item" style="padding:6px"><div class="li-t"><div class="t" style="font-size:12px">'+esc(q.source)+' — '+esc(q.narrator)+'</div><div class="s">'+esc(q.text)+'</div></div><button class="btn-d" style="padding:4px 8px;font-size:11px" onclick="rmHadithRef('+i+')">✕</button></div>';
+    });
+  }
+  b.innerHTML=h;
+}
+function rmQuranRef(i){window._quranRefs=window._quranRefs.filter(function(_,j){return j!=i});renderRefsBox();}
+function rmHadithRef(i){window._hadithRefs=window._hadithRefs.filter(function(_,j){return j!=i});renderRefsBox();}
 function appendText(id,text){
   var e=document.getElementById(id);
   if(e)e.value+=text;
@@ -705,11 +765,18 @@ function saveReport(){
   if(!c){tg('متن گزارش را وارد کنید',1);return}
   var u=gs(),d=db();
   var status=document.getElementById('fstatus').value;
+  var quranRefs=window._quranRefs||[];
+  var hadithRefs=window._hadithRefs||[];
   var rep={
     id:Date.now(),uid:u.id,instructorName:u.name,
     date:Date.now(),
     jdate:v('fdate'),status:status,count:v('fcount'),
     subject:s,content:c,
+    summary:v('fsummary'),audience:v('faudience'),
+    reportPattern:v('fpattern'),reportStyle:v('fstyle'),
+    recommendations:v('frecs'),challenges:v('fchal'),solutions:v('fsol'),
+    pedagogicalNotes:v('fped'),
+    quranRefs:quranRefs,hadithRefs:hadithRefs,
     s1:v('fs1'),s2:v('fs2'),s3:v('fs3'),s4:v('fs4'),
     g1:v('fg1'),g2:v('fg2'),g3:v('fg3'),ev:v('fev')
   };
@@ -721,7 +788,24 @@ function saveReport(){
   // Award points
   awardPoints(u.id,5,'ثبت گزارش: '+s);
   sv(d);tg('گزارش با موفقیت ذخیره شد');
-  if(window.API&&API.base()&&u.serverId)API.push('report',rep,String(rep.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  // Server payload — map PWA fields to DailyReport
+  var payload={
+    subject:s,content:c,summary:rep.summary||undefined,
+    audience:rep.audience||undefined,
+    reportPattern:rep.reportPattern||undefined,reportStyle:rep.reportStyle||undefined,
+    recommendations:rep.recommendations||undefined,
+    challenges:rep.challenges||undefined,solutions:rep.solutions||undefined,
+    pedagogicalNotes:rep.pedagogicalNotes||undefined,
+    attendeesCount:parseInt(v('fcount')||'0',10)||0,
+    quranRefs:quranRefs,hadithRefs:hadithRefs,
+    stagePresentation:v('fs1'),stageThinking:v('fs2'),
+    stageDiscussion:v('fs3'),stageReporting:v('fs4'),
+    groupEndurance:v('fg1'),groupSemiSpeed:v('fg2'),groupSpeed:v('fg3'),
+    evaluationSelf:v('fev'),
+    status:status
+  };
+  if(window.API&&API.base()&&API.getToken)API.push('report',payload,String(rep.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  window._quranRefs=[];window._hadithRefs=[];
   nav('reports');
 }
 function awardPoints(uid,amount,reason){
@@ -743,9 +827,19 @@ function reportView(){
     '<div class="kv"><span class="k">تاریخ ثبت</span><span class="v">'+pdate(r.date)+'</span></div>'+
     (r.jdate?'<div class="kv"><span class="k">تاریخ جلسه</span><span class="v">'+esc(r.jdate)+'</span></div>':'')+
     (r.count?'<div class="kv"><span class="k">تعداد شرکت‌کنندگان</span><span class="v">'+esc(r.count)+'</span></div>':'')+
+    (r.audience?'<div class="kv"><span class="k">مخاطب</span><span class="v">'+esc(r.audience)+'</span></div>':'')+
     '<div class="kv"><span class="k">وضعیت</span><span class="v">'+statusTag(r.status||'DRAFT')+'</span></div>'+
+    (r.reportPattern?'<div class="kv"><span class="k">الگوی گزارش</span><span class="v">'+esc(r.reportPattern)+'</span></div>':'')+
+    (r.reportStyle?'<div class="kv"><span class="k">سبک نگارش</span><span class="v">'+esc(r.reportStyle)+'</span></div>':'')+
+    (r.summary?'<div class="divider"></div><h2 style="font-size:13px">خلاصه</h2><p style="font-size:12px">'+esc(r.summary)+'</p>':'')+
     '<div class="divider"></div>'+
     '<p style="font-size:13px;line-height:1.8;margin:8px 0">'+esc(r.content).replace(/\n/g,'<br>')+'</p>';
+  if(r.recommendations||r.challenges||r.solutions){
+    h+='<div class="divider"></div>';
+    if(r.recommendations)h+='<h2 style="font-size:13px">توصیه‌ها</h2><p style="font-size:12px;margin:4px 0">'+esc(r.recommendations).replace(/\n/g,'<br>')+'</p>';
+    if(r.challenges)h+='<h2 style="font-size:13px">چالش‌ها</h2><p style="font-size:12px;margin:4px 0">'+esc(r.challenges).replace(/\n/g,'<br>')+'</p>';
+    if(r.solutions)h+='<h2 style="font-size:13px">راه‌حل‌ها</h2><p style="font-size:12px;margin:4px 0">'+esc(r.solutions).replace(/\n/g,'<br>')+'</p>';
+  }
   if(r.s1||r.s2||r.s3||r.s4){
     h+='<div class="divider"></div><h2 style="font-size:13px">چهار مرحله</h2>';
     if(r.s1)h+='<p style="font-size:12px;margin:4px 0"><b>۱. ارائه:</b> '+esc(r.s1).replace(/\n/g,'<br>')+'</p>';
@@ -760,6 +854,19 @@ function reportView(){
     if(r.g3)h+='<p style="font-size:12px;margin:4px 0"><b>سرعتی:</b> '+esc(r.g3).replace(/\n/g,'<br>')+'</p>';
   }
   if(r.ev){h+='<div class="divider"></div><h2 style="font-size:13px">خودارزیابی</h2><p style="font-size:12px">'+esc(r.ev).replace(/\n/g,'<br>')+'</p>'}
+  if(r.pedagogicalNotes){h+='<div class="divider"></div><h2 style="font-size:13px">یادداشت‌های تربیتی</h2><p style="font-size:12px">'+esc(r.pedagogicalNotes).replace(/\n/g,'<br>')+'</p>'}
+  // Structured Quran / Hadith refs
+  if((r.quranRefs&&r.quranRefs.length)||(r.hadithRefs&&r.hadithRefs.length)){
+    h+='<div class="divider"></div><h2 style="font-size:13px">منابع درج‌شده</h2>';
+    if(r.quranRefs&&r.quranRefs.length){
+      h+='<div class="s" style="margin:4px 0">📖 آیات:</div>';
+      r.quranRefs.forEach(function(q){h+='<div style="font-size:12px;padding:3px 0">'+esc(q.surah)+':'+q.verseNo+' — '+esc(q.text)+'</div>';});
+    }
+    if(r.hadithRefs&&r.hadithRefs.length){
+      h+='<div class="s" style="margin:4px 0">☪️ احادیث:</div>';
+      r.hadithRefs.forEach(function(q){h+='<div style="font-size:12px;padding:3px 0">'+esc(q.source)+' — '+esc(q.narrator)+' : '+esc(q.text)+'</div>';});
+    }
+  }
   h+='</div>';
   // Export buttons
   h+='<div class="row">'+
@@ -993,50 +1100,107 @@ function lessonForm(){
   return '<div class="bar-back"><button onclick="nav(\'lessons\')">‹ بازگشت</button><span class="t">طرح درس جدید</span></div>'+
     '<div class="card">'+
     '<div class="f"><label>عنوان طرح درس *</label><input id="ltitle" placeholder="مثال: طرح درس اخلاق - جلسه اول"></div>'+
-    '<div class="row"><div class="f"><label>موضوع</label><input id="lsubject" placeholder="موضوع درس"></div>'+
+    '<div class="row"><div class="f"><label>موضوع *</label><input id="lsubject" placeholder="موضوع درس"></div>'+
     '<div class="f"><label>تاریخ</label><input id="ldate" value="'+pdate()+'"></div></div>'+
     '<div class="row"><div class="f"><label>مدت (دقیقه)</label><input id="lduration" inputmode="numeric" value="60"></div>'+
+    '<div class="f"><label>تعداد جلسات</label><input id="lsessions" inputmode="numeric" value="1"></div>'+
     '<div class="f"><label>تعداد افراد</label><input id="lcount" inputmode="numeric" value="15"></div></div>'+
     '<div class="row"><div class="f"><label>پایه تحصیلی</label><input id="lgrade" placeholder="مثال: هفتم"></div>'+
     '<div class="f"><label>وضعیت</label><select id="lstatus"><option value="DRAFT">پیش‌نویس</option><option value="SUBMITTED">ارسال برای ارزیابی</option></select></div></div>'+
-    '<div class="sec-h">اهداف رفتاری</div>'+
-    '<div class="f"><label>هدف اصلی</label><textarea id="lgoal" placeholder="هدف کلی این جلسه"></textarea></div>'+
-    '<div class="f"><label>اهداف جزئی (هر خط یک هدف)</label><textarea id="lsubgoals" placeholder="اهداف خرد"></textarea></div>'+
+    '<div class="sec-h">اهداف</div>'+
+    '<div class="f"><label>هدف کلی</label><textarea id="lgoal" rows="2" placeholder="هدف کلی طرح درس"></textarea></div>'+
+    '<div class="f"><label>اهداف جزئی (هر خط یک هدف)</label><textarea id="lsubgoals" rows="2" placeholder="اهداف خرد"></textarea></div>'+
+    '<div class="f"><label>اهداف رفتاری (عملکرد، شرایط، معیار)</label><textarea id="lbehavior" rows="2" placeholder="اهداف رفتاری قابل مشاهده و سنجش"></textarea></div>'+
+    '<div class="f"><label>عناوین فرعی</label><textarea id="lsubhead" rows="2" placeholder="عناوین فرعی طرح درس"></textarea></div>'+
+    '<div class="f"><label>پیش‌نیازها</label><textarea id="lprereq" rows="2" placeholder="پیش‌نیازهای یادگیری افراد"></textarea></div>'+
+    '<div class="f"><label>ارزشیابی تشخیصی</label><textarea id="ldiag" rows="2" placeholder="سنجش سطح اولیه افراد"></textarea></div>'+
+    '<div class="sec-h">مراحل تدریس</div>'+
+    '<div class="f"><label>۱. آمادگی</label><textarea id="lp1" rows="2" placeholder="ایجاد انگیزه و آمادگی افراد"></textarea></div>'+
+    '<div class="f"><label>۲. معرفی</label><textarea id="lp2" rows="2" placeholder="معرفی موضوع و اهداف"></textarea></div>'+
+    '<div class="f"><label>۳. ارائه مطلب</label><textarea id="lp3" rows="2" placeholder="ارائه محتوای اصلی"></textarea></div>'+
+    '<div class="f"><label>۴. خلاصه</label><textarea id="lp4" rows="2" placeholder="جمع‌بندی مطلب"></textarea></div>'+
+    '<div class="f"><label>۵. ارزشیابی</label><textarea id="lp5" rows="2" placeholder="سنجش یادگیری"></textarea></div>'+
+    '<div class="f"><label>۶. فعالیت‌های تکمیلی / تکالیف</label><textarea id="lp6" rows="2" placeholder="تکالیف و فعالیت‌های تکمیلی"></textarea></div>'+
+    '<div class="sec-h">روش تدریس و وسایل</div>'+
+    '<div class="f"><label>روش تدریس</label><textarea id="lmethod" rows="2" placeholder="چهار مرحله‌ای، بحث گروهی، ایفای نقش و..."></textarea></div>'+
+    '<div class="f"><label>وسایل آموزشی</label><textarea id="ltools" rows="2" placeholder="کتاب، ویدیو، نمودار"></textarea></div>'+
+    '<div class="f"><label>سؤال‌های ارزشیابی</label><textarea id="levq" rows="2" placeholder="سؤال‌های سنجش یادگیری"></textarea></div>'+
     '<div class="sec-h">منابع آموزشی</div>'+
     '<div class="row"><button class="btn-y" onclick="insertQuranLesson()">📖 درج آیه</button><button class="btn-v" onclick="insertHadithLesson()">☪️ درج حدیث</button></div>'+
-    '<div class="f"><label>آیات مرتبط</label><textarea id="lquran" placeholder="آیات قرآن مرتبط با درس"></textarea></div>'+
-    '<div class="f"><label>احادیث مرتبط</label><textarea id="lhadith" placeholder="احادیث مرتبط"></textarea></div>'+
-    '<div class="sec-h">مراحل تدریس</div>'+
-    '<div class="f"><label>۱. مقدمه و ارزشیابی تشخیصی</label><textarea id="lp1" placeholder="ارزشیابی اولیه"></textarea></div>'+
-    '<div class="f"><label>۲. ارائه مطلب</label><textarea id="lp2" placeholder="محتوای اصلی"></textarea></div>'+
-    '<div class="f"><label>۳. تفکر و مباحثه</label><textarea id="lp3" placeholder="پرسش و گفتگو"></textarea></div>'+
-    '<div class="f"><label>۴. جمع‌بندی و ارزشیابی</label><textarea id="lp4" placeholder="جمع‌بندی نهایی"></textarea></div>'+
-    '<div class="sec-h">ابزار و تکالیف</div>'+
-    '<div class="f"><label>وسایل آموزشی</label><textarea id="ltools" placeholder="کتاب، ویدیو، نمودار"></textarea></div>'+
-    '<div class="f"><label>منابع</label><textarea id="lrefs" placeholder="قرآن، نهج‌البلاغه، کتاب‌های مرجع"></textarea></div>'+
-    '<div class="f"><label>تکالیف</label><textarea id="lhw" placeholder="تکلیف جلسه بعد"></textarea></div>'+
+    '<div id="lrefsBox"></div>'+
+    '<div class="f"><label>آیات درج‌شده</label><textarea id="lquran" rows="2" placeholder="آیات قرآن مرتبط با درس"></textarea></div>'+
+    '<div class="f"><label>احادیث درج‌شده</label><textarea id="lhadith" rows="2" placeholder="احادیث مرتبط"></textarea></div>'+
+    '<div class="f"><label>منابع (هر خط یک منبع)</label><textarea id="lrefs" rows="2" placeholder="قرآن، نهج‌البلاغه، کتاب‌های مرجع"></textarea></div>'+
+    '<div class="sec-h">چهار مرحله (الگوی تربیتی)</div>'+
+    '<div class="f"><label>۱. ارائه مطلب</label><textarea id="ls1" rows="2" placeholder="موضوع ارائه‌شده به افراد"></textarea></div>'+
+    '<div class="f"><label>۲. تفکر</label><textarea id="ls2" rows="2" placeholder="پرسش و تأمل در مطلب"></textarea></div>'+
+    '<div class="f"><label>۳. مباحثه</label><textarea id="ls3" rows="2" placeholder="گفتگو و تبادل نظر"></textarea></div>'+
+    '<div class="f"><label>۴. ارائه به مربی</label><textarea id="ls4" rows="2" placeholder="نتیجه و جمع‌بندی نهایی"></textarea></div>'+
+    '<div class="sec-h">سه گروه (پیشرفت تربیتی)</div>'+
+    '<div class="f"><label>گروه استقامتی</label><textarea id="lg1" rows="2" placeholder="افراد در مرحله استقامت"></textarea></div>'+
+    '<div class="f"><label>گروه نیمه‌سرعتی</label><textarea id="lg2" rows="2" placeholder="افراد در حال پیشرفت"></textarea></div>'+
+    '<div class="f"><label>گروه سرعتی</label><textarea id="lg3" rows="2" placeholder="افراد پیشرفته"></textarea></div>'+
+    '<div class="f"><label>خودارزیابی مربی</label><textarea id="levself" rows="2" placeholder="ارزیابی مربی از طرح درس"></textarea></div>'+
     '<button class="btn-p" onclick="saveLesson()">ذخیره طرح درس</button>'+
     '<button class="btn-s" onclick="nav(\'lessons\')" style="margin-top:6px">انصراف</button></div>';
 }
-function insertQuranLesson(){var d=db();var h='<h3>انتخاب آیه</h3>';d.quran.forEach(function(q){h+='<div class="verse" onclick="appendText(\'lquran\',\'[قرآن-'+esc(q.surah)+':'+q.verseNo+'] '+esc(q.text)+'\\n\');closeModal()"><div>'+esc(q.text)+'</div><span class="vref">'+esc(q.surah)+' • '+q.verseNo+' • '+esc(q.topic)+'</span></div>'});showModal(h)}
-function insertHadithLesson(){var d=db();var h='<h3>انتخاب حدیث</h3>';d.hadiths.forEach(function(hd){h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" onclick="appendText(\'lhadith\',\'['+esc(hd.source)+' - '+esc(hd.narrator)+'] '+esc(hd.text)+'\\n\');closeModal()"><div>'+esc(hd.text)+'</div><span class="vref" style="color:#6d28d9">'+esc(hd.source)+' • '+esc(hd.narrator)+'</span></div>'});showModal(h)}
+function insertQuranLesson(){var d=db();var h='<h3>انتخاب آیه</h3>';d.quran.forEach(function(q){h+='<div class="verse" onclick="addLessonQuranRef(\''+q.surah+'\',\''+q.verseNo+'\',\''+esc(q.text).replace(/'/g,"\\'")+'\')"><div>'+esc(q.text)+'</div><span class="vref">'+esc(q.surah)+' • '+q.verseNo+' • '+esc(q.topic)+'</span></div>'});showModal(h)}
+function insertHadithLesson(){var d=db();var h='<h3>انتخاب حدیث</h3>';d.hadiths.forEach(function(hd){h+='<div class="verse" style="background:#ede9fe;border-right-color:#7c3aed" onclick="addLessonHadithRef(\''+esc(hd.source).replace(/'/g,"\\'")+'\',\''+esc(hd.narrator).replace(/'/g,"\\'")+'\',\''+esc(hd.text).replace(/'/g,"\\'")+'\')"><div>'+esc(hd.text)+'</div><span class="vref" style="color:#6d28d9">'+esc(hd.source)+' • '+esc(hd.narrator)+'</span></div>'});showModal(h)}
+function addLessonQuranRef(surah,verseNo,text){if(!window._lQuranRefs)window._lQuranRefs=[];window._lQuranRefs.push({surah:surah,verseNo:verseNo,text:text});appendText('lquran','[قرآن-'+surah+':'+verseNo+'] '+text+'\n');renderLRefsBox();closeModal();}
+function addLessonHadithRef(source,narrator,text){if(!window._lHadithRefs)window._lHadithRefs=[];window._lHadithRefs.push({source:source,narrator:narrator,text:text});appendText('lhadith','['+source+' - '+narrator+'] '+text+'\n');renderLRefsBox();closeModal();}
+function renderLRefsBox(){var b=document.getElementById('lrefsBox');if(!b)return;var h='';
+  if(window._lQuranRefs&&window._lQuranRefs.length){h+='<div class="sec-h">آیات درج‌شده ('+window._lQuranRefs.length+')</div>';window._lQuranRefs.forEach(function(q,i){h+='<div class="list-item" style="padding:6px"><div class="li-t"><div class="t" style="font-size:12px">'+esc(q.surah)+':'+q.verseNo+'</div><div class="s">'+esc(q.text)+'</div></div><button class="btn-d" style="padding:4px 8px;font-size:11px" onclick="rmLessonQuranRef('+i+')">✕</button></div>';});}
+  if(window._lHadithRefs&&window._lHadithRefs.length){h+='<div class="sec-h">احادیث درج‌شده ('+window._lHadithRefs.length+')</div>';window._lHadithRefs.forEach(function(q,i){h+='<div class="list-item" style="padding:6px"><div class="li-t"><div class="t" style="font-size:12px">'+esc(q.source)+' — '+esc(q.narrator)+'</div><div class="s">'+esc(q.text)+'</div></div><button class="btn-d" style="padding:4px 8px;font-size:11px" onclick="rmLessonHadithRef('+i+')">✕</button></div>';});}
+  b.innerHTML=h;}
+function rmLessonQuranRef(i){window._lQuranRefs=window._lQuranRefs.filter(function(_,j){return j!=i});renderLRefsBox();}
+function rmLessonHadithRef(i){window._lHadithRefs=window._lHadithRefs.filter(function(_,j){return j!=i});renderLRefsBox();}
 function saveLesson(){
   var t=document.getElementById('ltitle').value.trim();
   if(!t){tg('عنوان را وارد کنید',1);return}
   var u=gs(),d=db();
+  var quranRefs=window._lQuranRefs||[];
+  var hadithRefs=window._lHadithRefs||[];
   var les={
     id:Date.now(),uid:u.id,name:u.name,date:Date.now(),
     title:t,subject:v('lsubject'),jdate:v('ldate'),status:v('lstatus'),
-    duration:v('lduration'),count:v('lcount'),grade:v('lgrade'),
-    goal:v('lgoal'),subgoals:v('lsubgoals'),
+    duration:v('lduration'),sessions:v('lsessions'),count:v('lcount'),grade:v('lgrade'),
+    goal:v('lgoal'),subgoals:v('lsubgoals'),behavior:v('lbehavior'),
+    subhead:v('lsubhead'),prereq:v('lprereq'),diag:v('ldiag'),
     quran:v('lquran'),hadith:v('lhadith'),
-    p1:v('lp1'),p2:v('lp2'),p3:v('lp3'),p4:v('lp4'),
-    tools:v('ltools'),refs:v('lrefs'),hw:v('lhw')
+    p1:v('lp1'),p2:v('lp2'),p3:v('lp3'),p4:v('lp4'),p5:v('lp5'),p6:v('lp6'),
+    method:v('lmethod'),tools:v('ltools'),evq:v('levq'),refs:v('lrefs'),
+    s1:v('ls1'),s2:v('ls2'),s3:v('ls3'),s4:v('ls4'),
+    g1:v('lg1'),g2:v('lg2'),g3:v('lg3'),evself:v('levself'),
+    quranRefs:quranRefs,hadithRefs:hadithRefs
   };
   d.lessons.push(les);
   awardPoints(u.id,8,'ثبت طرح درس: '+t);
   sv(d);tg('طرح درس ذخیره شد');
-  if(window.API&&API.base()&&u.serverId)API.push('lesson',les,String(les.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  var payload={
+    title:t,subject:v('lsubject')||undefined,grade:v('lgrade')||undefined,
+    sessionCount:parseInt(v('lsessions')||'1',10)||1,
+    generalObjective:v('lgoal')||undefined,
+    objectives:(v('lsubgoals')||'').split('\n').filter(Boolean),
+    behavioralObjectives:v('lbehavior')||undefined,
+    subHeadings:v('lsubhead')||undefined,prerequisites:v('lprereq')||undefined,
+    diagnosticEvaluation:v('ldiag')||undefined,
+    preparationPhase:v('lp1')||undefined,introductionPhase:v('lp2')||undefined,
+    presentationPhase:v('lp3')||undefined,summaryPhase:v('lp4')||undefined,
+    evaluationPhase:v('lp5')||undefined,supplementaryActivities:v('lp6')||undefined,
+    teachingMethod:v('lmethod')||undefined,teachingAids:v('ltools')||undefined,
+    evaluationQuestions:v('levq')||undefined,
+    quranRefs:quranRefs,hadithRefs:hadithRefs,
+    sources:(v('lrefs')||'').split('\n').filter(Boolean),
+    stagePresentation:v('ls1')||undefined,stageThinking:v('ls2')||undefined,
+    stageDiscussion:v('ls3')||undefined,stageReporting:v('ls4')||undefined,
+    groupEndurance:v('lg1')||undefined,groupSemiSpeed:v('lg2')||undefined,
+    groupSpeed:v('lg3')||undefined,
+    evaluationSelf:v('levself')||undefined,
+    traineeCount:parseInt(v('lcount')||'0',10)||0,
+    status:v('lstatus')
+  };
+  if(window.API&&API.base()&&API.getToken)API.push('lesson',payload,String(les.id)).catch(function(){tg('آفلاین — برای همگام‌سازی بعداً',1)});
+  window._lQuranRefs=[];window._lHadithRefs=[];
   nav('lessons');
 }
 function openLesson(id){curSub='view';curLessonId=id;render()}
@@ -1052,17 +1216,49 @@ function lessonView(){
   h+='<div class="kv"><span class="k">افراد</span><span class="v">'+esc(r.count||'-')+'</span></div>';
   if(r.grade)h+='<div class="kv"><span class="k">پایه</span><span class="v">'+esc(r.grade)+'</span></div>';
   h+='<div class="kv"><span class="k">وضعیت</span><span class="v">'+statusTag(r.status||'DRAFT')+'</span></div>';
-  if(r.goal){h+='<div class="divider"></div><h2 style="font-size:13px">هدف اصلی</h2><p style="font-size:13px">'+esc(r.goal).replace(/\n/g,'<br>')+'</p>'}
+  if(r.goal){h+='<div class="divider"></div><h2 style="font-size:13px">هدف کلی</h2><p style="font-size:13px">'+esc(r.goal).replace(/\n/g,'<br>')+'</p>'}
   if(r.subgoals){h+='<h2 style="font-size:13px">اهداف جزئی</h2><p style="font-size:12px;white-space:pre-line">'+esc(r.subgoals)+'</p>'}
+  if(r.behavior){h+='<h2 style="font-size:13px">اهداف رفتاری</h2><p style="font-size:12px">'+esc(r.behavior).replace(/\n/g,'<br>')+'</p>'}
+  if(r.subhead){h+='<h2 style="font-size:13px">عناوین فرعی</h2><p style="font-size:12px">'+esc(r.subhead).replace(/\n/g,'<br>')+'</p>'}
+  if(r.prereq){h+='<h2 style="font-size:13px">پیش‌نیازها</h2><p style="font-size:12px">'+esc(r.prereq).replace(/\n/g,'<br>')+'</p>'}
+  if(r.diag){h+='<h2 style="font-size:13px">ارزشیابی تشخیصی</h2><p style="font-size:12px">'+esc(r.diag).replace(/\n/g,'<br>')+'</p>'}
+  if(r.p1||r.p2||r.p3||r.p4||r.p5||r.p6){
+    h+='<div class="divider"></div><h2 style="font-size:13px">مراحل تدریس</h2>';
+    if(r.p1)h+='<p style="font-size:12px;margin:4px 0"><b>۱. آمادگی:</b> '+esc(r.p1).replace(/\n/g,'<br>')+'</p>';
+    if(r.p2)h+='<p style="font-size:12px;margin:4px 0"><b>۲. معرفی:</b> '+esc(r.p2).replace(/\n/g,'<br>')+'</p>';
+    if(r.p3)h+='<p style="font-size:12px;margin:4px 0"><b>۳. ارائه مطلب:</b> '+esc(r.p3).replace(/\n/g,'<br>')+'</p>';
+    if(r.p4)h+='<p style="font-size:12px;margin:4px 0"><b>۴. خلاصه:</b> '+esc(r.p4).replace(/\n/g,'<br>')+'</p>';
+    if(r.p5)h+='<p style="font-size:12px;margin:4px 0"><b>۵. ارزشیابی:</b> '+esc(r.p5).replace(/\n/g,'<br>')+'</p>';
+    if(r.p6)h+='<p style="font-size:12px;margin:4px 0"><b>۶. تکمیلی/تکالیف:</b> '+esc(r.p6).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.method||r.tools||r.evq){
+    h+='<div class="divider"></div>';
+    if(r.method)h+='<h2 style="font-size:13px">روش تدریس</h2><p style="font-size:12px">'+esc(r.method).replace(/\n/g,'<br>')+'</p>';
+    if(r.tools)h+='<h2 style="font-size:13px">وسایل آموزشی</h2><p style="font-size:12px">'+esc(r.tools).replace(/\n/g,'<br>')+'</p>';
+    if(r.evq)h+='<h2 style="font-size:13px">سؤال‌های ارزشیابی</h2><p style="font-size:12px">'+esc(r.evq).replace(/\n/g,'<br>')+'</p>';
+  }
   if(r.quran){h+='<div class="divider"></div><h2 style="font-size:13px">آیات قرآن</h2><div style="background:#fef9c3;padding:8px;border-radius:6px;font-size:12px;line-height:1.8">'+esc(r.quran).replace(/\n/g,'<br>')+'</div>'}
   if(r.hadith){h+='<h2 style="font-size:13px">احادیث</h2><div style="background:#ede9fe;padding:8px;border-radius:6px;font-size:12px;line-height:1.8">'+esc(r.hadith).replace(/\n/g,'<br>')+'</div>'}
-  if(r.p1){h+='<div class="divider"></div><h2 style="font-size:13px">مراحل تدریس</h2><p style="font-size:12px;margin:4px 0"><b>۱. مقدمه:</b> '+esc(r.p1).replace(/\n/g,'<br>')+'</p>'}
-  if(r.p2)h+='<p style="font-size:12px;margin:4px 0"><b>۲. ارائه:</b> '+esc(r.p2).replace(/\n/g,'<br>')+'</p>';
-  if(r.p3)h+='<p style="font-size:12px;margin:4px 0"><b>۳. تفکر:</b> '+esc(r.p3).replace(/\n/g,'<br>')+'</p>';
-  if(r.p4)h+='<p style="font-size:12px;margin:4px 0"><b>۴. جمع‌بندی:</b> '+esc(r.p4).replace(/\n/g,'<br>')+'</p>';
-  if(r.tools){h+='<div class="divider"></div><h2 style="font-size:13px">وسایل</h2><p style="font-size:12px">'+esc(r.tools).replace(/\n/g,'<br>')+'</p>'}
-  if(r.refs){h+='<h2 style="font-size:13px">منابع</h2><p style="font-size:12px">'+esc(r.refs).replace(/\n/g,'<br>')+'</p>'}
-  if(r.hw){h+='<h2 style="font-size:13px">تکالیف</h2><p style="font-size:12px">'+esc(r.hw).replace(/\n/g,'<br>')+'</p>'}
+  if((r.quranRefs&&r.quranRefs.length)||(r.hadithRefs&&r.hadithRefs.length)){
+    h+='<div class="divider"></div><h2 style="font-size:13px">منابع درج‌شده</h2>';
+    if(r.quranRefs&&r.quranRefs.length){h+='<div class="s" style="margin:4px 0">📖 آیات:</div>';r.quranRefs.forEach(function(q){h+='<div style="font-size:12px;padding:3px 0">'+esc(q.surah)+':'+q.verseNo+' — '+esc(q.text)+'</div>';});}
+    if(r.hadithRefs&&r.hadithRefs.length){h+='<div class="s" style="margin:4px 0">☪️ احادیث:</div>';r.hadithRefs.forEach(function(q){h+='<div style="font-size:12px;padding:3px 0">'+esc(q.source)+' — '+esc(q.narrator)+' : '+esc(q.text)+'</div>';});}
+  }
+  if(r.refs){h+='<div class="divider"></div><h2 style="font-size:13px">منابع</h2><p style="font-size:12px;white-space:pre-line">'+esc(r.refs)+'</p>'}
+  if(r.s1||r.s2||r.s3||r.s4){
+    h+='<div class="divider"></div><h2 style="font-size:13px">چهار مرحله</h2>';
+    if(r.s1)h+='<p style="font-size:12px;margin:4px 0"><b>۱. ارائه:</b> '+esc(r.s1).replace(/\n/g,'<br>')+'</p>';
+    if(r.s2)h+='<p style="font-size:12px;margin:4px 0"><b>۲. تفکر:</b> '+esc(r.s2).replace(/\n/g,'<br>')+'</p>';
+    if(r.s3)h+='<p style="font-size:12px;margin:4px 0"><b>۳. مباحثه:</b> '+esc(r.s3).replace(/\n/g,'<br>')+'</p>';
+    if(r.s4)h+='<p style="font-size:12px;margin:4px 0"><b>۴. ارائه به مربی:</b> '+esc(r.s4).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.g1||r.g2||r.g3){
+    h+='<div class="divider"></div><h2 style="font-size:13px">سه گروه</h2>';
+    if(r.g1)h+='<p style="font-size:12px;margin:4px 0"><b>استقامتی:</b> '+esc(r.g1).replace(/\n/g,'<br>')+'</p>';
+    if(r.g2)h+='<p style="font-size:12px;margin:4px 0"><b>نیمه‌سرعتی:</b> '+esc(r.g2).replace(/\n/g,'<br>')+'</p>';
+    if(r.g3)h+='<p style="font-size:12px;margin:4px 0"><b>سرعتی:</b> '+esc(r.g3).replace(/\n/g,'<br>')+'</p>';
+  }
+  if(r.evself){h+='<div class="divider"></div><h2 style="font-size:13px">خودارزیابی مربی</h2><p style="font-size:12px">'+esc(r.evself).replace(/\n/g,'<br>')+'</p>'}
   h+='</div>';
   h+='<div class="row"><button class="btn-i" onclick="exportLessonPDF('+r.id+')">📄 PDF</button><button class="btn-v" onclick="exportLessonWord('+r.id+')">📝 Word</button><button class="btn-s" onclick="exportLessonText('+r.id+')">💾 متن</button></div>';
   h+='<div class="row" style="margin-top:6px"><button class="btn-y" onclick="exportLessonJSON('+r.id+')">📋 JSON</button><button class="btn-p" onclick="shareLesson('+r.id+')">🔗 اشتراک</button>'+(u.role=='ADMIN'||u.role=='EVALUATOR'?'<button class="btn-v" onclick="evaluateLesson('+r.id+')">🎯 ارزیابی</button>':'')+'</div>';
@@ -1667,12 +1863,14 @@ function branchesPage(){
   var d=db();
   var h='<div class="bar-back"><button onclick="nav(\'more\')">‹ بازگشت</button><span class="t">شعب و مکاتب</span></div>';
   h+='<div class="card"><h2>مکاتب ('+d.maktabs.length+')</h2>';
+  h+='<button class="btn-p" onclick="addMaktabForm()" style="margin-bottom:8px">＋ افزودن مکتب</button>';
   d.maktabs.forEach(function(m){
     var brs=d.branches.filter(function(b){return b.maktabId==m.id});
     h+='<div class="list-item"><div class="li-ic">🏛</div><div class="li-t"><div class="t">'+esc(m.name)+'</div><div class="s">کد: '+esc(m.code)+' • '+brs.length+' شعبه</div></div></div>';
   });
   h+='</div>';
   h+='<div class="card"><h2>شعب ('+d.branches.length+')</h2>';
+  h+='<button class="btn-p" onclick="addBranchForm()" style="margin-bottom:8px">＋ افزودن شعبه</button>';
   d.branches.forEach(function(b){
     var mk=d.maktabs.find(function(m){return m.id==b.maktabId});
     var userCount=d.users.filter(function(u){return u.branchId==b.id}).length;
@@ -1680,6 +1878,47 @@ function branchesPage(){
   });
   h+='</div>';
   return h;
+}
+function addMaktabForm(){
+  var h='<h3>افزودن مکتب</h3>'+
+    '<div class="f"><label>نام مکتب</label><input id="mkname" placeholder="مثلاً مکتب حضرت سیدالشهدا"></div>'+
+    '<div class="f"><label>کد مکتب</label><input id="mkcode" placeholder="مثلاً MK-SYED"></div>'+
+    '<button class="btn-p" onclick="saveMaktab()">ذخیره</button>'+
+    '<button class="btn-s" onclick="closeModal()" style="margin-top:6px">انصراف</button>';
+  showModal(h);
+}
+function saveMaktab(){
+  var n=document.getElementById('mkname').value.trim();
+  if(!n){tg('نام مکتب را وارد کنید',1);return}
+  var d=db();
+  d.maktabs.push({id:uid('mk'),name:n,code:v('mkcode'),active:true});
+  sv(d);
+  tg('مکتب افزوده شد');
+  closeModal();nav('more','branches');
+}
+function addBranchForm(){
+  var d=db();
+  var mkOpts='';
+  d.maktabs.forEach(function(m){mkOpts+='<option value="'+m.id+'">'+esc(m.name)+'</option>'});
+  var mkSel=d.maktabs.length?('<div class="f"><label>مکتب</label><select id="brmk">'+mkOpts+'</select></div>'):'';
+  var h='<h3>افزودن شعبه</h3>'+
+    '<div class="f"><label>نام شعبه</label><input id="brname" placeholder="مثلاً شعبه مرکزی"></div>'+
+    '<div class="f"><label>کد شعبه</label><input id="brcode" placeholder="مثلاً BR-01"></div>'+
+    '<div class="f"><label>تلفن</label><input id="brphone" placeholder="مثلاً 021-12345678"></div>'+
+    mkSel+
+    '<button class="btn-p" onclick="saveBranch()">ذخیره</button>'+
+    '<button class="btn-s" onclick="closeModal()" style="margin-top:6px">انصراف</button>';
+  showModal(h);
+}
+function saveBranch(){
+  var n=document.getElementById('brname').value.trim();
+  if(!n){tg('نام شعبه را وارد کنید',1);return}
+  var d=db();
+  var mkid=v('brmk');
+  d.branches.push({id:uid('br'),name:n,code:v('brcode'),phone:v('brphone'),maktabId:mkid});
+  sv(d);
+  tg('شعبه افزوده شد');
+  closeModal();nav('more','branches');
 }
 
 // ========= USERS =========
@@ -1946,7 +2185,7 @@ function aboutPage(){
     '<li>⭐ سیستم امتیازدهی خودکار</li>'+
     '<li>🏆 تقدیر و نشان‌ها</li>'+
     '<li>📈 رتبه‌بندی مربیان</li>'+
-    '<li>🏛 مدیریت مکاتب (۴ مکتب) و شعب (۶ شعبه)</li>'+
+    '<li>🏛 مدیریت مکاتب و شعب</li>'+
     '<li>👥 مدیریت کاربران با ۴ نقش (مدیر، مربی، ارزیاب، تربیت‌پذیر)</li>'+
     '<li>✅ تأیید ثبت‌نام کاربران جدید</li>'+
     '<li>💬 ثبت نظر روی گزارش‌ها و طرح‌درس‌ها</li>'+
@@ -2174,6 +2413,15 @@ function editReport(id){
     if(document.getElementById('fg2'))document.getElementById('fg2').value=r.g2||'';
     if(document.getElementById('fg3'))document.getElementById('fg3').value=r.g3||'';
     if(document.getElementById('fev'))document.getElementById('fev').value=r.ev||'';
+    if(document.getElementById('fsummary'))document.getElementById('fsummary').value=r.summary||'';
+    if(document.getElementById('faudience'))document.getElementById('faudience').value=r.audience||'';
+    if(document.getElementById('fpattern'))document.getElementById('fpattern').value=r.reportPattern||'';
+    if(document.getElementById('fstyle'))document.getElementById('fstyle').value=r.reportStyle||'';
+    if(document.getElementById('frecs'))document.getElementById('frecs').value=r.recommendations||'';
+    if(document.getElementById('fchal'))document.getElementById('fchal').value=r.challenges||'';
+    if(document.getElementById('fsol'))document.getElementById('fsol').value=r.solutions||'';
+    if(document.getElementById('fped'))document.getElementById('fped').value=r.pedagogicalNotes||'';
+    window._quranRefs=r.quranRefs||[];window._hadithRefs=r.hadithRefs||[];renderRefsBox();
     // Delete the old one (will be re-saved on saveReport)
     if(confirm('گزارش در حالت ویرایش است. ادامه می‌دهید؟ (گزارش قبلی با ذخیره جایگزین می‌شود)')){
       d.reports=d.reports.filter(function(x){return x.id!=id});sv(d);
@@ -2249,21 +2497,57 @@ function askSuggestion(q){
   document.getElementById('chatInput').value=q;
   sendChat();
 }
+function scrollChat(){
+  setTimeout(function(){
+    var box=document.getElementById('chatBox');
+    if(box)box.scrollTop=box.scrollHeight;
+  },50);
+}
 function sendChat(){
   var q=document.getElementById('chatInput').value.trim();
   if(!q)return;
   var d=db();
   if(!d.chatHistory)d.chatHistory=[];
   d.chatHistory.push({role:'user',text:q,date:Date.now()});
-  var answer=aiAnswer(q,d);
-  d.chatHistory.push({role:'bot',text:answer,date:Date.now()});
-  if(d.chatHistory.length>50)d.chatHistory=d.chatHistory.slice(-50);
-  sv(d);
-  render();
-  setTimeout(function(){
-    var box=document.getElementById('chatBox');
-    if(box)box.scrollTop=box.scrollHeight;
-  },50);
+  var input=document.getElementById('chatInput');
+  if(input)input.value='';
+  var canLLM=(window.API&&API.base&&API.base()&&API.getToken&&API.getToken()&&navigator.onLine);
+  if(canLLM){
+    d.chatHistory.push({role:'bot',text:'⏳ در حال پاسخ…',pending:true,date:Date.now()});
+    sv(d);render();scrollChat();
+    fetch(API.base()+'/api/assistant',{method:'POST',headers:{'Content-Type':'application/json','x-user-id':API.getToken()||''},body:JSON.stringify({message:q})})
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+      .then(function(j){
+        var d2=db();if(!d2.chatHistory)d2.chatHistory=[];
+        var ans=(j.response||'');
+        if(!ans){ans=aiAnswer(q,d2);d2.chatHistory.push({role:'bot',text:ans,date:Date.now()});}
+        else{
+          var m=d2.chatHistory[d2.chatHistory.length-1];
+          if(m&&m.pending)m.text=ans;else d2.chatHistory.push({role:'bot',text:ans,date:Date.now()});
+          if(j.sources){
+            var src='';
+            if(j.sources.quran&&j.sources.quran.length)src+='\n\n📖 آیات مرتبط:\n'+j.sources.quran;
+            if(j.sources.hadith&&j.sources.hadith.length)src+='\n\n☪️ روایات مرتبط:\n'+j.sources.hadith;
+            if(src){var mm=d2.chatHistory[d2.chatHistory.length-1];if(mm)mm.text+=src;}
+          }
+        }
+        if(d2.chatHistory.length>50)d2.chatHistory=d2.chatHistory.slice(-50);
+        sv(d2);render();scrollChat();
+      })
+      .catch(function(){
+        var d3=db();if(!d3.chatHistory)d3.chatHistory=[];
+        var fb=aiAnswer(q,d3);
+        var m3=d3.chatHistory[d3.chatHistory.length-1];
+        if(m3&&m3.pending)m3.text=fb;else d3.chatHistory.push({role:'bot',text:fb,date:Date.now()});
+        if(d3.chatHistory.length>50)d3.chatHistory=d3.chatHistory.slice(-50);
+        sv(d3);render();scrollChat();
+      });
+  } else {
+    var answer=aiAnswer(q,d);
+    d.chatHistory.push({role:'bot',text:answer,date:Date.now()});
+    if(d.chatHistory.length>50)d.chatHistory=d.chatHistory.slice(-50);
+    sv(d);render();scrollChat();
+  }
 }
 function aiAnswer(q,d){
   q=q.toLowerCase();

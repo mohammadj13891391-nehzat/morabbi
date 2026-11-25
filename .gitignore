@@ -10,6 +10,12 @@ node_modules/
 dist/
 .angular/
 
+# Env / secrets
+.env
+.env.local
+.env.*.local
+.z-ai-config
+
 # Logs
 *.log
 *.out
@@ -18,3 +24,13 @@ dist/
 # OS
 Thumbs.db
 Desktop.ini
+
+# Dev logs (D:\morabbi root)
+api-*.log
+api-*.out
+*.log.err
+
+
+# Next.js build output / dev cache
+.next/
+unified/server/prisma/dev.db
