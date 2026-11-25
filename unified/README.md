@@ -37,16 +37,32 @@ D:\morabbi-unified\
 └────────────────────┘
 ```
 
-## شروع سریع (۳ دستور)
+## شروع سریع (کلون و اجرا)
 
 ```bash
-cd server
-npm install && npm run db:push && npm run db:seed
+# ۱. کلون
+git clone <this-repo> && cd <repo>
+
+# ۲. نصب و راه‌اندازی
+cd unified/server
+npm install
+npm run db:restore          # بازسازی prisma/dev.db از dev.db.zip (داده‌ی کامل قرآن/حدیث)
+cp .env.example .env        # سپس مقادیر واقعی را پر کنید
 npx next dev -p 3015
 ```
 
 - بکند + PWA: <http://localhost:3015/app/index.html>
 - سلامت API: <http://localhost:3015/api/health>
+
+> **داده‌ی قرآن** (۶۲۳۶ آیه) به‌صورت `prisma/dev.db.zip` (۰٫۷ مگابایت) در ریپو است؛ `npm run db:restore` آن را به `prisma/dev.db` (۲٫۸ مگابایت) استخراج می‌کند.
+>
+> **حدیث‌ها** (۱۶۸ روایتِ کاملِ بحارالانوار ≈ ۱۰۸ مگابایت) برای سبک‌ماندنِ ریپو داخلِ zip نیستند؛ برای افزودن‌شان `npm run import:hadith` را با دسترسی به منبع خام `E:\بحارالانوار` اجرا کنید. (قرآن نیز با `npm run import:quran` از `E:\corpus.quran.com` قابل‌بازسازی است.)
+
+> **دستیار هوشمند (AI):** برای فعال‌شدن پاسخ‌های واقعی LLM یکی از دو حالت را برقرار کنید:
+> - متغیرهای `ZAI_BASE_URL` و `ZAI_API_KEY` در `.env` را پر کنید، **یا**
+> - `cp .z-ai-config.example .z-ai-config` و `baseUrl`/`apiKey` را بنویسید.
+>
+> بدون این‌کار دستیار به‌صورت rule-based (آفلاین) پاسخ می‌دهد.
 
 راهنمای کامل نصب: [INSTALL.md](INSTALL.md)
 

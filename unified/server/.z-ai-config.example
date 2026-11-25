@@ -1,0 +1,4 @@
+{
+  "baseUrl": "https://api.example.com/v1",
+  "apiKey": "YOUR_ZAI_API_KEY"
+}
