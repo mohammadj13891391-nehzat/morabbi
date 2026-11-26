@@ -1766,12 +1766,37 @@ function hadithPage(){
   h+='</div></div>';
   return h;
 }
+var _hadithSrvTimer=null;
 function searchHadith(){
-  var q=(document.getElementById('hsearch').value||'').toLowerCase();
+  var raw=(document.getElementById('hsearch').value||'').trim();
+  var q=raw.toLowerCase();
   document.querySelectorAll('#hadithList .verse').forEach(function(v){
     var s=v.getAttribute('data-search');
     v.style.display=s.indexOf(q)>=0?'block':'none';
   });
+  if(q.length>=2&&window.API&&API.getToken&&API.getToken()){
+    clearTimeout(_hadithSrvTimer);
+    _hadithSrvTimer=setTimeout(function(){
+      API.pullHadithSearch(raw).then(function(n){
+        if(!n)return;
+        var d=db(),list=document.getElementById('hadithList');
+        if(!list)return;
+        d.hadiths.forEach(function(v){
+          if(!v.sid)return;
+          var s=(v.text+' '+v.source+' '+v.narrator+' '+v.topic).toLowerCase();
+          if(s.indexOf(q)<0)return;
+          var ex=list.querySelector('.verse[data-sid="'+v.sid+'"]');
+          if(ex){ex.style.display='block';return;}
+          var div=document.createElement('div');
+          div.className='verse';
+          div.setAttribute('data-sid',v.sid);
+          div.setAttribute('data-search',s);
+          div.innerHTML='<div>'+esc(v.text)+'</div><span class="vref" style="color:#059669">🌐 '+esc(v.source)+' • '+esc(v.narrator)+(v.topic?' • موضوع: '+esc(v.topic):'')+'</span>';
+          list.appendChild(div);
+        });
+      }).catch(function(){});
+    },400);
+  }
 }
 
 // ========= EVALUATIONS =========

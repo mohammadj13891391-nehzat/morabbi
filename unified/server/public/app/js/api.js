@@ -626,6 +626,23 @@
       }).catch(function () { return 0; });
     },
 
+    pullHadithSearch: function (q) {
+      return req('GET', '/api/hadith/search?q=' + encodeURIComponent(q)).then(function (res) {
+        var list = (res && res.hadiths) || [];
+        var d = readDb(); if (!d || !list.length) return 0;
+        var added = 0;
+        list.forEach(function (h) {
+          if (!h || !h.id) return;
+          var exists = false;
+          for (var i = 0; i < d.hadiths.length; i++) if (d.hadiths[i].sid === h.id) { exists = true; break; }
+          if (exists) return;
+          d.hadiths.push({ id: 'sh' + h.id, sid: h.id, source: h.source || '', narrator: h.narratorChain || '', text: h.textFa || h.textAr || '', topic: h.chapter || '' });
+          added++;
+        });
+        writeDb(d); return added;
+      }).catch(function () { return 0; });
+    },
+
     /* Quran has no list endpoint (search-only) — merge search results on demand */
     pullQuranSearch: function (q) {
       return req('GET', '/api/quran/search?q=' + encodeURIComponent(q)).then(function (res) {

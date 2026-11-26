@@ -1,13 +1,27 @@
 // Import structured hadith data from the local Bihar al-Anwar volume dumps.
-// Source: E:\بحارالانوار\New folder\<bookId> <title>\volK.txt (+ _meta.txt)
+// Source: E:\بحارالانوار\5-کتاب‌های مرتبط\<bookId> <title>\volK.txt (+ _meta.txt)
 // Each volume file → one Hadith record (source/volume/chapter/subjectTags + full Arabic text).
-// Run:    node --experimental-strip-types scripts/import-hadith-bihar.ts
+// Run:    node --experimental-strip-types scripts/import-hadith-bihar.ts [bookId ...]
+//         (no args → the 9 default books; ids → import only those books)
 
 import { db } from "../src/lib/db.ts";
 import { readFileSync, readdirSync, existsSync } from "fs";
 import path from "path";
 
-const ROOT = "E:/بحارالانوار/New folder";
+const ROOT = "E:/بحارالانوار/5-کتاب‌های مرتبط";
+
+// Default book set (the 9 requested books)
+const DEFAULT_BOOK_IDS = [
+  "10107", // علل الشرائع
+  "10261", // صحیفه سجادیه
+  "11005", // الكافي - ط الاسلامية
+  "11479", // نهج البلاغه - فيض الاسلام
+  "12024", // تفسير نور الثقلين
+  "12667", // تصنيف غرر الحكم و درر الكلم
+  "12672", // ترجمه ثواب الأعمال و عقاب الأعمال - شيخ صدوق
+  "12679", // رهاورد خرد - ترجمه تحف العقول
+  "86650", // بصائر الدرجات
+];
 
 // Strip OCR artifacts, page markers, image placeholders, and header comment lines.
 function cleanBody(raw: string): string {
@@ -18,11 +32,15 @@ function cleanBody(raw: string): string {
       if (!l) return false;
       if (/^#/.test(l)) return false;            // header comment lines
       if (/^\[p\d+\]$/.test(l)) return false;    // page markers
-      if (/^\[image page\]/i.test(l)) return false; // image placeholders
+      if (/^\[image/i.test(l)) return false;     // image placeholders ([image page], [images: ...])
       if (/^\/images\//.test(l)) return false;   // image paths
+      if (/^`n$/.test(l)) return false;          // standalone literal `n newline artifacts
       return true;
     })
     .join(" ")
+    .replace(/`n/g, " ")                          // strip inline literal `n artifacts
+    .replace(/\[images?:\s[^\]\n]*\]/gi, " ")     // strip inline image placeholders ([images: /images/.../cover.jpg])
+    .replace(/\[image[s]?\b[^\]\n]*\]/gi, " ")    // strip other inline [image ...] placeholders
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -38,7 +56,16 @@ interface Vol {
 async function main() {
   if (!existsSync(ROOT)) { console.error(`Source not found: ${ROOT}`); process.exit(1); }
 
-  const bookDirs = readdirSync(ROOT, { withFileTypes: true }).filter((d) => d.isDirectory());
+  const idFilter = new Set(process.argv.slice(2).length ? process.argv.slice(2) : DEFAULT_BOOK_IDS);
+  const bookDirs = readdirSync(ROOT, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .filter((d) => {
+      const m = d.name.match(/^(\d+)/);
+      return m ? idFilter.has(m[1]) : false;
+    });
+
+  if (bookDirs.length === 0) { console.error(`No matching book dirs in ${ROOT}`); process.exit(1); }
+
   const vols: Vol[] = [];
   let parseErrors = 0;
 
