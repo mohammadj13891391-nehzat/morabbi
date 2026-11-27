@@ -2,7 +2,23 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using System.Data;
 
-var sqlitePath = args.Length > 0 ? args[0] : @"D:\morabbi\unified\server\prisma\dev.db";
+// Resolve the SQLite dev.db relative to this repo, so the tool works no matter
+// where the repo is cloned. Walk up from the tool dir to find the repo root
+// (the dir containing "unified/server/prisma/dev.db").
+string FindDevDb()
+{
+    if (args.Length > 0) return args[0];
+    var dir = new DirectoryInfo(AppContext.BaseDirectory);
+    while (dir != null)
+    {
+        var candidate = Path.Combine(dir.FullName, "unified", "server", "prisma", "dev.db");
+        if (File.Exists(candidate)) return candidate;
+        dir = dir.Parent;
+    }
+    return @"D:\morabbi\unified\server\prisma\dev.db";
+}
+
+var sqlitePath = FindDevDb();
 var sqlConnStr = args.Length > 1
     ? args[1]
     : @"Server=.;Database=Morabbi_Dev;Trusted_Connection=True;TrustServerCertificate=True;";

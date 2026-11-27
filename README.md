@@ -16,9 +16,43 @@
 
 ---
 
-## شروع سریع — استک رسمی (توصیه‌شده)
+## 🚀 onboarding همکار (clone تا اجرا با دادهٔ کامل)
 
-### ۱. بکند (:3010)
+ریپو **public** است. همکار فقط این مراحل را انجام دهد:
+
+```bash
+# ۱. clone
+git clone https://github.com/mohammadj13891391-nehzat/morabbi.git
+cd morabbi
+
+# ۲. دیتابیس SQLite (منبع داده) را از تکه‌ها بازسازی کن
+cd unified/server
+npm install
+npm run db:restore        # prisma/dev.db از dev.db.part1..5.zip ساخته می‌شود
+cd ../..
+
+# ۳. بکند را اجرا کن (DB: Morabbi_Dev خودکار ساخته/مهاجرت می‌شود)
+cd backend
+dotnet run                # API روی :3010
+
+# ۴. (ترمینال جدا) دادهٔ کامل قرآن/حدیث را از SQLite به SQL Server ببر
+cd backend/tools/migrate-data
+dotnet run                # مسیر dev.db را خودکار پیدا می‌کند → 6236 + 171 رکورد
+
+# ۵. (ترمینال جدا) فرانت‌اند
+cd frontend
+npm install
+npm start                 # روی :4210
+```
+
+ورود: <http://localhost:4210> — حساب admin: `09120000001`/`password123`
+سلامت API: `GET http://localhost:3010/api/health`
+
+> ⚠️ مراحل ۲ تا ۴ **فقط برای بار اول** لازم است (یا هر بار که بخواهید داده‌ها را از نو بریزید). بعد از آن، `dotnet run` + `npm start` کافی است.
+
+### شروع سریع (وقتی داده‌ها قبلاً import شده‌اند)
+
+#### بکند (:3010)
 
 ```bash
 cd backend
