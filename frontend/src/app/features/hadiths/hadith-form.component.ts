@@ -29,8 +29,12 @@ import { CreateHadithPayload } from '../../core/models/morabbi.models';
         </div>
       </div>
       <div class="field">
-        <label>متن حدیث *</label>
-        <textarea [(ngModel)]="form.text" style="min-height: 100px"></textarea>
+        <label>متن اصلی *</label>
+        <textarea [(ngModel)]="form.textAr" style="min-height: 100px" dir="rtl"></textarea>
+      </div>
+      <div class="field">
+        <label>ترجمه / متن فارسی (اختیاری)</label>
+        <textarea [(ngModel)]="form.textFa" style="min-height: 80px" dir="rtl"></textarea>
       </div>
       <div class="field">
         <label>موضوع</label>
@@ -51,21 +55,20 @@ export class HadithFormComponent implements OnInit {
   readonly info = signal<string | null>(null);
 
   editId: number | null = null;
-  form: CreateHadithPayload = { source: '', narrator: '', text: '', topic: '' };
+  form: CreateHadithPayload = { source: '', narrator: '', textAr: '', textFa: null, topic: null };
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editId = +id;
       this.isEdit.set(true);
-      this.auth.getHadiths().subscribe({
-        next: (list) => {
-          const h = list.find((x) => x.id === this.editId);
+      this.auth.getHadith(this.editId).subscribe({
+        next: (h) => {
           if (!h) {
             this.error.set('حدیث یافت نشد.');
             return;
           }
-          this.form = { source: h.source, narrator: h.narrator, text: h.text, topic: h.topic ?? '' };
+          this.form = { source: h.source, narrator: h.narrator, textAr: h.textAr, textFa: h.textFa ?? null, topic: h.topic ?? null };
         },
         error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت حدیث')
       });
@@ -73,8 +76,8 @@ export class HadithFormComponent implements OnInit {
   }
 
   save(): void {
-    if (!this.form.source.trim() || !this.form.text.trim()) {
-      this.error.set('منبع و متن حدیث الزامی است.');
+    if (!this.form.source.trim() || !this.form.textAr.trim()) {
+      this.error.set('منبع و متن اصلی الزامی است.');
       return;
     }
     this.busy.set(true);
@@ -82,7 +85,8 @@ export class HadithFormComponent implements OnInit {
     const payload: CreateHadithPayload = {
       source: this.form.source.trim(),
       narrator: this.form.narrator?.trim() || '',
-      text: this.form.text.trim(),
+      textAr: this.form.textAr.trim(),
+      textFa: this.form.textFa?.trim() || null,
       topic: this.form.topic?.trim() || null
     };
     const req = this.isEdit() && this.editId ? this.auth.updateHadith(this.editId, payload) : this.auth.createHadith(payload);

@@ -1,63 +1,85 @@
 # مورابی (Morabbi)
 
-سامانهٔ تربیتی «نهضت تربیتی حضرت سیدالشهدا (ع)». این ریپو **سه نسل** از محصول را کنار هم دارد:
+سامانهٔ تربیتی «نهضت تربیتی حضرت سیدالشهدا (ع)».
+
+> **استک رسمی**: بکند **ASP.NET Core + SQL Server** (`backend/`) + فرانت‌اند **Angular** (`frontend/`).
+> دادهٔ کامل **قرآن (۶۲۳۶ آیه)** و **۹ کتاب حدیث (۱۷۱ روایت)** در دیتابیس SQL Server بارگذاری شده و **جستجو در قرآن و روایات فعال** است.
 
 | لایه | مسیر | فناوری | پورت dev | وضعیت |
 |---|---|---|---|---|
-| **بکند اصلی (legacy)** | `backend/` | ASP.NET Core (Clean Architecture) + EF Core + SQL Server | `:3010` | فعال — بکندی است که `nehzat-plus` به آن وصل می‌شود |
-| **فرانت‌اند مجزا** | `frontend/` | Angular 21 standalone + Vitest | `:4210` | فعال — SPA مستقل مورابی |
-| **نسل یکپارچه (فعال)** | `unified/` | Next.js 16 + Prisma 6 + SQLite (PWA) + قاب اندروید | `:3015` | **نسل فعلی** — PWA آفلاین‌اول + ۴۸ مسیر REST + WebView Android |
+| **بکند رسمی** | `backend/` | ASP.NET Core (Clean Architecture) + EF Core + **SQL Server** | `:3010` | **فعال — استک اصلی** (قرآن + حدیث + جستجو) |
+| **فرانت رسمی** | `frontend/` | Angular 21 standalone + Vitest | `:4210` | **فعال — SPA اصلی** |
+| نسل یکپارچه | `unified/` | Next.js 16 + Prisma + SQLite (PWA) + WebView | `:3015` | مرجع/تاریخی — مبدأ داده‌های اولیه |
 
-> راهنمای کامل نسل یکپارچه: [unified/README.md](unified/README.md)
+> ⚠️ `unified/` دیگر «نسل فعال» نیست؛ داده‌ها به استک رسمی (SQL Server) مهاجرت کرده‌اند. جزئیات: [unified/README.md](unified/README.md)
 > معماری یکپارچگی با `nehzat-plus`: [docs/INTEGRATION_ARCHITECTURE.md](docs/INTEGRATION_ARCHITECTURE.md)
 
 ---
 
-## شروع سریع — نسل یکپارچه (توصیه‌شده)
+## شروع سریع — استک رسمی (توصیه‌شده)
 
-```bash
-git clone https://github.com/mohammadj13891391-nehzat/morabbi.git
-cd morabbi/unified/server
-
-npm install
-npm run db:restore          # بازسازی prisma/dev.db از dev.db.zip (قرآن + ۱۷۱ روایت حدیث)
-cp .env.example .env        # مقادیر پیش‌فرض dev کافی‌اند
-npx next dev -p 3015
-```
-
-- PWA: <http://localhost:3015/app/index.html>
-- سلامت API: <http://localhost:3015/api/health>
-
-پس از `db:restore`، **جستجو در قرآن و روایات بلافاصله فعال** است (۶۲۳۶ آیه + ۹ کتاب حدیث داخل zip هستند).
-
-حساب‌های دمو: `09120000001`/`567890` (ADMIN)، `09120000002`/`112233` (INSTRUCTOR)، `09120000003`/`445566` (EVALUATOR).
-
-### پیش‌نیازها
-- **Node.js** (تست با Node 26؛ هر نسخه‌ای که `next dev` و `prisma` را بچرخاند کافی است)
-- SQLite — داخلی است، نصب جداگانه ندارد
-- (اختیاری) برای دستیار AI: `ZAI_BASE_URL`/`ZAI_API_KEY` در `.env` — بدون آن‌ها پاسخ‌ها rule-based آفلاین است
-
----
-
-## بکند legacy (`backend/`) — ASP.NET Core :3010
+### ۱. بکند (:3010)
 
 ```bash
 cd backend
-dotnet run            # API روی :3010 (DB: Morabbi_Dev)
+dotnet run            # API روی :3010 — DB: Morabbi_Dev
 ```
 
-**پیش‌نیاز**: .NET SDK 10 + **SQL Server** با دسترسی Windows Auth (instance پیش‌فرض).
+**پیش‌نیاز**: .NET SDK 10 + **SQL Server** (Windows Auth, instance پیش‌فرض).
+- دیتابیس `Morabbi_Dev` هنگام استارت به‌صورت خودکار ساخته/مهاجرت می‌شود.
+- برای بازآفرینی کامل + seed: `dotnet run --seed`
+- برای بارگذاری مجدد قرآن/حدیث از منبع SQLite (unified): `dotnet run --project tools/migrate-data`
+
 > ⚠️ مقدار `Server=.` در `backend/src/EducationalPlatform.Morabbi.API/appsettings.Development.json` یعنی «instance پیش‌فرض SQL Server روی همان دستگاه». اگر instance شما فرق دارد، `ConnectionStrings:DefaultConnection` را تنظیم کنید. بقیهٔ مقادیر آن فایل (LocalAuth secret، VAPID keys) صرفاً dev هستند.
 
-این بکند، بکندی است که اپلیکیشن `nehzat-plus` (رپوی جدا در `D:\nehzat-plus`) از طریق `MorabbiApiService` به آن وصل می‌شود؛ جزئیات: [docs/INTEGRATION_ARCHITECTURE.md](docs/INTEGRATION_ARCHITECTURE.md).
-
-## فرانت‌اند مجزا (`frontend/`) — Angular :4210
+### ۲. فرانت‌اند (:4210)
 
 ```bash
 cd frontend
 npm install
 npm start             # روی :4210
 ```
+
+**پیش‌نیاز**: Node.js (تست با Node 26).
+
+- SPA: <http://localhost:4210>
+- صفحات **قرآن** و **روایات** دارای **جستجوی سرورساید** هستند (روایات: دکمهٔ «جستجوی عمیق» برای جستجو در متن کامل).
+
+### حساب‌های دمو (بکند)
+`09120000001`/`password123` (admin)، `09120000002`/`password123` (manager)، `09120000003`/`password123` (branch_manager)، `09120000004`/`password123` (evaluator)، `09120000005`/`password123` (coach).
+
+### سلامت API
+`GET http://localhost:3010/api/health` → `{status:"ok",service:"morabbi"}`
+
+---
+
+## داده‌ها: قرآن و روایات
+
+- **قرآن**: ۶۲۳۶ آیه، ۱۱۴ سوره (متن عثمانی + ساده‌شده). جدول `Morabbi_quran_verses` با فیلدهای `TextAr` (عثمانی) + `TextFa` (ساده‌شده).
+- **روایات**: ۱۷۱ روایت از ۹ کتاب (کافی، نهج‌البلاغه، نورالثقلین، علل‌الشرایع، سجادیه، غررالحکم، ثواب‌الاعمال، تحف‌العقول، بصائرالدرجات). جدول `Morabbi_hadiths` با `TextAr` + `TextFa`.
+- **جستجو**:
+  - `GET /api/quran-verses/search?q=` — نرمال‌سازی عربی (تشدید/همزه) + جستجو در متن عربی/ساده‌شده/سوره/موضوع
+  - `GET /api/hadiths/search?q=&includeText=` — سریع (متادیتا) یا `includeText=true` برای متن کامل
+
+### ابزار مهاجرت داده
+`backend/tools/migrate-data` — از SQLite (unified) به SQL Server:
+```bash
+cd backend/tools/migrate-data
+dotnet run            # پیش‌فرض: D:\morabbi\unified\server\prisma\dev.db → Morabbi_Dev
+```
+
+---
+
+## نسل یکپارچه (`unified/`) — مرجع
+
+```bash
+cd unified/server
+npm install
+npm run db:restore    # بازسازی prisma/dev.db از dev.db.part1..5.zip (git-lfs)
+cp .env.example .env
+npx next dev -p 3015
+```
+- PWA: <http://localhost:3015/app/index.html>
 
 ## قاب اندروید (`unified/android/`)
 
@@ -70,7 +92,8 @@ WebView باریک Kotlin که PWA را می‌بندد. ساخت **فقط در 
 ## نکات برای همکار
 
 - **`docs/DEVELOPMENT_LOG.md` مربوط به نسل قدیمی (Next.js نسل اول) است** — به‌عنوان تاریخچه بخوانید، نه راهنمای فعلی.
-- دیتابیس dev (`unified/server/prisma/dev.db`) در git نیست و از `dev.db.zip` بازسازی می‌شود؛ پس از هر تغییر بزرگ داده‌ای، zip را بازمساخته و commit کنید تا کلون بعدی دادهٔ کامل داشته باشد.
+- دیتابیس dev (`unified/server/prisma/dev.db`) در git نیست و از `dev.db.part1..5.zip` (git-lfs) بازسازی می‌شود؛ `npm run db:restore` تکه‌ها را یکپارچه می‌کند.
+- داده‌های SQL Server (`Morabbi_Dev`) در git نیست؛ برای بازسازی کامل از `backend/tools/migrate-data` استفاده کنید (منبع: `unified/server/prisma/dev.db`).
 - لاگ‌های dev (`*.log`، `*.out`، `*.err`) gitignore شده‌اند و نباید commit شوند.
 
 ## ساختار مستندات

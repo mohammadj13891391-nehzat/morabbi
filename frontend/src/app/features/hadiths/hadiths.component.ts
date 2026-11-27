@@ -10,16 +10,22 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="page-header">
-      <h1 class="page-title">احادیث</h1>
+      <h1 class="page-title">احادیث و روایات</h1>
       <div class="toolbar">
-        <input type="search" placeholder="جستجو در متن، منبع یا موضوع..." [(ngModel)]="search" (ngModelChange)="applyFilter()" />
+        <input type="search" placeholder="جستجو در کتاب، راوی یا فصل..." [(ngModel)]="search" (ngModelChange)="onSearch()" />
+        <label class="deep-toggle">
+          <input type="checkbox" [(ngModel)]="deep" (ngModelChange)="onSearch()" />
+          جستجوی عمیق در متن
+        </label>
         <button routerLink="/hadiths/new" class="btn" *ngIf="auth.isAdminManager()">افزودن حدیث</button>
       </div>
     </div>
 
     <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
+    <div class="hint" *ngIf="searching()">در حال جستجو{{ deep ? ' (عمیق — ممکن است تا ۱ دقیقه طول بکشد)' : '' }}...</div>
+    <div class="hint" *ngIf="!search.trim()">نمایش: {{ results().length }} رکورد (هر رکورد یک جلد/بخش از یک کتاب است)</div>
 
-    <div class="card" *ngFor="let h of filtered()">
+    <div class="card" *ngFor="let h of results()">
       <div class="h-head">
         <span class="badge">{{ h.source }}</span>
         <span class="badge" *ngIf="h.narrator">روایت: {{ h.narrator }}</span>
@@ -29,9 +35,13 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
           <button class="btn btn-danger btn-sm" (click)="remove(h)" *ngIf="auth.isAdminManager()">حذف</button>
         </div>
       </div>
-      <p class="text">{{ h.text }}</p>
+      <p class="text">{{ h.textFa || h.textAr }}</p>
+      <details *ngIf="h.textFa && h.textAr">
+        <summary>متن عربی</summary>
+        <p class="text arabic" dir="rtl">{{ h.textAr }}</p>
+      </details>
     </div>
-    <div class="empty" *ngIf="filtered().length === 0">حدیثی یافت نشد.</div>
+    <div class="empty" *ngIf="!searching() && results().length === 0">حدیثی یافت نشد.</div>
   `,
   styles: `
     .h-head {
@@ -51,18 +61,42 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
       line-height: 2;
       margin: 0;
       white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
     }
+    .text.arabic {
+      font-family: 'Traditional Arabic', 'Amiri', var(--lp-font);
+      font-size: 17px;
+    }
+    .deep-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--lp-text, #222);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .hint {
+      color: var(--lp-muted, #666);
+      font-size: 13px;
+      margin: 8px 0;
+    }
+    details { margin-top: 8px; }
+    summary { cursor: pointer; font-size: 13px; color: var(--lp-muted, #666); }
   `
 })
 export class HadithsComponent implements OnInit {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private timer: ReturnType<typeof setTimeout> | null = null;
 
-  readonly list = signal<MorabbiHadith[]>([]);
-  readonly filtered = signal<MorabbiHadith[]>([]);
+  readonly results = signal<MorabbiHadith[]>([]);
   readonly error = signal<string | null>(null);
   readonly info = signal<string | null>(null);
+  readonly searching = signal(false);
   search = '';
+  deep = false;
 
   ngOnInit(): void {
     this.load();
@@ -70,19 +104,32 @@ export class HadithsComponent implements OnInit {
 
   load(): void {
     this.auth.getHadiths().subscribe({
-      next: (list) => {
-        this.list.set(list);
-        this.applyFilter();
-      },
+      next: (list) => this.results.set(list),
       error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت احادیث')
     });
   }
 
-  applyFilter(): void {
+  onSearch(): void {
+    if (this.timer) clearTimeout(this.timer);
     const q = this.search.trim();
-    this.filtered.set(
-      q ? this.list().filter((h) => h.text.includes(q) || h.source.includes(q) || (h.topic ?? '').includes(q)) : this.list()
-    );
+    if (!q) {
+      this.searching.set(false);
+      this.load();
+      return;
+    }
+    this.timer = setTimeout(() => {
+      this.searching.set(true);
+      this.auth.searchHadiths(q, this.deep).subscribe({
+        next: (res) => {
+          this.results.set(res.results);
+          this.searching.set(false);
+        },
+        error: (err) => {
+          this.error.set(err?.error?.message ?? 'خطا در جستجو');
+          this.searching.set(false);
+        }
+      });
+    }, 300);
   }
 
   remove(h: MorabbiHadith): void {

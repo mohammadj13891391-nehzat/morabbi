@@ -29,8 +29,12 @@ import { CreateQuranVersePayload } from '../../core/models/morabbi.models';
         </div>
       </div>
       <div class="field">
-        <label>متن آیه *</label>
-        <textarea [(ngModel)]="form.text" style="min-height: 100px" dir="rtl"></textarea>
+        <label>متن عربی (عثمانی) *</label>
+        <textarea [(ngModel)]="form.textAr" style="min-height: 100px" dir="rtl"></textarea>
+      </div>
+      <div class="field">
+        <label>متن ساده‌شده (اختیاری)</label>
+        <textarea [(ngModel)]="form.textFa" style="min-height: 80px" dir="rtl"></textarea>
       </div>
       <div class="field">
         <label>موضوع</label>
@@ -51,21 +55,20 @@ export class VerseFormComponent implements OnInit {
   readonly info = signal<string | null>(null);
 
   editId: number | null = null;
-  form: CreateQuranVersePayload = { surah: '', verseNo: 0, text: '', topic: '' };
+  form: CreateQuranVersePayload = { surah: '', verseNo: 0, textAr: '', textFa: null, topic: null };
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.editId = +id;
       this.isEdit.set(true);
-      this.auth.getQuranVerses().subscribe({
-        next: (list) => {
-          const v = list.find((x) => x.id === this.editId);
+      this.auth.getQuranVerse(this.editId).subscribe({
+        next: (v) => {
           if (!v) {
             this.error.set('آیه یافت نشد.');
             return;
           }
-          this.form = { surah: v.surah, verseNo: v.verseNo, text: v.text, topic: v.topic ?? '' };
+          this.form = { surah: v.surah, verseNo: v.verseNo, textAr: v.textAr, textFa: v.textFa ?? null, topic: v.topic ?? null };
         },
         error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت آیه')
       });
@@ -73,8 +76,8 @@ export class VerseFormComponent implements OnInit {
   }
 
   save(): void {
-    if (!this.form.surah.trim() || !this.form.text.trim() || !this.form.verseNo) {
-      this.error.set('سوره، شماره آیه و متن الزامی است.');
+    if (!this.form.surah.trim() || !this.form.textAr.trim() || !this.form.verseNo) {
+      this.error.set('سوره، شماره آیه و متن عربی الزامی است.');
       return;
     }
     this.busy.set(true);
@@ -82,7 +85,8 @@ export class VerseFormComponent implements OnInit {
     const payload: CreateQuranVersePayload = {
       surah: this.form.surah.trim(),
       verseNo: this.form.verseNo,
-      text: this.form.text.trim(),
+      textAr: this.form.textAr.trim(),
+      textFa: this.form.textFa?.trim() || null,
       topic: this.form.topic?.trim() || null
     };
     const req = this.isEdit() && this.editId ? this.auth.updateQuranVerse(this.editId, payload) : this.auth.createQuranVerse(payload);

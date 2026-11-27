@@ -562,7 +562,8 @@ export interface QuranVerse {
   id: number;
   surah: string;
   verseNo: number;
-  text: string;
+  textAr: string;
+  textFa: string | null;
   topic: string | null;
   createdAt: string;
 }
@@ -570,18 +571,20 @@ export interface QuranVerse {
 export interface CreateQuranVersePayload {
   surah: string;
   verseNo: number;
-  text: string;
+  textAr: string;
+  textFa?: string | null;
   topic?: string | null;
 }
 
-export type UpdateQuranVersePayload = CreateQuranVersePayload;
+export type UpdateQuranVersePayload = Partial<CreateQuranVersePayload>;
 
 // ===== Hadith =====
 export interface MorabbiHadith {
   id: number;
   source: string;
   narrator: string;
-  text: string;
+  textAr: string;
+  textFa: string | null;
   topic: string | null;
   createdAt: string;
 }
@@ -589,8 +592,15 @@ export interface MorabbiHadith {
 export interface CreateHadithPayload {
   source: string;
   narrator: string;
-  text: string;
+  textAr: string;
+  textFa?: string | null;
   topic?: string | null;
 }
 
-export type UpdateHadithPayload = CreateHadithPayload;
+export type UpdateHadithPayload = Partial<CreateHadithPayload>;
+
+// ===== Search results =====
+export interface SearchResults<T> {
+  results: T[];
+  count: number;
+}

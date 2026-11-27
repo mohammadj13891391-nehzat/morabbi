@@ -39,13 +39,17 @@ public interface ITarbiyatiService
     Task DeleteMethodologyAsync(int id);
 
     // ---- QuranVerse ----
-    Task<List<QuranVerse>> GetQuranVersesAsync();
+    Task<QuranVerse?> GetQuranVerseAsync(int id);
+    Task<List<QuranVerse>> GetQuranVersesAsync(int? skip = null, int? take = null);
+    Task<List<QuranVerse>> SearchQuranVersesAsync(string q, int? take = null);
     Task<QuranVerse> CreateQuranVerseAsync(CreateQuranVerseRequest request);
     Task<QuranVerse> UpdateQuranVerseAsync(int id, UpdateQuranVerseRequest request);
     Task DeleteQuranVerseAsync(int id);
 
     // ---- Hadith ----
-    Task<List<Hadith>> GetHadithsAsync();
+    Task<Hadith?> GetHadithAsync(int id);
+    Task<List<Hadith>> GetHadithsAsync(int? skip = null, int? take = null);
+    Task<List<Hadith>> SearchHadithsAsync(string q, int? take = null, bool includeText = false);
     Task<Hadith> CreateHadithAsync(CreateHadithRequest request);
     Task<Hadith> UpdateHadithAsync(int id, UpdateHadithRequest request);
     Task DeleteHadithAsync(int id);

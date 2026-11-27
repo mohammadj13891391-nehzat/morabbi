@@ -82,9 +82,9 @@ public record CreateMethodologyRequest(string Name, string? Desc, string? Steps)
 public record UpdateMethodologyRequest(string? Name, string? Desc, string? Steps);
 
 // ===== QuranVerse =====
-public record CreateQuranVerseRequest(string Surah, int VerseNo, string Text, string? Topic);
-public record UpdateQuranVerseRequest(string? Surah, int? VerseNo, string? Text, string? Topic);
+public record CreateQuranVerseRequest(string Surah, int VerseNo, string TextAr, string? TextFa, string? Topic);
+public record UpdateQuranVerseRequest(string? Surah, int? VerseNo, string? TextAr, string? TextFa, string? Topic);
 
 // ===== Hadith =====
-public record CreateHadithRequest(string Source, string Narrator, string Text, string? Topic);
-public record UpdateHadithRequest(string? Source, string? Narrator, string? Text, string? Topic);
+public record CreateHadithRequest(string Source, string Narrator, string TextAr, string? TextFa, string? Topic);
+public record UpdateHadithRequest(string? Source, string? Narrator, string? TextAr, string? TextFa, string? Topic);

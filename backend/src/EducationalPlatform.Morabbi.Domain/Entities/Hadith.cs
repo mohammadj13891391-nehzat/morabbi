@@ -17,7 +17,10 @@ public class Hadith
     public string Narrator { get; set; } = string.Empty;
 
     [Column(TypeName = "nvarchar(max)")]
-    public string Text { get; set; } = string.Empty;
+    public string TextAr { get; set; } = string.Empty;
+
+    [Column(TypeName = "nvarchar(max)")]
+    public string? TextFa { get; set; }
 
     [Column(TypeName = "nvarchar(200)")]
     public string? Topic { get; set; }

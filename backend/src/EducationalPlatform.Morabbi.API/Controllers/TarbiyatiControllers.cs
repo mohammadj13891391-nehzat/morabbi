@@ -212,7 +212,22 @@ public class QuranVersesController : MorabbiControllerBase
     public QuranVersesController(IMorabbiUserService userService, ITarbiyatiService svc) : base(userService) => _svc = svc;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _svc.GetQuranVersesAsync());
+    public async Task<IActionResult> GetAll(int? skip, int? take) => Ok(await _svc.GetQuranVersesAsync(skip, take));
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var v = await _svc.GetQuranVerseAsync(id);
+        return v is null ? NotFound(GenericErrorMessages.NotFound) : Ok(v);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> Search(string? q, int? take)
+    {
+        if (string.IsNullOrWhiteSpace(q)) return Ok(new { results = Array.Empty<QuranVerse>(), count = 0 });
+        var results = await _svc.SearchQuranVersesAsync(q, take ?? 50);
+        return Ok(new { results, count = results.Count });
+    }
 
     [HttpPost]
     [Authorize(Roles = RoleNames.AdminManager)]
@@ -247,7 +262,22 @@ public class HadithsController : MorabbiControllerBase
     public HadithsController(IMorabbiUserService userService, ITarbiyatiService svc) : base(userService) => _svc = svc;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _svc.GetHadithsAsync());
+    public async Task<IActionResult> GetAll(int? skip, int? take) => Ok(await _svc.GetHadithsAsync(skip, take));
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var h = await _svc.GetHadithAsync(id);
+        return h is null ? NotFound(GenericErrorMessages.NotFound) : Ok(h);
+    }
+
+    [HttpGet("search")]
+    public async Task<IActionResult> Search(string? q, int? take, bool? includeText)
+    {
+        if (string.IsNullOrWhiteSpace(q)) return Ok(new { results = Array.Empty<Hadith>(), count = 0 });
+        var results = await _svc.SearchHadithsAsync(q, take ?? 50, includeText == true);
+        return Ok(new { results, count = results.Count });
+    }
 
     [HttpPost]
     [Authorize(Roles = RoleNames.AdminManager)]

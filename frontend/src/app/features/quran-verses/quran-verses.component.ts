@@ -12,14 +12,15 @@ import { QuranVerse } from '../../core/models/morabbi.models';
     <div class="page-header">
       <h1 class="page-title">آیات قرآن</h1>
       <div class="toolbar">
-        <input type="search" placeholder="جستجو در متن، سوره یا موضوع..." [(ngModel)]="search" (ngModelChange)="applyFilter()" />
+        <input type="search" placeholder="جستجو در متن، سوره یا موضوع..." [(ngModel)]="search" (ngModelChange)="onSearch()" />
         <button routerLink="/quran-verses/new" class="btn" *ngIf="auth.isAdminManager()">افزودن آیه</button>
       </div>
     </div>
 
     <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
+    <div class="hint" *ngIf="searching()">در حال جستجو...</div>
 
-    <div class="card" *ngFor="let v of filtered()">
+    <div class="card" *ngFor="let v of results()">
       <div class="v-head">
         <span class="badge">{{ v.surah }} — آیه {{ v.verseNo }}</span>
         <span class="badge" *ngIf="v.topic">{{ v.topic }}</span>
@@ -28,9 +29,9 @@ import { QuranVerse } from '../../core/models/morabbi.models';
           <button class="btn btn-danger btn-sm" (click)="remove(v)" *ngIf="auth.isAdminManager()">حذف</button>
         </div>
       </div>
-      <p class="verse" dir="rtl">{{ v.text }}</p>
+      <p class="verse" dir="rtl">{{ v.textAr }}</p>
     </div>
-    <div class="empty" *ngIf="filtered().length === 0">آیه‌ای یافت نشد.</div>
+    <div class="empty" *ngIf="!searching() && results().length === 0">آیه‌ای یافت نشد.</div>
   `,
   styles: `
     .v-head {
@@ -51,16 +52,22 @@ import { QuranVerse } from '../../core/models/morabbi.models';
       margin: 0;
       font-family: 'Traditional Arabic', 'Amiri', var(--lp-font);
     }
+    .hint {
+      color: var(--lp-muted, #666);
+      font-size: 13px;
+      margin: 8px 0;
+    }
   `
 })
 export class QuranVersesComponent implements OnInit {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private timer: ReturnType<typeof setTimeout> | null = null;
 
-  readonly list = signal<QuranVerse[]>([]);
-  readonly filtered = signal<QuranVerse[]>([]);
+  readonly results = signal<QuranVerse[]>([]);
   readonly error = signal<string | null>(null);
   readonly info = signal<string | null>(null);
+  readonly searching = signal(false);
   search = '';
 
   ngOnInit(): void {
@@ -69,19 +76,32 @@ export class QuranVersesComponent implements OnInit {
 
   load(): void {
     this.auth.getQuranVerses().subscribe({
-      next: (list) => {
-        this.list.set(list);
-        this.applyFilter();
-      },
+      next: (list) => this.results.set(list),
       error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت آیات')
     });
   }
 
-  applyFilter(): void {
+  onSearch(): void {
+    if (this.timer) clearTimeout(this.timer);
     const q = this.search.trim();
-    this.filtered.set(
-      q ? this.list().filter((v) => v.text.includes(q) || v.surah.includes(q) || (v.topic ?? '').includes(q)) : this.list()
-    );
+    if (!q) {
+      this.searching.set(false);
+      this.load();
+      return;
+    }
+    this.timer = setTimeout(() => {
+      this.searching.set(true);
+      this.auth.searchQuranVerses(q).subscribe({
+        next: (res) => {
+          this.results.set(res.results);
+          this.searching.set(false);
+        },
+        error: (err) => {
+          this.error.set(err?.error?.message ?? 'خطا در جستجو');
+          this.searching.set(false);
+        }
+      });
+    }, 300);
   }
 
   remove(v: QuranVerse): void {

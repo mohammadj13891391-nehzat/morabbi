@@ -39,6 +39,7 @@ import {
   QuranVerse,
   Recognition,
   RegisterPayload,
+  SearchResults,
   SetAttendancePayload,
   UpdateBranchPayload,
   UpdateEvaluationPayload,
@@ -314,8 +315,16 @@ export class AuthService {
   }
 
   // ===== QuranVerse =====
+  getQuranVerse(id: number): Observable<QuranVerse | null> {
+    return this.http.get<QuranVerse | null>(`${this.base}/api/quran-verses/${id}`);
+  }
   getQuranVerses(): Observable<QuranVerse[]> {
     return this.http.get<QuranVerse[]>(`${this.base}/api/quran-verses`);
+  }
+  searchQuranVerses(q: string, take = 50): Observable<SearchResults<QuranVerse>> {
+    return this.http.get<SearchResults<QuranVerse>>(`${this.base}/api/quran-verses/search`, {
+      params: { q, take: String(take) }
+    });
   }
   createQuranVerse(payload: CreateQuranVersePayload): Observable<QuranVerse> {
     return this.http.post<QuranVerse>(`${this.base}/api/quran-verses`, payload);
@@ -328,8 +337,16 @@ export class AuthService {
   }
 
   // ===== Hadith =====
+  getHadith(id: number): Observable<MorabbiHadith | null> {
+    return this.http.get<MorabbiHadith | null>(`${this.base}/api/hadiths/${id}`);
+  }
   getHadiths(): Observable<MorabbiHadith[]> {
     return this.http.get<MorabbiHadith[]>(`${this.base}/api/hadiths`);
+  }
+  searchHadiths(q: string, includeText = false, take = 30): Observable<SearchResults<MorabbiHadith>> {
+    return this.http.get<SearchResults<MorabbiHadith>>(`${this.base}/api/hadiths/search`, {
+      params: { q, includeText: String(includeText), take: String(take) }
+    });
   }
   createHadith(payload: CreateHadithPayload): Observable<MorabbiHadith> {
     return this.http.post<MorabbiHadith>(`${this.base}/api/hadiths`, payload);

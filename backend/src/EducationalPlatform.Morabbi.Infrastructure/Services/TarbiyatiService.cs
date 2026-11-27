@@ -317,14 +317,50 @@ public class TarbiyatiService : ITarbiyatiService
     }
 
     // ===== QuranVerse =====
-    public async Task<List<QuranVerse>> GetQuranVersesAsync()
+    public Task<QuranVerse?> GetQuranVerseAsync(int id)
+        => _db.QuranVerses.FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task<List<QuranVerse>> GetQuranVersesAsync(int? skip = null, int? take = null)
     {
-        return await _db.QuranVerses.OrderBy(q => q.Surah).ThenBy(q => q.VerseNo).ToListAsync();
+        var query = _db.QuranVerses.OrderBy(q => q.Surah).ThenBy(q => q.VerseNo).AsQueryable();
+        if (skip is not null) query = query.Skip(skip.Value);
+        if (take is not null) query = query.Take(take.Value);
+        return await query.ToListAsync();
     }
+
+    private static string NormalizeArabic(string s)
+    {
+        var sb = new System.Text.StringBuilder(s.Length);
+        foreach (var c in s)
+        {
+            if (c is >= '\u064B' and <= '\u0652') continue;
+            if (c is '\u0640' or '\u0653' or '\u0670') continue;
+            sb.Append(c == '\u0671' ? '\u0627' : c);
+        }
+        return sb.ToString();
+    }
+
+    public async Task<List<QuranVerse>> SearchQuranVersesAsync(string q, int? take = null)
+    {
+        var t = NormalizeArabic(q.Trim());
+        if (string.IsNullOrEmpty(t)) return new List<QuranVerse>();
+        var all = await _db.QuranVerses.OrderBy(x => x.Surah).ThenBy(x => x.VerseNo).ToListAsync();
+        var results = all
+            .Where(x => ArabicContains(x.TextAr, t)
+                || (x.TextFa != null && ArabicContains(x.TextFa, t))
+                || (x.Surah != null && ArabicContains(x.Surah, t))
+                || (x.Topic != null && ArabicContains(x.Topic, t)))
+            .ToList();
+        if (take is not null) results = results.Take(take.Value).ToList();
+        return results;
+    }
+
+    private static bool ArabicContains(string? text, string normQuery)
+        => text is not null && NormalizeArabic(text).Contains(normQuery, StringComparison.Ordinal);
 
     public async Task<QuranVerse> CreateQuranVerseAsync(CreateQuranVerseRequest request)
     {
-        var q = new QuranVerse { Surah = request.Surah, VerseNo = request.VerseNo, Text = request.Text, Topic = request.Topic };
+        var q = new QuranVerse { Surah = request.Surah, VerseNo = request.VerseNo, TextAr = request.TextAr, TextFa = request.TextFa, Topic = request.Topic };
         _db.QuranVerses.Add(q);
         await _db.SaveChangesAsync();
         return q;
@@ -335,7 +371,8 @@ public class TarbiyatiService : ITarbiyatiService
         var q = await _db.QuranVerses.FindAsync(id) ?? throw new KeyNotFoundException("QuranVerse not found");
         if (request.Surah is not null) q.Surah = request.Surah;
         if (request.VerseNo.HasValue) q.VerseNo = request.VerseNo.Value;
-        if (request.Text is not null) q.Text = request.Text;
+        if (request.TextAr is not null) q.TextAr = request.TextAr;
+        if (request.TextFa is not null) q.TextFa = request.TextFa;
         if (request.Topic is not null) q.Topic = request.Topic;
         await _db.SaveChangesAsync();
         return q;
@@ -349,14 +386,41 @@ public class TarbiyatiService : ITarbiyatiService
     }
 
     // ===== Hadith =====
-    public async Task<List<Hadith>> GetHadithsAsync()
+    public Task<Hadith?> GetHadithAsync(int id)
+        => _db.Hadiths.FirstOrDefaultAsync(x => x.Id == id);
+
+    public async Task<List<Hadith>> GetHadithsAsync(int? skip = null, int? take = null)
     {
-        return await _db.Hadiths.OrderBy(h => h.Source).ToListAsync();
+        var query = _db.Hadiths.OrderBy(h => h.Source).AsQueryable();
+        if (skip is not null) query = query.Skip(skip.Value);
+        if (take is not null) query = query.Take(take.Value);
+        return await query.ToListAsync();
+    }
+
+    public async Task<List<Hadith>> SearchHadithsAsync(string q, int? take = null, bool includeText = false)
+    {
+        var t = q.Trim();
+        var query = _db.Hadiths.AsQueryable();
+        if (includeText)
+        {
+            _db.Database.SetCommandTimeout(120);
+            query = query.Where(x => EF.Functions.Like(x.TextAr, $"%{t}%"));
+        }
+        else
+        {
+            query = query.Where(x => (x.TextFa != null && EF.Functions.Like(x.TextFa, $"%{t}%"))
+                || (x.Source != null && EF.Functions.Like(x.Source, $"%{t}%"))
+                || (x.Narrator != null && EF.Functions.Like(x.Narrator, $"%{t}%"))
+                || (x.Topic != null && EF.Functions.Like(x.Topic, $"%{t}%")));
+        }
+        query = query.OrderBy(x => x.Source);
+        if (take is not null) query = query.Take(take.Value);
+        return await query.ToListAsync();
     }
 
     public async Task<Hadith> CreateHadithAsync(CreateHadithRequest request)
     {
-        var h = new Hadith { Source = request.Source, Narrator = request.Narrator, Text = request.Text, Topic = request.Topic };
+        var h = new Hadith { Source = request.Source, Narrator = request.Narrator, TextAr = request.TextAr, TextFa = request.TextFa, Topic = request.Topic };
         _db.Hadiths.Add(h);
         await _db.SaveChangesAsync();
         return h;
@@ -367,7 +431,8 @@ public class TarbiyatiService : ITarbiyatiService
         var h = await _db.Hadiths.FindAsync(id) ?? throw new KeyNotFoundException("Hadith not found");
         if (request.Source is not null) h.Source = request.Source;
         if (request.Narrator is not null) h.Narrator = request.Narrator;
-        if (request.Text is not null) h.Text = request.Text;
+        if (request.TextAr is not null) h.TextAr = request.TextAr;
+        if (request.TextFa is not null) h.TextFa = request.TextFa;
         if (request.Topic is not null) h.Topic = request.Topic;
         await _db.SaveChangesAsync();
         return h;

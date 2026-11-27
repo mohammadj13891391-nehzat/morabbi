@@ -406,8 +406,11 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("TextAr")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TextFa")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Topic")
@@ -907,8 +910,11 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("TextAr")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TextFa")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Topic")
