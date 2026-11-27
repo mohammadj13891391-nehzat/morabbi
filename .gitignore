@@ -33,7 +33,7 @@ api-*.out
 
 # Next.js build output / dev cache
 .next/
-# dev.db is generated from committed dev.db.part*.zip (git-lfs) at clone time
+# dev.db is generated from committed dev.db.part*.zip at clone time
 unified/server/prisma/dev.db
 unified/server/prisma/dev.db.backup*
 unified/server/prisma/dev.db.zip

@@ -30,7 +30,7 @@ npx ng test                         # Vitest
 
 # نسل یکپارچه (مرجع)
 cd unified/server
-npm install && npm run db:restore   # prisma/dev.db از dev.db.part1..5.zip (git-lfs)
+npm install && npm run db:restore   # prisma/dev.db از dev.db.part1..5.zip
 npx next dev -p 3015                # PWA روی /app/index.html
 ```
 
@@ -41,7 +41,7 @@ npx next dev -p 3015                # PWA روی /app/index.html
 
 ## هشدارها (landmines)
 - **داده‌های SQL Server در git نیست** — برای بازسازی کامل: `backend/tools/migrate-data` (منبع: `unified/server/prisma/dev.db`).
-- `unified/server/prisma/dev.db` در git **نیست** — از `dev.db.part1..5.zip` (git-lfs, committed) بازسازی می‌شود. پس از تغییر بزرگ داده‌ای، **zip جدید را بساز، به ۵ تکه ۱۱ مگابایتی تقسیم کن و part‌ها را commit کن**.
+- `unified/server/prisma/dev.db` در git **نیست** — از `dev.db.part1..5.zip` (blob عادی، committed) بازسازی می‌شود. پس از تغییر بزرگ داده‌ای، **zip جدید را بساز، به ۵ تکه ۱۱ مگابایتی تقسیم کن و part‌ها را (هر کدام در commit جدا) commit کن**.
 - **جستجوی عمیق روایات** (`includeText=true`) روی ۲۳۱MB متن، ~۳۳-۶۰ ثانیه طول می‌کشد (LIKE full scan) — FTS روی این SQL Server نصب نیست.
 - کلمهٔ `EF.Functions.Replace` در EF Core **وجود ندارد** (CS1929) — برای نرمال‌سازی عربی، داده را در حافظه فیلتر کن.
 - keystore اندروید (`unified/android/morabbi-release.keystore`) عمداً committed است (dev، ریپوی خصوصی) — حذفش نکن؛ رمزها در `unified/android/README.md`.

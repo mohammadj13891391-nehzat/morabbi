@@ -75,7 +75,7 @@ dotnet run            # پیش‌فرض: D:\morabbi\unified\server\prisma\dev.db
 ```bash
 cd unified/server
 npm install
-npm run db:restore    # بازسازی prisma/dev.db از dev.db.part1..5.zip (git-lfs)
+npm run db:restore    # بازسازی prisma/dev.db از dev.db.part1..5.zip
 cp .env.example .env
 npx next dev -p 3015
 ```
@@ -92,7 +92,7 @@ WebView باریک Kotlin که PWA را می‌بندد. ساخت **فقط در 
 ## نکات برای همکار
 
 - **`docs/DEVELOPMENT_LOG.md` مربوط به نسل قدیمی (Next.js نسل اول) است** — به‌عنوان تاریخچه بخوانید، نه راهنمای فعلی.
-- دیتابیس dev (`unified/server/prisma/dev.db`) در git نیست و از `dev.db.part1..5.zip` (git-lfs) بازسازی می‌شود؛ `npm run db:restore` تکه‌ها را یکپارچه می‌کند.
+- دیتابیس dev (`unified/server/prisma/dev.db`) در git نیست و از `dev.db.part1..5.zip` بازسازی می‌شود؛ `npm run db:restore` تکه‌ها را یکپارچه می‌کند.
 - داده‌های SQL Server (`Morabbi_Dev`) در git نیست؛ برای بازسازی کامل از `backend/tools/migrate-data` استفاده کنید (منبع: `unified/server/prisma/dev.db`).
 - لاگ‌های dev (`*.log`، `*.out`، `*.err`) gitignore شده‌اند و نباید commit شوند.
 
