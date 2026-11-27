@@ -20,7 +20,9 @@ import { QuranVerse } from '../../core/models/morabbi.models';
     <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
     <div class="hint" *ngIf="searching()">در حال جستجو...</div>
 
-    <div class="card" *ngFor="let v of results()">
+    <div class="hint" *ngIf="!search.trim()">نمایش: {{ shown() }} از {{ results().length }} آیه</div>
+
+    <div class="card" *ngFor="let v of results().slice(0, shown())">
       <div class="v-head">
         <span class="badge">{{ v.surah }} — آیه {{ v.verseNo }}</span>
         <span class="badge" *ngIf="v.topic">{{ v.topic }}</span>
@@ -32,6 +34,7 @@ import { QuranVerse } from '../../core/models/morabbi.models';
       <p class="verse" dir="rtl">{{ v.textAr }}</p>
     </div>
     <div class="empty" *ngIf="!searching() && results().length === 0">آیه‌ای یافت نشد.</div>
+    <button class="btn btn-sm" (click)="showMore()" *ngIf="results().length > shown()">نمایش ۲۰۰ آیهٔ بعدی</button>
   `,
   styles: `
     .v-head {
@@ -68,13 +71,20 @@ export class QuranVersesComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly info = signal<string | null>(null);
   readonly searching = signal(false);
+  readonly shown = signal(200);
+  private readonly step = 200;
   search = '';
+
+  showMore(): void {
+    this.shown.set(this.shown() + this.step);
+  }
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
+    this.shown.set(this.step);
     this.auth.getQuranVerses().subscribe({
       next: (list) => this.results.set(list),
       error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت آیات')
@@ -91,6 +101,7 @@ export class QuranVersesComponent implements OnInit {
     }
     this.timer = setTimeout(() => {
       this.searching.set(true);
+      this.shown.set(this.step);
       this.auth.searchQuranVerses(q).subscribe({
         next: (res) => {
           this.results.set(res.results);

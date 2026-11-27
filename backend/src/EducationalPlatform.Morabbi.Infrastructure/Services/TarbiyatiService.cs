@@ -394,7 +394,8 @@ public class TarbiyatiService : ITarbiyatiService
         var query = _db.Hadiths.OrderBy(h => h.Source).AsQueryable();
         if (skip is not null) query = query.Skip(skip.Value);
         if (take is not null) query = query.Take(take.Value);
-        return await query.ToListAsync();
+        var rows = await query.ToListAsync();
+        return rows.Select(h => ToListItem(h, null)).ToList();
     }
 
     public async Task<List<Hadith>> SearchHadithsAsync(string q, int? take = null, bool includeText = false)
@@ -415,7 +416,41 @@ public class TarbiyatiService : ITarbiyatiService
         }
         query = query.OrderBy(x => x.Source);
         if (take is not null) query = query.Take(take.Value);
-        return await query.ToListAsync();
+        var rows = await query.ToListAsync();
+        return rows.Select(h => ToListItem(h, t)).ToList();
+    }
+
+    private const int HadithPreviewLen = 400;
+
+    private static Hadith ToListItem(Hadith h, string? q)
+    {
+        if (h.TextAr.Length <= HadithPreviewLen && (h.TextFa == null || h.TextFa.Length <= HadithPreviewLen)) return h;
+        return new Hadith
+        {
+            Id = h.Id,
+            Source = h.Source,
+            Narrator = h.Narrator,
+            TextAr = Preview(h.TextAr, q),
+            TextFa = h.TextFa != null ? Preview(h.TextFa, q) : null,
+            Topic = h.Topic,
+            CreatedAt = h.CreatedAt
+        };
+    }
+
+    private static string Preview(string text, string? q)
+    {
+        if (text.Length <= HadithPreviewLen) return text;
+        if (!string.IsNullOrEmpty(q))
+        {
+            var idx = text.IndexOf(q, StringComparison.OrdinalIgnoreCase);
+            if (idx >= 0)
+            {
+                var start = Math.Max(0, idx - HadithPreviewLen / 4);
+                var slice = text[start..Math.Min(text.Length, start + HadithPreviewLen)];
+                return (start > 0 ? "…" : "") + slice + "…";
+            }
+        }
+        return text[..HadithPreviewLen] + "…";
     }
 
     public async Task<Hadith> CreateHadithAsync(CreateHadithRequest request)

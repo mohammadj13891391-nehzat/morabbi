@@ -35,11 +35,15 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
           <button class="btn btn-danger btn-sm" (click)="remove(h)" *ngIf="auth.isAdminManager()">حذف</button>
         </div>
       </div>
-      <p class="text">{{ h.textFa || h.textAr }}</p>
-      <details *ngIf="h.textFa && h.textAr">
-        <summary>متن عربی</summary>
-        <p class="text arabic" dir="rtl">{{ h.textAr }}</p>
-      </details>
+      <p class="text" *ngIf="!fullText()[h.id]">{{ (h.textFa && h.textFa.length > h.textAr.length ? h.textFa : h.textAr) || '—' }}</p>
+      <div *ngIf="fullText()[h.id]">
+        <p class="text" *ngIf="fullText()[h.id]!.textFa" dir="rtl">{{ fullText()[h.id]!.textFa }}</p>
+        <p class="text arabic" dir="rtl">{{ fullText()[h.id]!.textAr }}</p>
+      </div>
+      <button class="btn btn-secondary btn-sm full-btn" (click)="toggleFull(h)">
+        {{ fullText()[h.id] ? 'بستن متن کامل' : 'مشاهده متن کامل' }}
+      </button>
+      <div class="hint loading" *ngIf="loadingFull()[h.id]">در حال بارگذاری متن کامل...</div>
     </div>
     <div class="empty" *ngIf="!searching() && results().length === 0">حدیثی یافت نشد.</div>
   `,
@@ -84,6 +88,8 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
     }
     details { margin-top: 8px; }
     summary { cursor: pointer; font-size: 13px; color: var(--lp-muted, #666); }
+    .full-btn { margin-top: 10px; }
+    .hint.loading { margin-top: 6px; }
   `
 })
 export class HadithsComponent implements OnInit {
@@ -95,6 +101,8 @@ export class HadithsComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly info = signal<string | null>(null);
   readonly searching = signal(false);
+  readonly fullText = signal<Record<number, MorabbiHadith>>({});
+  readonly loadingFull = signal<Record<number, boolean>>({});
   search = '';
   deep = false;
 
@@ -103,6 +111,7 @@ export class HadithsComponent implements OnInit {
   }
 
   load(): void {
+    this.fullText.set({});
     this.auth.getHadiths().subscribe({
       next: (list) => this.results.set(list),
       error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت احادیث')
@@ -119,6 +128,7 @@ export class HadithsComponent implements OnInit {
     }
     this.timer = setTimeout(() => {
       this.searching.set(true);
+      this.fullText.set({});
       this.auth.searchHadiths(q, this.deep).subscribe({
         next: (res) => {
           this.results.set(res.results);
@@ -130,6 +140,31 @@ export class HadithsComponent implements OnInit {
         }
       });
     }, 300);
+  }
+
+  toggleFull(h: MorabbiHadith): void {
+    const current = this.fullText();
+    if (current[h.id]) {
+      const next = { ...current };
+      delete next[h.id];
+      this.fullText.set(next);
+      return;
+    }
+    this.loadingFull.set({ ...this.loadingFull(), [h.id]: true });
+    this.auth.getHadith(h.id).subscribe({
+      next: (full) => {
+        if (full) this.fullText.set({ ...this.fullText(), [full.id]: full });
+        const lf = { ...this.loadingFull() };
+        delete lf[h.id];
+        this.loadingFull.set(lf);
+      },
+      error: () => {
+        const lf = { ...this.loadingFull() };
+        delete lf[h.id];
+        this.loadingFull.set(lf);
+        this.error.set('خطا در دریافت متن کامل حدیث');
+      }
+    });
   }
 
   remove(h: MorabbiHadith): void {
