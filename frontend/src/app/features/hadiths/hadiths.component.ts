@@ -13,6 +13,10 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
       <h1 class="page-title">احادیث و روایات</h1>
       <div class="toolbar">
         <input type="search" placeholder="جستجو در کتاب، راوی یا فصل..." [(ngModel)]="search" (ngModelChange)="onSearch()" />
+        <select [(ngModel)]="sourceFilter">
+          <option value="">همهٔ کتاب‌ها</option>
+          <option *ngFor="let s of sources()">{{ s }}</option>
+        </select>
         <label class="deep-toggle">
           <input type="checkbox" [(ngModel)]="deep" (ngModelChange)="onSearch()" />
           جستجوی عمیق در متن
@@ -23,9 +27,9 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
 
     <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
     <div class="hint" *ngIf="searching()">در حال جستجو{{ deep ? ' (عمیق — ممکن است تا ۱ دقیقه طول بکشد)' : '' }}...</div>
-    <div class="hint" *ngIf="!search.trim()">نمایش: {{ results().length }} رکورد (هر رکورد یک جلد/بخش از یک کتاب است)</div>
+    <div class="hint" *ngIf="!search.trim()">نمایش: {{ displayed().length }} رکورد (هر رکورد یک جلد/بخش از یک کتاب است)</div>
 
-    <div class="card" *ngFor="let h of results()">
+    <div class="card" *ngFor="let h of displayed()">
       <div class="h-head">
         <span class="badge">{{ h.source }}</span>
         <span class="badge" *ngIf="h.narrator">روایت: {{ h.narrator }}</span>
@@ -45,7 +49,7 @@ import { MorabbiHadith } from '../../core/models/morabbi.models';
       </button>
       <div class="hint loading" *ngIf="loadingFull()[h.id]">در حال بارگذاری متن کامل...</div>
     </div>
-    <div class="empty" *ngIf="!searching() && results().length === 0">حدیثی یافت نشد.</div>
+    <div class="empty" *ngIf="!searching() && displayed().length === 0">حدیثی یافت نشد.</div>
   `,
   styles: `
     .h-head {
@@ -105,6 +109,16 @@ export class HadithsComponent implements OnInit {
   readonly loadingFull = signal<Record<number, boolean>>({});
   search = '';
   deep = false;
+  sourceFilter = '';
+
+  sources(): string[] {
+    return Array.from(new Set(this.results().map((h) => h.source).filter((s) => s.length > 0))).sort((a, b) => a.localeCompare(b, 'fa'));
+  }
+
+  displayed(): MorabbiHadith[] {
+    if (!this.sourceFilter) return this.results();
+    return this.results().filter((h) => h.source === this.sourceFilter);
+  }
 
   ngOnInit(): void {
     this.load();

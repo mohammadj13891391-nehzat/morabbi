@@ -13,6 +13,10 @@ import { QuranVerse } from '../../core/models/morabbi.models';
       <h1 class="page-title">آیات قرآن</h1>
       <div class="toolbar">
         <input type="search" placeholder="جستجو در متن، سوره یا موضوع..." [(ngModel)]="search" (ngModelChange)="onSearch()" />
+        <select [(ngModel)]="surahFilter" (ngModelChange)="onSurahFilter()">
+          <option value="">همهٔ سوره‌ها</option>
+          <option *ngFor="let s of surahs()">{{ s }}</option>
+        </select>
         <button routerLink="/quran-verses/new" class="btn" *ngIf="auth.isAdminManager()">افزودن آیه</button>
       </div>
     </div>
@@ -20,9 +24,9 @@ import { QuranVerse } from '../../core/models/morabbi.models';
     <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
     <div class="hint" *ngIf="searching()">در حال جستجو...</div>
 
-    <div class="hint" *ngIf="!search.trim()">نمایش: {{ shown() }} از {{ results().length }} آیه</div>
+    <div class="hint" *ngIf="!search.trim()">نمایش: {{ shown() }} از {{ displayed().length }} آیه{{ surahFilter ? ' (سورهٔ ' + surahFilter + ')' : '' }}</div>
 
-    <div class="card" *ngFor="let v of results().slice(0, shown())">
+    <div class="card" *ngFor="let v of displayed().slice(0, shown())">
       <div class="v-head">
         <span class="badge">{{ v.surah }} — آیه {{ v.verseNo }}</span>
         <span class="badge" *ngIf="v.topic">{{ v.topic }}</span>
@@ -34,8 +38,8 @@ import { QuranVerse } from '../../core/models/morabbi.models';
       <p class="verse" dir="rtl">{{ v.textAr }}</p>
       <p class="verse-fa" *ngIf="v.textFa">{{ v.textFa }}</p>
     </div>
-    <div class="empty" *ngIf="!searching() && results().length === 0">آیه‌ای یافت نشد.</div>
-    <button class="btn btn-sm" (click)="showMore()" *ngIf="results().length > shown()">نمایش ۲۰۰ آیهٔ بعدی</button>
+    <div class="empty" *ngIf="!searching() && displayed().length === 0">آیه‌ای یافت نشد.</div>
+    <button class="btn btn-sm" (click)="showMore()" *ngIf="displayed().length > shown()">نمایش ۲۰۰ آیهٔ بعدی</button>
   `,
   styles: `
     .v-head {
@@ -81,6 +85,20 @@ export class QuranVersesComponent implements OnInit {
   readonly shown = signal(200);
   private readonly step = 200;
   search = '';
+  surahFilter = '';
+
+  surahs(): string[] {
+    return Array.from(new Set(this.results().map((v) => v.surah).filter((s) => s.length > 0))).sort((a, b) => a.localeCompare(b, 'fa'));
+  }
+
+  displayed(): QuranVerse[] {
+    if (!this.surahFilter) return this.results();
+    return this.results().filter((v) => v.surah === this.surahFilter);
+  }
+
+  onSurahFilter(): void {
+    this.shown.set(this.step);
+  }
 
   showMore(): void {
     this.shown.set(this.shown() + this.step);
