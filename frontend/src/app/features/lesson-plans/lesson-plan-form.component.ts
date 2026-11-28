@@ -161,6 +161,7 @@ const emptyForm = (): PlanForm => ({
     </div>
 
     <div class="alert alert-error" *ngIf="error()">{{ error() }}</div>
+    <div class="alert alert-success" *ngIf="info()">{{ info() }}</div>
 
     <form (ngSubmit)="submit()" *ngIf="ready(); else loading">
       <div class="card">
@@ -174,6 +175,12 @@ const emptyForm = (): PlanForm => ({
             <label>موضوع</label>
             <input name="subject" [(ngModel)]="form.subject" />
           </div>
+        </div>
+        <div style="display: flex; justify-content: flex-start; margin-top: 4px">
+          <button type="button" class="btn btn-secondary btn-sm" [disabled]="aiBusy() || busy() || !form.subject.trim()" (click)="generateWithAi()">
+            {{ aiBusy() ? 'در حال تدوین با AI...' : 'تدوین خودکار با AI' }}
+          </button>
+          <small style="color: var(--lp-muted); margin-right: 10px">با موضوع بالا، فیلدهای خالی را پر می‌کند</small>
         </div>
         <div class="grid-2">
           <div class="field">
@@ -279,6 +286,8 @@ export class LessonPlanFormComponent implements OnInit {
   readonly booksLoading = signal(false);
   readonly openBookId = signal<number | null>(null);
   readonly bookContents = signal<Record<number, string>>({});
+  readonly aiBusy = signal(false);
+  readonly info = signal<string | null>(null);
   form: PlanForm = emptyForm();
 
   userLoop(): string | null {
@@ -337,6 +346,50 @@ export class LessonPlanFormComponent implements OnInit {
         this.bookContents.update((m) => ({ ...m, [b.id]: d.content }));
       });
     }
+  }
+
+  generateWithAi(): void {
+    const subject = this.form.subject.trim();
+    if (!subject) {
+      this.error.set('برای تدوین با AI، موضوع را وارد کنید.');
+      return;
+    }
+    this.aiBusy.set(true);
+    this.info.set(null);
+    this.error.set(null);
+    this.auth.aiLessonPlan(subject, this.form.grade.trim() || null, Number(this.form.sessionCount) || 1).subscribe({
+      next: (res) => {
+        this.aiBusy.set(false);
+        if (!res.plan) {
+          this.error.set('AI طرحی به‌صورت ساختاریافته برنگرداند. دوباره تلاش کنید.');
+          return;
+        }
+        const filled = this.applyAiPlan(res.plan);
+        this.info.set(filled > 0 ? `${filled} فیلد با AI پر شد. پیش از ذخیره بررسی کنید.` : 'فیلد خالی برای پرکردن با AI یافت نشد.');
+      },
+      error: (err) => {
+        this.aiBusy.set(false);
+        this.error.set(err?.error?.message ?? 'خطا در تدوین با AI');
+      }
+    });
+  }
+
+  private applyAiPlan(plan: Record<string, unknown>): number {
+    let filled = 0;
+    for (const key of Object.keys(plan) as (keyof PlanForm)[]) {
+      const value = plan[key];
+      if (value === null || value === undefined) continue;
+      const text = Array.isArray(value)
+        ? value.map((x) => String(x).trim()).filter((x) => x.length > 0).join('، ')
+        : String(value).trim();
+      if (!text) continue;
+      const current = this.form[key];
+      if (typeof current === 'string' && current.trim() === '') {
+        (this.form as unknown as Record<string, unknown>)[key] = text;
+        filled++;
+      }
+    }
+    return filled;
   }
 
   addBookToSources(b: BookSummary): void {

@@ -94,6 +94,13 @@ public class BooksController : MorabbiControllerBase
         }
     }
 
+    [HttpGet("users")]
+    [Authorize(Roles = "admin,manager")]
+    public async Task<IActionResult> GetUsers()
+    {
+        return Ok(await _userService.GetAllAsync());
+    }
+
     [HttpPut("users/{userId:int}/loop")]
     [Authorize(Roles = "admin,manager")]
     public async Task<IActionResult> SetUserLoop(int userId, [FromBody] SetUserLoopRequest request)

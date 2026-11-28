@@ -4,6 +4,7 @@ import { Observable, map, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   AiAssistantResult,
+  AiLessonPlanResult,
   AiEvaluateResult,
   ApproveUserPayload,
   Attendance,
@@ -377,6 +378,10 @@ export class AuthService {
     return this.http.post<AiAssistantResult>(`${this.base}/api/ai/assistant`, { message, context });
   }
 
+  aiLessonPlan(subject: string, grade?: string | null, sessionCount?: number): Observable<AiLessonPlanResult> {
+    return this.http.post<AiLessonPlanResult>(`${this.base}/api/ai/lesson-plan`, { subject, grade: grade ?? null, sessionCount: sessionCount ?? 1 });
+  }
+
   // ===== Book =====
   getBooks(q?: string): Observable<BookSummary[]> {
     let params = new HttpParams();
@@ -402,6 +407,10 @@ export class AuthService {
 
   setUserLoop(userId: number, loop: string): Observable<{ ok: boolean }> {
     return this.http.put<{ ok: boolean }>(`${this.base}/api/books/users/${userId}/loop`, { loop });
+  }
+
+  getUsers(): Observable<AuthUserDto[]> {
+    return this.http.get<AuthUserDto[]>(`${this.base}/api/books/users`);
   }
 
   logout(): void {

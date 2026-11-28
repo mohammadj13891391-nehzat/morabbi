@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/api.service';
-import { Branch, CreateBranchPayload, CreateMaktabPayload, Maktab } from '../../core/models/morabbi.models';
+import { AuthUserDto, Branch, CreateBranchPayload, CreateMaktabPayload, Maktab } from '../../core/models/morabbi.models';
+import { roleLabel as roleLabelFn } from '../../core/utils/labels';
 
 interface MaktabForm {
   name: string;
@@ -154,13 +155,54 @@ interface BranchForm {
         </table>
       </div>
     </div>
+
+    <div class="card" style="margin-top: 16px">
+      <h3 class="card-title">مربیان و حلقهٔ تربیتی</h3>
+      <small style="color: var(--lp-muted); display: block; margin-bottom: 10px">
+        حلقهٔ تربیتی تعیین می‌کند کدام کتاب‌های آموزشی در فرم طرح‌درس به مربی نمایش داده می‌شود.
+      </small>
+      <table class="lp-table">
+        <thead>
+          <tr>
+            <th>نام</th>
+            <th>تلفن</th>
+            <th>نقش</th>
+            <th>حلقهٔ تربیتی</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users()">
+            <td>{{ u.name }}</td>
+            <td dir="ltr">{{ u.phone }}</td>
+            <td>{{ roleLabel(u.role) }}</td>
+            <td>
+              <select
+                style="width: 160px"
+                [ngModel]="u.trainingLoop ?? ''"
+                (ngModelChange)="setLoop(u, $event)"
+              >
+                <option value="">— بدون حلقه —</option>
+                <option value="مبانی">مبانی</option>
+                <option value="تأسیس">تأسیس</option>
+                <option value="تعالی">تعالی</option>
+              </select>
+            </td>
+          </tr>
+          <tr *ngIf="users().length === 0">
+            <td colspan="4" class="empty">مربی یافت نشد.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   `
 })
 export class OrganizationComponent implements OnInit {
   private readonly auth = inject(AuthService);
 
+  readonly roleLabel = roleLabelFn;
   readonly maktabs = signal<Maktab[]>([]);
   readonly branches = signal<Branch[]>([]);
+  readonly users = signal<AuthUserDto[]>([]);
   readonly maktabEditing = signal(false);
   readonly branchEditing = signal(false);
   readonly busy = signal(false);
@@ -184,6 +226,21 @@ export class OrganizationComponent implements OnInit {
     this.auth.getBranches().subscribe({
       next: (b) => this.branches.set(b),
       error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت شعب')
+    });
+    this.auth.getUsers().subscribe({
+      next: (u) => this.users.set(u),
+      error: (err) => this.error.set(err?.error?.message ?? 'خطا در دریافت مربیان')
+    });
+  }
+
+  setLoop(user: AuthUserDto, loop: string): void {
+    if (!loop) return;
+    this.auth.setUserLoop(user.id, loop).subscribe({
+      next: () => {
+        this.info.set(`حلقهٔ ${user.name} به «${loop}» تغییر کرد.`);
+        this.users.update((list) => list.map((x) => (x.id === user.id ? { ...x, trainingLoop: loop } : x)));
+      },
+      error: (err) => this.error.set(err?.error?.message ?? 'خطا در تغییر حلقهٔ تربیتی')
     });
   }
 

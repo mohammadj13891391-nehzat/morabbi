@@ -177,6 +177,60 @@ public class AiService : IAiService
         return new AiEvaluateResponse(percent, comment, scores, suggestions);
     }
 
+    public async Task<AiLessonPlanResponse> GenerateLessonPlanAsync(int userId, AiLessonPlanRequest request)
+    {
+        EnsureConfigured();
+        var (quranSources, hadithSources, bookSources) = await GatherSourcesAsync(request.Subject, userId);
+
+        var gradeLine = string.IsNullOrWhiteSpace(request.Grade) ? "" : $"پایه/سطح: {request.Grade}. ";
+        var prompt = $$"""
+برای موضوع «{{request.Subject}}» یک طرح درس کامل، کاربردی و منسجم بنویس.
+{{gradeLine}}تعداد جلسات: {{request.SessionCount}}.
+
+فقط JSON خالص (بدون Markdown و بدون توضیح اضافه) با دقیقاً این کلیدها برگردان:
+{
+  "title": "عنوان مناسب طرح درس",
+  "generalObjective": "هدف کلی",
+  "objectives": ["هدف جزئی ۱", "هدف جزئی ۲"],
+  "behavioralObjectives": "اهداف رفتاری (با عملکرد، شرایط، معیار)",
+  "subHeadings": "زیرمباحث",
+  "prerequisites": "پیش‌نیازها",
+  "diagnosticEvaluation": "ارزیابی تشخیصی",
+  "preparationPhase": "مرحله آمادگی",
+  "introductionPhase": "مرحله مقدمه‌سازی",
+  "presentationPhase": "مرحله ارائه",
+  "summaryPhase": "مرحله جمع‌بندی",
+  "evaluationPhase": "مرحله ارزشیابی",
+  "supplementaryActivities": "فعالیت‌های تکمیلی",
+  "teachingMethod": "روش تدریس",
+  "teachingAids": "وسایل کمک‌آموزشی",
+  "evaluationQuestions": "سؤالات ارزشیابی",
+  "contentOutline": "طرح محتوا",
+  "evaluationMethod": "روش ارزشیابی",
+  "quranRefs": ["ارجاع قرآنی ۱"],
+  "hadithRefs": ["ارجاع حدیثی ۱"]
+}
+
+مطالب را بر اساس اسناد نهضت، آیات قرآن و روایات مرتبط و کتاب‌های آموزشی زیر بنویس:
+
+# آیات قرآن مرتبط:
+{{string.Join("\n", quranSources.DefaultIfEmpty("یافت نشد"))}}
+
+# روایات مرتبط:
+{{string.Join("\n", hadithSources.DefaultIfEmpty("یافت نشد"))}}
+
+# کتاب‌های آموزشی مرتبط (مطابق حلقهٔ تربیتی مربی):
+{{string.Join("\n", bookSources.DefaultIfEmpty("یافت نشد"))}}
+""";
+
+        var reply = await ChatAsync("شما طراح طرح درس حرفه‌ای هستید. فقط JSON خالص برگردانید.", prompt);
+        if (ExtractJsonNode(reply) is not JsonObject json)
+        {
+            return new AiLessonPlanResponse(null, quranSources, hadithSources);
+        }
+        return new AiLessonPlanResponse(json, quranSources, hadithSources);
+    }
+
     public async Task<AiTranscribeResponse> TranscribeAsync(byte[] audio, string fileName, string contentType)
     {
         EnsureConfigured();

@@ -72,6 +72,29 @@ public class AiController : MorabbiControllerBase
         }
     }
 
+    [HttpPost("lesson-plan")]
+    public async Task<IActionResult> LessonPlan([FromBody] AiLessonPlanRequest request)
+    {
+        var current = await GetCurrentUserAsync();
+        if (current is null) return Unauthorized(GenericErrorMessages.Unauthorized);
+        if (string.IsNullOrWhiteSpace(request.Subject))
+        {
+            return BadRequest(new { message = "موضوع الزامی است." });
+        }
+        try
+        {
+            return Ok(await _aiService.GenerateLessonPlanAsync(current.Id, request));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return StatusCode(503, new { message = ex.Message });
+        }
+        catch (HttpRequestException ex)
+        {
+            return StatusCode(502, new { message = ex.Message });
+        }
+    }
+
     [HttpPost("transcribe")]
     [RequestSizeLimit(26 * 1024 * 1024)]
     public async Task<IActionResult> Transcribe(IFormFile file)

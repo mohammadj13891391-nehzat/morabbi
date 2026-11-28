@@ -30,6 +30,12 @@ export interface AiAssistantResult {
   hadithSources: string[];
 }
 
+export interface AiLessonPlanResult {
+  plan: Record<string, unknown> | null;
+  quranSources: string[];
+  hadithSources: string[];
+}
+
 export interface BookSummary {
   id: number;
   title: string;
