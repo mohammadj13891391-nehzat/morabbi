@@ -52,6 +52,49 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Migrations
                     b.ToTable("Morabbi_attendance");
                 });
 
+            modelBuilder.Entity("EducationalPlatform.Morabbi.Domain.Entities.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Loops")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Morabbi_books");
+                });
+
             modelBuilder.Entity("EducationalPlatform.Morabbi.Domain.Entities.Branch", b =>
                 {
                     b.Property<int>("Id")
@@ -94,6 +137,48 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Migrations
                     b.HasIndex("MaktabId");
 
                     b.ToTable("Morabbi_branches");
+                });
+
+            modelBuilder.Entity("EducationalPlatform.Morabbi.Domain.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Anchor")
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TargetId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("TargetType", "TargetId");
+
+                    b.ToTable("Morabbi_comments");
                 });
 
             modelBuilder.Entity("EducationalPlatform.Morabbi.Domain.Entities.DailyReport", b =>
@@ -707,6 +792,9 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Migrations
                     b.Property<int>("TotalPoints")
                         .HasColumnType("int");
 
+                    b.Property<string>("TrainingLoop")
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -1080,6 +1168,24 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Maktab");
+                });
+
+            modelBuilder.Entity("EducationalPlatform.Morabbi.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("EducationalPlatform.Morabbi.Domain.Entities.MorabbiUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("EducationalPlatform.Morabbi.Domain.Entities.Comment", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("EducationalPlatform.Morabbi.Domain.Entities.DailyReport", b =>

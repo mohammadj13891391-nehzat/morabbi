@@ -1,3 +1,4 @@
+using EducationalPlatform.Morabbi.Application.Constants;
 using EducationalPlatform.Morabbi.Application.DTOs;
 using EducationalPlatform.Morabbi.Application.Interfaces;
 using EducationalPlatform.Morabbi.Domain.Entities;
@@ -10,11 +11,13 @@ public class LessonPlanService : ILessonPlanService
 {
     private readonly AppDbContext _db;
     private readonly INotificationService _notificationService;
+    private readonly IPointsService _pointsService;
 
-    public LessonPlanService(AppDbContext db, INotificationService notificationService)
+    public LessonPlanService(AppDbContext db, INotificationService notificationService, IPointsService pointsService)
     {
         _db = db;
         _notificationService = notificationService;
+        _pointsService = pointsService;
     }
 
     public async Task<LessonPlan> CreateAsync(int instructorId, CreateLessonPlanRequest request)
@@ -68,6 +71,7 @@ public class LessonPlanService : ILessonPlanService
         };
         _db.LessonPlans.Add(plan);
         await _db.SaveChangesAsync();
+        await _pointsService.AwardIfNewAsync(plan.InstructorId, PointRules.LessonSaved, PointRules.LessonSavedAmount, $"ثبت طرح درس: {plan.Title}", "lesson_plan", plan.Id);
         return plan;
     }
 
@@ -75,9 +79,15 @@ public class LessonPlanService : ILessonPlanService
     {
         var plan = await _db.LessonPlans.FindAsync(id)
             ?? throw new KeyNotFoundException("Lesson plan not found");
+        var wasApproved = plan.Status == "APPROVED";
         ApplyUpdate(plan, request);
         plan.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+
+        if (!wasApproved && plan.Status == "APPROVED")
+        {
+            await _pointsService.AwardIfNewAsync(plan.InstructorId, PointRules.LessonApproved, PointRules.LessonApprovedAmount, $"تأیید طرح درس: {plan.Title}", "lesson_plan", plan.Id);
+        }
         return plan;
     }
 

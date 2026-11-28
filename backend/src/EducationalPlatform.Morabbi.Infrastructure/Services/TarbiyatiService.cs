@@ -1,3 +1,4 @@
+using EducationalPlatform.Morabbi.Application.Constants;
 using EducationalPlatform.Morabbi.Application.DTOs;
 using EducationalPlatform.Morabbi.Application.Interfaces;
 using EducationalPlatform.Morabbi.Domain.Entities;
@@ -9,30 +10,38 @@ namespace EducationalPlatform.Morabbi.Infrastructure.Services;
 public class TarbiyatiService : ITarbiyatiService
 {
     private readonly AppDbContext _db;
+    private readonly INotificationService _notificationService;
 
-    public TarbiyatiService(AppDbContext db)
+    public TarbiyatiService(AppDbContext db, INotificationService notificationService)
     {
         _db = db;
+        _notificationService = notificationService;
     }
 
-    private async Task AwardPointsAsync(int userId, int amount, string reason, string? sourceType = null, int? sourceId = null)
+    private async Task AwardPointsAsync(int userId, int amount, string description, string reason, string? sourceType = null, int? sourceId = null)
     {
         var user = await _db.Users.FindAsync(userId);
         if (user is null) return;
-        user.BranchId ??= user.BranchId;
+        if (sourceType is not null && sourceId is not null)
+        {
+            var exists = await _db.PointTransactions
+                .AnyAsync(p => p.UserId == userId && p.Reason == reason && p.SourceType == sourceType && p.SourceId == sourceId.ToString());
+            if (exists) return;
+        }
         _db.PointTransactions.Add(new PointTransaction
         {
             UserId = userId,
             BranchId = user.BranchId,
             Amount = amount,
-            Reason = "MANUAL_AWARD",
-            Description = reason,
+            Reason = reason,
+            Description = description,
             SourceType = sourceType,
             SourceId = sourceId?.ToString()
         });
         user.TotalPoints += amount;
         user.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+        await _notificationService.CreateAsync(userId, "points", $"+{amount} امتیاز", description);
     }
 
     // ===== Person =====
@@ -147,7 +156,7 @@ public class TarbiyatiService : ITarbiyatiService
         };
         _db.Sessions.Add(session);
         await _db.SaveChangesAsync();
-        await AwardPointsAsync(instructorId, 3, "ثبت صورتجلسه: " + request.Title, "session", session.Id);
+        await AwardPointsAsync(instructorId, PointRules.SessionSavedAmount, "ثبت صورتجلسه: " + request.Title, PointRules.SessionSaved, "session", session.Id);
         return await _db.Sessions.Include(s => s.Instructor).FirstAsync(s => s.Id == session.Id);
     }
 
@@ -205,7 +214,7 @@ public class TarbiyatiService : ITarbiyatiService
         await _db.SaveChangesAsync();
         if (done)
         {
-            await AwardPointsAsync(task.InstructorId, 1, "انجام کار: " + task.Text, "task", task.Id);
+            await AwardPointsAsync(task.InstructorId, PointRules.TaskCompletedAmount, "انجام کار: " + task.Text, PointRules.TaskCompleted, "task", task.Id);
         }
         return task;
     }
@@ -264,7 +273,7 @@ public class TarbiyatiService : ITarbiyatiService
         await _db.SaveChangesAsync();
         if (newlyTrue > 0)
         {
-            await AwardPointsAsync(instructorId, newlyTrue, "برنامه روزانه", "tracker", tracker.Id);
+            await AwardPointsAsync(instructorId, newlyTrue * PointRules.TrackerItemAmount, $"برنامه روزانه: {newlyTrue} آیتم", PointRules.TrackerItem, "tracker", tracker.Id);
         }
         return tracker;
     }

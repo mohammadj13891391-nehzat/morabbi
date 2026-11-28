@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/api.service';
-import { Branch, CreateLessonPlanPayload, LessonPlan, TargetStatus } from '../../core/models/morabbi.models';
+import { BookSummary, Branch, CreateLessonPlanPayload, LessonPlan, TargetStatus } from '../../core/models/morabbi.models';
 
 interface PlanForm {
   branchId: number | null;
@@ -194,6 +194,26 @@ const emptyForm = (): PlanForm => ({
         </div>
       </div>
 
+      <div class="card" style="margin-top: 16px">
+        <h3 class="card-title">کتابخانهٔ آموزشی (مطابق حلقهٔ تربیتی شما)</h3>
+        <p class="book-hint" *ngIf="userLoop()">حلقهٔ شما: <strong>{{ userLoop() }}</strong></p>
+        <div class="empty" *ngIf="!booksLoading() && books().length === 0">کتابی برای نمایش موجود نیست.</div>
+        <div class="book-list" *ngFor="let b of books()">
+          <div class="book-row">
+            <div class="book-meta">
+              <span class="book-title">{{ b.title }}</span>
+              <span class="book-author" *ngIf="b.author"> — {{ b.author }}</span>
+              <span class="book-loops" *ngIf="b.loops.length"> [{{ b.loops.join('، ') }}]</span>
+            </div>
+            <div class="book-actions">
+              <button type="button" class="btn btn-secondary btn-sm" (click)="toggleBook(b)">{{ openBookId() === b.id ? 'بستن' : 'مشاهده محتوا' }}</button>
+              <button type="button" class="btn btn-sm" (click)="addBookToSources(b)">افزودن به منابع</button>
+            </div>
+          </div>
+          <div class="book-content" *ngIf="openBookId() === b.id && bookContents()[b.id]">{{ bookContents()[b.id] }}</div>
+        </div>
+      </div>
+
       <div class="card" *ngFor="let s of sections" style="margin-top: 16px">
         <h3 class="card-title">{{ s.title }}</h3>
         <div class="grid-2">
@@ -255,7 +275,15 @@ export class LessonPlanFormComponent implements OnInit {
   readonly error = signal<string | null>(null);
   readonly branches = signal<Branch[]>([]);
   readonly showBranch = signal(false);
+  readonly books = signal<BookSummary[]>([]);
+  readonly booksLoading = signal(false);
+  readonly openBookId = signal<number | null>(null);
+  readonly bookContents = signal<Record<number, string>>({});
   form: PlanForm = emptyForm();
+
+  userLoop(): string | null {
+    return this.auth.user()?.trainingLoop ?? null;
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -267,6 +295,8 @@ export class LessonPlanFormComponent implements OnInit {
         this.form.branchId = this.auth.user()!.branchId;
       }
     });
+
+    this.loadBooks();
 
     if (id) {
       this.editId.set(id);
@@ -283,6 +313,42 @@ export class LessonPlanFormComponent implements OnInit {
   cancel(): void {
     if (this.editId()) this.router.navigate(['/lesson-plans', this.editId()]);
     else this.router.navigate(['/lesson-plans']);
+  }
+
+  private loadBooks(): void {
+    this.booksLoading.set(true);
+    this.auth.getBooks().subscribe({
+      next: (b) => {
+        this.books.set(b);
+        this.booksLoading.set(false);
+      },
+      error: () => this.booksLoading.set(false)
+    });
+  }
+
+  toggleBook(b: BookSummary): void {
+    if (this.openBookId() === b.id) {
+      this.openBookId.set(null);
+      return;
+    }
+    this.openBookId.set(b.id);
+    if (this.bookContents()[b.id] === undefined) {
+      this.auth.getBook(b.id).subscribe((d) => {
+        this.bookContents.update((m) => ({ ...m, [b.id]: d.content }));
+      });
+    }
+  }
+
+  addBookToSources(b: BookSummary): void {
+    const ref = b.author ? `${b.title} — ${b.author}` : b.title;
+    const parts = this.form.sources
+      .split(/،|,/)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+    if (!parts.some((p) => p === ref)) {
+      parts.push(ref);
+      this.form.sources = parts.join('، ');
+    }
   }
 
   submit(): void {

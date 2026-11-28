@@ -155,6 +155,7 @@ public class MorabbiUserService : IMorabbiUserService
 
     private static AuthUserDto ToDto(MorabbiUser u) => new(
         u.Id, u.Name, u.Phone, u.NationalId, u.Role,
-        u.BranchId, u.MaktabId, u.ApprovalStatus, u.TotalPoints, u.RecognitionsCount
+        u.BranchId, u.MaktabId, u.ApprovalStatus, u.TotalPoints, u.RecognitionsCount,
+        u.TrainingLoop
     );
 }

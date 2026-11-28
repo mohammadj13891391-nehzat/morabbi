@@ -3,13 +3,19 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
+  AiAssistantResult,
+  AiEvaluateResult,
   ApproveUserPayload,
   Attendance,
   AuthUserDto,
+  BookDetail,
+  BookSummary,
+  CreateBookPayload,
   AwardRecognitionPayload,
   BoardEntry,
   Branch,
   ChangePasswordPayload,
+  UpdateBookPayload,
   CreateBranchPayload,
   CreateEvaluationPayload,
   CreateHadithPayload,
@@ -356,6 +362,46 @@ export class AuthService {
   }
   deleteHadith(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/api/hadiths/${id}`);
+  }
+
+  // ===== AI =====
+  aiStatus(): Observable<{ configured: boolean }> {
+    return this.http.get<{ configured: boolean }>(`${this.base}/api/ai/status`);
+  }
+
+  aiEvaluate(targetType: string, targetId: number): Observable<AiEvaluateResult> {
+    return this.http.post<AiEvaluateResult>(`${this.base}/api/ai/evaluate`, { targetType, targetId });
+  }
+
+  aiAssistant(message: string, context?: string | null): Observable<AiAssistantResult> {
+    return this.http.post<AiAssistantResult>(`${this.base}/api/ai/assistant`, { message, context });
+  }
+
+  // ===== Book =====
+  getBooks(q?: string): Observable<BookSummary[]> {
+    let params = new HttpParams();
+    if (q) params = params.set('q', q);
+    return this.http.get<BookSummary[]>(`${this.base}/api/books`, { params });
+  }
+
+  getBook(id: number): Observable<BookDetail> {
+    return this.http.get<BookDetail>(`${this.base}/api/books/${id}`);
+  }
+
+  createBook(payload: CreateBookPayload): Observable<BookDetail> {
+    return this.http.post<BookDetail>(`${this.base}/api/books`, payload);
+  }
+
+  updateBook(id: number, payload: UpdateBookPayload): Observable<BookDetail> {
+    return this.http.put<BookDetail>(`${this.base}/api/books/${id}`, payload);
+  }
+
+  deleteBook(id: number): Observable<{ ok: boolean }> {
+    return this.http.delete<{ ok: boolean }>(`${this.base}/api/books/${id}`);
+  }
+
+  setUserLoop(userId: number, loop: string): Observable<{ ok: boolean }> {
+    return this.http.put<{ ok: boolean }>(`${this.base}/api/books/users/${userId}/loop`, { loop });
   }
 
   logout(): void {

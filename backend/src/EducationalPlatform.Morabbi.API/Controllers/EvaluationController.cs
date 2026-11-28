@@ -24,11 +24,73 @@ public class EvaluationController : MorabbiControllerBase
         return Ok(await _evaluationService.GetCriteriaAsync(type));
     }
 
+    [HttpPost("evaluation-criteria")]
+    [Authorize(Roles = RoleNames.AdminManager)]
+    public async Task<IActionResult> CreateCriterion([FromBody] CreateEvaluationCriterionRequest request)
+    {
+        var current = await GetCurrentUserAsync();
+        if (current is null)
+        {
+            return Unauthorized(GenericErrorMessages.Unauthorized);
+        }
+        if (string.IsNullOrWhiteSpace(request.Title))
+        {
+            return BadRequest(new { message = "عنوان معیار الزامی است." });
+        }
+        return Ok(await _evaluationService.CreateCriterionAsync(current.Id, request));
+    }
+
+    [HttpPut("evaluation-criteria/{id}")]
+    [Authorize(Roles = RoleNames.AdminManager)]
+    public async Task<IActionResult> UpdateCriterion(int id, [FromBody] UpdateEvaluationCriterionRequest request)
+    {
+        try
+        {
+            return Ok(await _evaluationService.UpdateCriterionAsync(id, request));
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(GenericErrorMessages.NotFound);
+        }
+    }
+
+    [HttpDelete("evaluation-criteria/{id}")]
+    [Authorize(Roles = RoleNames.AdminManager)]
+    public async Task<IActionResult> DeleteCriterion(int id)
+    {
+        try
+        {
+            await _evaluationService.DeleteCriterionAsync(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(GenericErrorMessages.NotFound);
+        }
+    }
+
     [HttpGet("evaluations")]
     public async Task<IActionResult> GetByTarget([FromQuery] string targetType, [FromQuery] int targetId)
     {
         var evaluations = await _evaluationService.GetByTargetAsync(targetType, targetId);
         return Ok(new { evaluations });
+    }
+
+    [HttpGet("evaluations/summary")]
+    public async Task<IActionResult> GetSummary([FromQuery] string targetType, [FromQuery] int targetId)
+    {
+        return Ok(await _evaluationService.GetSummaryAsync(targetType, targetId));
+    }
+
+    [HttpGet("evaluations/mine")]
+    public async Task<IActionResult> GetMine()
+    {
+        var current = await GetCurrentUserAsync();
+        if (current is null)
+        {
+            return Unauthorized(GenericErrorMessages.Unauthorized);
+        }
+        return Ok(new { evaluations = await _evaluationService.GetByEvaluatorAsync(current.Id) });
     }
 
     [HttpPost("evaluations")]

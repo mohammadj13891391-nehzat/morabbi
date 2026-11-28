@@ -1,3 +1,4 @@
+using EducationalPlatform.Morabbi.Application.Constants;
 using EducationalPlatform.Morabbi.Application.DTOs;
 using EducationalPlatform.Morabbi.Application.Interfaces;
 using EducationalPlatform.Morabbi.Domain.Entities;
@@ -11,12 +12,14 @@ public class DailyReportService : IDailyReportService
     private readonly AppDbContext _db;
     private readonly INotificationService _notificationService;
     private readonly INehzatHubClient _nehzatHub;
+    private readonly IPointsService _pointsService;
 
-    public DailyReportService(AppDbContext db, INotificationService notificationService, INehzatHubClient nehzatHub)
+    public DailyReportService(AppDbContext db, INotificationService notificationService, INehzatHubClient nehzatHub, IPointsService pointsService)
     {
         _db = db;
         _notificationService = notificationService;
         _nehzatHub = nehzatHub;
+        _pointsService = pointsService;
     }
 
     public async Task<DailyReport> CreateAsync(int instructorId, CreateDailyReportRequest request)
@@ -62,6 +65,7 @@ public class DailyReportService : IDailyReportService
         };
         _db.DailyReports.Add(report);
         await _db.SaveChangesAsync();
+        await _pointsService.AwardIfNewAsync(report.InstructorId, PointRules.ReportSaved, PointRules.ReportSavedAmount, $"ثبت گزارش: {report.Subject}", "report", report.Id);
         return report;
     }
 
@@ -69,9 +73,15 @@ public class DailyReportService : IDailyReportService
     {
         var report = await _db.DailyReports.FindAsync(id)
             ?? throw new KeyNotFoundException("Report not found");
+        var wasApproved = report.Status == "APPROVED";
         ApplyUpdate(report, request);
         report.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync();
+
+        if (!wasApproved && report.Status == "APPROVED")
+        {
+            await _pointsService.AwardIfNewAsync(report.InstructorId, PointRules.ReportApproved, PointRules.ReportApprovedAmount, $"تأیید گزارش: {report.Subject}", "report", report.Id);
+        }
         return report;
     }
 

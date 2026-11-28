@@ -136,6 +136,13 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPushSubscriptionService, PushSubscriptionService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ITarbiyatiService, TarbiyatiService>();
+builder.Services.AddScoped<IPointsService, PointsService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+builder.Services.AddScoped<IExportService, ExportService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IAiService, AiService>();
+builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<SampleDataSeeder>();
 
 builder.Services.AddEndpointsApiExplorer();

@@ -10,7 +10,8 @@ public record AuthUserDto(
     int? MaktabId,
     string ApprovalStatus,
     int TotalPoints,
-    int RecognitionsCount
+    int RecognitionsCount,
+    string? TrainingLoop
 );
 
 public record LocalLoginRequest(string Phone, string Password);

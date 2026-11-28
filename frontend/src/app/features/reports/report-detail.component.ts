@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/api.service';
-import { DailyReport, Evaluation, EvaluationCriteria } from '../../core/models/morabbi.models';
+import { AiEvaluateResult, DailyReport, Evaluation, EvaluationCriteria } from '../../core/models/morabbi.models';
 import { formatDate as formatDateFn, parseJsonList, parseJsonRecord, statusLabel as statusLabelFn } from '../../core/utils/labels';
 
 @Component({
@@ -68,8 +68,25 @@ import { formatDate as formatDateFn, parseJsonList, parseJsonRecord, statusLabel
     </div>
 
     <div class="card" style="margin-top: 16px" *ngIf="canEvaluate()">
-      <h3 class="card-title">{{ editingEvalId() ? 'ویرایش ارزیابی' : 'ارزیابی جدید' }}</h3>
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap">
+        <h3 class="card-title" style="margin: 0">{{ editingEvalId() ? 'ویرایش ارزیابی' : 'ارزیابی جدید' }}</h3>
+        <button class="btn btn-secondary btn-sm" [disabled]="aiBusy() || busy()" (click)="runAiEvaluate()">
+          {{ aiBusy() ? 'در حال ارزیابی هوشمند...' : 'ارزیابی هوشمند (AI)' }}
+        </button>
+      </div>
+      <div class="alert alert-info ai-result" *ngIf="aiResult()">
+        <div *ngIf="aiResult()!.suggestedPercent !== null" class="ai-percent">
+          درصد پیشنهادی AI: <strong>{{ aiResult()!.suggestedPercent }}٪</strong>
+        </div>
+        <div *ngIf="aiResult()!.suggestedComment" class="ai-comment">{{ aiResult()!.suggestedComment }}</div>
+        <ul *ngIf="aiResult()!.suggestions?.length" class="ai-suggestions">
+          <li *ngFor="let s of aiResult()!.suggestions">{{ s }}</li>
+        </ul>
+      </div>
       <div *ngIf="criteria().length === 0" class="empty">معیار ارزیابی تعریف نشده است.</div>
+      <small style="color: var(--lp-muted); display: block; margin-bottom: 8px">
+        نمره هر معیار: ۰ تا ۱۰۰ (۱۰۰ = عالی، ۰ = بسیار ضعیف)
+      </small>
       <div *ngFor="let c of criteria()" class="field" style="display: flex; align-items: center; gap: 10px">
         <label style="flex: 1; margin: 0">{{ c.title }} <small>({{ c.weight }})</small></label>
         <input
@@ -147,6 +164,8 @@ export class ReportDetailComponent implements OnInit {
   readonly info = signal<string | null>(null);
   readonly quranRefs = signal<string[]>([]);
   readonly hadithRefs = signal<string[]>([]);
+  readonly aiBusy = signal(false);
+  readonly aiResult = signal<AiEvaluateResult | null>(null);
 
   overallComment = '';
   evalStatus = 'DRAFT';
@@ -197,6 +216,43 @@ export class ReportDetailComponent implements OnInit {
 
   setScore(id: number, value: number): void {
     this.scores.update((s) => ({ ...s, [id]: value }));
+  }
+
+  runAiEvaluate(): void {
+    const id = this.id();
+    this.aiBusy.set(true);
+    this.aiResult.set(null);
+    this.error.set(null);
+    this.auth.aiEvaluate('report', id).subscribe({
+      next: (res) => {
+        this.aiBusy.set(false);
+        this.aiResult.set(res);
+        this.applyAiScores(res);
+      },
+      error: (err) => {
+        this.aiBusy.set(false);
+        this.error.set((err as { error?: { message?: string } })?.error?.message ?? 'خطا در ارزیابی هوشمند');
+      }
+    });
+  }
+
+  private applyAiScores(res: AiEvaluateResult): void {
+    if (!res.suggestedScores) return;
+    const updates: Record<number, number> = {};
+    for (const c of this.criteria()) {
+      const raw = res.suggestedScores[String(c.id)];
+      if (raw === undefined || raw === null) continue;
+      const value = Number(raw);
+      if (Number.isNaN(value)) continue;
+      // AI now returns a 0-100 quality score (higher = better), matching the form.
+      updates[c.id] = Math.round(Math.min(Math.max(value, 0), 100));
+    }
+    if (Object.keys(updates).length > 0) {
+      this.scores.update((s) => ({ ...s, ...updates }));
+    }
+    if (res.suggestedComment) {
+      this.overallComment = res.suggestedComment;
+    }
   }
 
   editEvaluation(e: Evaluation): void {

@@ -146,6 +146,62 @@ label {
   font-weight: 600;
 }
 
+.book-hint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--lp-muted);
+}
+
+.book-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.book-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--lp-border);
+  border-radius: var(--lp-radius);
+  background: #f7f9f8;
+}
+
+.book-title {
+  font-weight: 600;
+}
+
+.book-author {
+  color: var(--lp-muted);
+  font-size: 13px;
+}
+
+.book-loops {
+  color: var(--lp-muted);
+  font-size: 12px;
+}
+
+.book-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.book-content {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px dashed var(--lp-border);
+  border-radius: var(--lp-radius);
+  font-size: 13px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  background: #fbfcfb;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
 .badge {
   display: inline-block;
   padding: 3px 10px;
@@ -263,6 +319,31 @@ table.lp-table {
 .alert-success {
   background: #dcfce7;
   color: var(--lp-success);
+}
+
+.alert-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.ai-result {
+  border-right: 3px solid #2563eb;
+}
+
+.ai-result .ai-percent {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.ai-result .ai-comment {
+  margin: 6px 0;
+  line-height: 1.8;
+}
+
+.ai-result .ai-suggestions {
+  margin: 6px 0 0;
+  padding-right: 20px;
+  line-height: 1.8;
 }
 
 .empty {

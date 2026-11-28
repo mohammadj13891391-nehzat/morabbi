@@ -29,6 +29,10 @@ Desktop.ini
 api-*.log
 api-*.out
 *.log.err
+logs/
+
+# Session dumps
+ses_*.json
 
 
 # Next.js build output / dev cache

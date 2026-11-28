@@ -26,6 +26,8 @@ public class AppDbContext : DbContext
     public DbSet<Methodology> Methodologies => Set<Methodology>();
     public DbSet<QuranVerse> QuranVerses => Set<QuranVerse>();
     public DbSet<Hadith> Hadiths => Set<Hadith>();
+    public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<Book> Books => Set<Book>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -194,6 +196,19 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Hadith>(entity =>
         {
             entity.HasIndex(e => e.Source);
+        });
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.HasIndex(e => new { e.TargetType, e.TargetId });
+            entity.HasOne(e => e.Author)
+                .WithMany()
+                .HasForeignKey(e => e.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Parent)
+                .WithMany()
+                .HasForeignKey(e => e.ParentId)
+                .OnDelete(DeleteBehavior.NoAction);
         });
     }
 }

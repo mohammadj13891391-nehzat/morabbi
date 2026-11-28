@@ -31,6 +31,9 @@ public class MorabbiUser
     public string Role { get; set; } = "coach";
 
     [Column(TypeName = "nvarchar(50)")]
+    public string? TrainingLoop { get; set; }
+
+    [Column(TypeName = "nvarchar(50)")]
     public string? RequestedRole { get; set; }
 
     public int? BranchId { get; set; }

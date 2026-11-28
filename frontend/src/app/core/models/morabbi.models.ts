@@ -4,6 +4,7 @@ export interface AuthUserDto {
   phone: string;
   nationalId: string | null;
   role: string;
+  trainingLoop: string | null;
   branchId: number | null;
   maktabId: number | null;
   approvalStatus: string;
@@ -14,6 +15,52 @@ export interface AuthUserDto {
 export interface LoginResponse {
   token: string;
   user: AuthUserDto;
+}
+
+export interface AiEvaluateResult {
+  suggestedPercent: number | null;
+  suggestedComment: string | null;
+  suggestedScores: Record<string, number | string> | null;
+  suggestions: string[];
+}
+
+export interface AiAssistantResult {
+  response: string;
+  quranSources: string[];
+  hadithSources: string[];
+}
+
+export interface BookSummary {
+  id: number;
+  title: string;
+  author: string | null;
+  category: string | null;
+  description: string | null;
+  loops: string[];
+}
+
+export interface BookDetail extends BookSummary {
+  content: string;
+  isActive: boolean;
+}
+
+export interface CreateBookPayload {
+  title: string;
+  author?: string | null;
+  category?: string | null;
+  description?: string | null;
+  content: string;
+  loops: string[];
+}
+
+export interface UpdateBookPayload {
+  title?: string;
+  author?: string | null;
+  category?: string | null;
+  description?: string | null;
+  content?: string;
+  loops?: string[];
+  isActive?: boolean;
 }
 
 export interface RegisterPayload {
