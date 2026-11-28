@@ -413,8 +413,11 @@ public class TarbiyatiService : ITarbiyatiService
         var query = _db.Hadiths.AsQueryable();
         if (includeText)
         {
+            // Deep search scans the full 231MB of text (no FTS on this SQL Server), so it can
+            // take 30–60s. Search both the Arabic and the Persian text so Persian queries work.
             _db.Database.SetCommandTimeout(120);
-            query = query.Where(x => EF.Functions.Like(x.TextAr, $"%{t}%"));
+            query = query.Where(x => EF.Functions.Like(x.TextAr, $"%{t}%")
+                || (x.TextFa != null && EF.Functions.Like(x.TextFa, $"%{t}%")));
         }
         else
         {

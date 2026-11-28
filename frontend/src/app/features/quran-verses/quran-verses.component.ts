@@ -32,6 +32,7 @@ import { QuranVerse } from '../../core/models/morabbi.models';
         </div>
       </div>
       <p class="verse" dir="rtl">{{ v.textAr }}</p>
+      <p class="verse-fa" *ngIf="v.textFa">{{ v.textFa }}</p>
     </div>
     <div class="empty" *ngIf="!searching() && results().length === 0">آیه‌ای یافت نشد.</div>
     <button class="btn btn-sm" (click)="showMore()" *ngIf="results().length > shown()">نمایش ۲۰۰ آیهٔ بعدی</button>
@@ -54,6 +55,12 @@ import { QuranVerse } from '../../core/models/morabbi.models';
       color: var(--lp-text);
       margin: 0;
       font-family: 'Traditional Arabic', 'Amiri', var(--lp-font);
+    }
+    .verse-fa {
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--lp-muted, #555);
+      margin: 6px 0 0;
     }
     .hint {
       color: var(--lp-muted, #666);

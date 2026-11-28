@@ -36,6 +36,24 @@ export interface AiLessonPlanResult {
   hadithSources: string[];
 }
 
+export interface SearchHit {
+  type: string;
+  id: number;
+  title: string;
+  subtitle: string | null;
+  date: string | null;
+  status: string | null;
+}
+
+export interface GlobalSearchResult {
+  reports: SearchHit[];
+  lessonPlans: SearchHit[];
+  people: SearchHit[];
+  quranVerses: SearchHit[];
+  hadiths: SearchHit[];
+  tasks: SearchHit[];
+}
+
 export interface BookSummary {
   id: number;
   title: string;

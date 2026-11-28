@@ -33,6 +33,7 @@ import {
   DailyTracker,
   Evaluation,
   EvaluationCriteria,
+  GlobalSearchResult,
   LessonPlan,
   LoginResponse,
   Maktab,
@@ -366,6 +367,12 @@ export class AuthService {
   }
 
   // ===== AI =====
+  globalSearch(q: string, perType = 5): Observable<GlobalSearchResult> {
+    return this.http.get<GlobalSearchResult>(`${this.base}/api/search`, {
+      params: { q, perType: String(perType) }
+    });
+  }
+
   aiStatus(): Observable<{ configured: boolean }> {
     return this.http.get<{ configured: boolean }>(`${this.base}/api/ai/status`);
   }
